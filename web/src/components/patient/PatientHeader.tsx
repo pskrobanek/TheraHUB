@@ -1,6 +1,7 @@
 import type { Patient } from '../../data/types';
 import { patientHref, patientTabs, type PatientTab } from '../../lib/route';
 import { initials } from '../../lib/format';
+import Link from '../Link';
 
 const tabLabels: Record<PatientTab, string> = {
   prehled: 'Přehled',
@@ -55,10 +56,10 @@ export default function PatientHeader({ patient, tab, activeCount }: Props) {
 
       <nav className="tabs" aria-label="Záložky pacienta">
         {patientTabs.map((id) => (
-          <a key={id} href={patientHref(patient.id, id)} className={id === tab ? 'tab active' : 'tab'}>
+          <Link key={id} href={patientHref(patient.id, id)} className={id === tab ? 'tab active' : 'tab'}>
             {tabLabels[id]}
             {id === 'aplikace' && <span className="tab-count">{activeCount}</span>}
-          </a>
+          </Link>
         ))}
       </nav>
     </header>

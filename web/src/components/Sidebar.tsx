@@ -13,6 +13,7 @@ import {
 import { currentUser, hospital, patients, sidebarCounts } from '../data/demo';
 import { initials } from '../lib/format';
 import { patientHref, type Route, type SectionId } from '../lib/route';
+import Link from './Link';
 
 interface NavItem {
   id: SectionId;
@@ -40,19 +41,19 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
   const Icon = item.icon;
   const href = item.id === 'pacienti' ? patientHref(patients[0].id) : `#/${item.id}`;
   return (
-    <a href={href} className={active ? 'nav-item active' : 'nav-item'}>
+    <Link href={href} className={active ? 'nav-item active' : 'nav-item'}>
       <Icon size={20} strokeWidth={1.8} />
       <span>{item.label}</span>
       {item.badge ? <span className="nav-badge">{item.badge}</span> : null}
       {item.count ? <span className="nav-count">{item.count}</span> : null}
-    </a>
+    </Link>
   );
 }
 
 export default function Sidebar({ route }: { route: Route }) {
   return (
     <aside className="sidebar glass">
-      <a className="brand" href={patientHref(patients[0].id)}>
+      <Link className="brand" href={patientHref(patients[0].id)}>
         <span className="brand-mark" aria-hidden>
           {Array.from({ length: 16 }, (_, i) => (
             <i key={i} />
@@ -61,7 +62,7 @@ export default function Sidebar({ route }: { route: Route }) {
         <span>
           Thera<b>HUB</b>
         </span>
-      </a>
+      </Link>
 
       <label className="search">
         <Search size={17} />
@@ -78,7 +79,7 @@ export default function Sidebar({ route }: { route: Route }) {
       <div className="nav-heading">Nedávní pacienti</div>
       <div className="recent">
         {patients.map((p) => (
-          <a
+          <Link
             key={p.id}
             href={patientHref(p.id, route.tab)}
             className={route.patientId === p.id ? 'recent-item active' : 'recent-item'}
@@ -88,7 +89,7 @@ export default function Sidebar({ route }: { route: Route }) {
               <span className="recent-name">{p.name}</span>
               <span className="recent-meta">{p.summary}</span>
             </span>
-          </a>
+          </Link>
         ))}
       </div>
 

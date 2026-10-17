@@ -1,6 +1,7 @@
 import { ArrowRight, LayoutGrid, Plus, Sparkle } from 'lucide-react';
 import type { CatalogApp, Recommendation } from '../../data/types';
 import AppIcon from '../AppIcon';
+import Link from '../Link';
 
 interface Props {
   hospitalShort: string;
@@ -47,7 +48,7 @@ export default function AvailableApps({ hospitalShort, apps, recommendations, on
           );
         })}
 
-        <a href="#/appstore" className="available glass more">
+        <Link href="#/appstore" className="available glass more">
           <span className="app-icon" style={{ width: 40, height: 40, color: 'var(--accent)', background: 'var(--accent-soft)' }}>
             <LayoutGrid size={20} />
           </span>
@@ -56,7 +57,7 @@ export default function AvailableApps({ hospitalShort, apps, recommendations, on
             <span className="muted small">Požádat o další aplikace</span>
           </div>
           <ArrowRight size={20} className="muted" />
-        </a>
+        </Link>
       </div>
     </section>
   );

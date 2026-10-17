@@ -22,3 +22,26 @@ export function parseHash(hash: string, defaultPatientId: string): Route {
 export function patientHref(patientId: string, tab: PatientTab = 'aplikace'): string {
   return `#/pacienti/${patientId}/${tab}`;
 }
+
+const NAV_EVENT = 'therahub:navigate';
+
+/** Přejde na `href` bez opuštění stránky (funguje i ve vloženém náhledu, kde URL nelze měnit). */
+export function navigate(href: string): void {
+  try {
+    history.replaceState(null, '', href);
+  } catch {
+    // Ve vloženém náhledu může být změna URL zakázaná; stav nese událost.
+  }
+  window.dispatchEvent(new CustomEvent(NAV_EVENT, { detail: href }));
+}
+
+export function onNavigate(handler: (href: string) => void): () => void {
+  const listener = (e: Event) => handler((e as CustomEvent<string>).detail);
+  const onHash = () => handler(window.location.hash);
+  window.addEventListener(NAV_EVENT, listener);
+  window.addEventListener('hashchange', onHash);
+  return () => {
+    window.removeEventListener(NAV_EVENT, listener);
+    window.removeEventListener('hashchange', onHash);
+  };
+}

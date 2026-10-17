@@ -2,21 +2,17 @@ import { useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar';
 import { activeApps as initialActive, patients } from './data/demo';
 import type { ActivePatientApp } from './data/types';
-import { parseHash, type Route } from './lib/route';
+import { onNavigate, parseHash, type Route } from './lib/route';
 import PatientPage from './pages/PatientPage';
 import Placeholder from './pages/Placeholder';
 
-const currentRoute = () => parseHash(window.location.hash, patients[0].id);
+const routeOf = (hash: string) => parseHash(hash, patients[0].id);
 
 export default function App() {
-  const [route, setRoute] = useState<Route>(currentRoute);
+  const [route, setRoute] = useState<Route>(() => routeOf(window.location.hash));
   const [active, setActive] = useState<Record<string, ActivePatientApp[]>>(initialActive);
 
-  useEffect(() => {
-    const onHash = () => setRoute(currentRoute());
-    window.addEventListener('hashchange', onHash);
-    return () => window.removeEventListener('hashchange', onHash);
-  }, []);
+  useEffect(() => onNavigate((href) => setRoute(routeOf(href))), []);
 
   const patient = patients.find((p) => p.id === route.patientId) ?? patients[0];
 
