@@ -1,40 +1,113 @@
-import type { Hospital } from '../data/types';
+import {
+  CalendarDays,
+  CheckSquare,
+  Home,
+  Inbox,
+  LayoutGrid,
+  LineChart,
+  Search,
+  SlidersHorizontal,
+  Users,
+  type LucideIcon,
+} from 'lucide-react';
+import { currentUser, hospital, patients, sidebarCounts } from '../data/demo';
+import { initials } from '../lib/format';
+import { patientHref, type Route, type SectionId } from '../lib/route';
 
-export const sections = [
-  { id: 'dashboard', label: 'Dashboard', icon: '📊' },
-  { id: 'appstore', label: 'App Store', icon: '🛒' },
-  { id: 'workflow', label: 'Workflow', icon: '🔗' },
-  { id: 'science', label: 'Science', icon: '🔬' },
-  { id: 'profil', label: 'Profil nemocnice', icon: '🏥' },
-] as const;
-
-export type Section = (typeof sections)[number]['id'];
-
-interface Props {
-  active: Section;
-  hospital: Hospital;
+interface NavItem {
+  id: SectionId;
+  label: string;
+  icon: LucideIcon;
+  badge?: number;
+  count?: number;
 }
 
-export default function Sidebar({ active, hospital }: Props) {
+const mainNav: NavItem[] = [
+  { id: 'domu', label: 'Domů', icon: Home },
+  { id: 'pacienti', label: 'Pacienti', icon: Users },
+  { id: 'upozorneni', label: 'Upozornění', icon: Inbox, badge: sidebarCounts.alerts },
+  { id: 'ukoly', label: 'Úkoly', icon: CheckSquare, count: sidebarCounts.tasks },
+  { id: 'plan', label: 'Plán', icon: CalendarDays },
+];
+
+const hospitalNav: NavItem[] = [
+  { id: 'appstore', label: 'App Store', icon: LayoutGrid },
+  { id: 'analytika', label: 'Analytika', icon: LineChart },
+  { id: 'nastaveni', label: 'Nastavení', icon: SlidersHorizontal },
+];
+
+function NavLink({ item, active }: { item: NavItem; active: boolean }) {
+  const Icon = item.icon;
+  const href = item.id === 'pacienti' ? patientHref(patients[0].id) : `#/${item.id}`;
   return (
-    <aside className="sidebar">
-      <div className="brand">
-        <span className="brand-mark">T</span>
-        <span>TheraHUB</span>
-      </div>
-      <div className="hospital">
-        <div className="hospital-name">{hospital.name}</div>
-        <div className="muted">NIS: {hospital.nis}</div>
-      </div>
-      <nav>
-        {sections.map((s) => (
-          <a key={s.id} href={`#/${s.id}`} className={s.id === active ? 'nav-item active' : 'nav-item'}>
-            <span aria-hidden>{s.icon}</span>
-            {s.label}
-          </a>
+    <a href={href} className={active ? 'nav-item active' : 'nav-item'}>
+      <Icon size={20} strokeWidth={1.8} />
+      <span>{item.label}</span>
+      {item.badge ? <span className="nav-badge">{item.badge}</span> : null}
+      {item.count ? <span className="nav-count">{item.count}</span> : null}
+    </a>
+  );
+}
+
+export default function Sidebar({ route }: { route: Route }) {
+  return (
+    <aside className="sidebar glass">
+      <a className="brand" href={patientHref(patients[0].id)}>
+        <span className="brand-mark" aria-hidden>
+          {Array.from({ length: 16 }, (_, i) => (
+            <i key={i} />
+          ))}
+        </span>
+        <span>
+          Thera<b>HUB</b>
+        </span>
+      </a>
+
+      <label className="search">
+        <Search size={17} />
+        <input placeholder="Hledat pacienty" aria-label="Hledat pacienty" />
+        <kbd>⌘K</kbd>
+      </label>
+
+      <nav className="nav">
+        {mainNav.map((item) => (
+          <NavLink key={item.id} item={item} active={route.section === item.id} />
         ))}
       </nav>
-      <div className="sidebar-footer muted">Demo · data jsou fiktivní</div>
+
+      <div className="nav-heading">Nedávní pacienti</div>
+      <div className="recent">
+        {patients.map((p) => (
+          <a
+            key={p.id}
+            href={patientHref(p.id, route.tab)}
+            className={route.patientId === p.id ? 'recent-item active' : 'recent-item'}
+          >
+            <span className="avatar sm">{initials(p.name)}</span>
+            <span>
+              <span className="recent-name">{p.name}</span>
+              <span className="recent-meta">{p.summary}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+
+      <div className="nav-heading">Nemocnice</div>
+      <nav className="nav">
+        {hospitalNav.map((item) => (
+          <NavLink key={item.id} item={item} active={route.section === item.id} />
+        ))}
+      </nav>
+
+      <div className="user">
+        <span className="avatar dark">{currentUser.initials}</span>
+        <span>
+          <span className="user-name">{currentUser.name}</span>
+          <span className="recent-meta">
+            {hospital.short} · {currentUser.department}
+          </span>
+        </span>
+      </div>
     </aside>
   );
 }

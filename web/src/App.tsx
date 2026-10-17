@@ -1,29 +1,70 @@
 import { useEffect, useState } from 'react';
-import Sidebar, { type Section, sections } from './components/Sidebar';
-import Dashboard from './pages/Dashboard';
+import Sidebar from './components/Sidebar';
+import { activeApps as initialActive, patients } from './data/demo';
+import type { ActivePatientApp } from './data/types';
+import { parseHash, type Route } from './lib/route';
+import PatientPage from './pages/PatientPage';
 import Placeholder from './pages/Placeholder';
-import { hospital } from './data/mockApps';
 
-function sectionFromHash(): Section {
-  const id = window.location.hash.replace('#/', '');
-  return sections.find((s) => s.id === id)?.id ?? 'dashboard';
-}
+const currentRoute = () => parseHash(window.location.hash, patients[0].id);
 
 export default function App() {
-  const [section, setSection] = useState<Section>(sectionFromHash);
+  const [route, setRoute] = useState<Route>(currentRoute);
+  const [active, setActive] = useState<Record<string, ActivePatientApp[]>>(initialActive);
 
   useEffect(() => {
-    const onHash = () => setSection(sectionFromHash());
+    const onHash = () => setRoute(currentRoute());
     window.addEventListener('hashchange', onHash);
     return () => window.removeEventListener('hashchange', onHash);
   }, []);
 
+  const patient = patients.find((p) => p.id === route.patientId) ?? patients[0];
+
+  const activate = (appId: string) =>
+    setActive((prev) => ({
+      ...prev,
+      [patient.id]: [...(prev[patient.id] ?? []), { appId, since: 'dnes', widget: { kind: 'pending' } }],
+    }));
+
+  const toggleTask = (appId: string, taskId: string) =>
+    setActive((prev) => ({
+      ...prev,
+      [patient.id]: prev[patient.id].map((a) =>
+        a.appId === appId && a.widget.kind === 'scribe'
+          ? {
+              ...a,
+              widget: {
+                ...a.widget,
+                tasks: a.widget.tasks.map((t) => (t.id === taskId ? { ...t, done: !t.done } : t)),
+              },
+            }
+          : a,
+      ),
+    }));
+
   return (
-    <div className="shell">
-      <Sidebar active={section} hospital={hospital} />
-      <main className="content">
-        {section === 'dashboard' ? <Dashboard /> : <Placeholder section={section} />}
-      </main>
-    </div>
+    <>
+      <div className="backdrop" aria-hidden>
+        <span className="blob b1" />
+        <span className="blob b2" />
+        <span className="blob b3" />
+      </div>
+      <div className="shell">
+        <Sidebar route={route} />
+        <main className="content">
+          {route.section === 'pacienti' ? (
+            <PatientPage
+              patient={patient}
+              tab={route.tab}
+              active={active[patient.id] ?? []}
+              onActivate={activate}
+              onToggleTask={toggleTask}
+            />
+          ) : (
+            <Placeholder section={route.section} />
+          )}
+        </main>
+      </div>
+    </>
   );
 }

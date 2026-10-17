@@ -1,53 +1,88 @@
-// Datový model odpovídá docs/ENDGAME.md (kap. 3.7, 4.2, 4.3, 6.2).
+// Klinický pracovní prostor běží v kontextu nemocnice (TheraHUB Node, ENDGAME kap. 11).
+// Zdravotní data pacientů nikdy neopouštějí nemocnici; centrální část zná jen katalog aplikací.
 
-/** Stupeň nasazení aplikace v nemocnici. */
-export type AppStatus = 'produkce' | 'pilot' | 'sandbox';
-
-/** Kde aplikace běží (profil nemocnice, kap. 4.3). */
-export type Hosting = 'onprem' | 'privatni-cloud' | 'saas-eu' | 'therahub-cloud';
-
-/** Připravenost k provozu s daty z NIS nemocnice (kap. 4.2). */
-export type Readiness = 'plny' | 'omezeny' | 'nelze';
-
-/** Úroveň splnění pilíře Frameworku. */
-export type Level = 'base' | 'standard' | 'high';
-
-export interface Compliance {
-  data: Level;
-  security: Level;
-  privacy: Level;
-  /** Regulatorní zařazení, např. „bez MDR“ nebo „MDR IIa“. */
-  safety: string;
-  /** Platnost certifikace TheraHUB (ISO datum). */
-  certifiedUntil: string;
+export interface Diagnosis {
+  code: string;
+  label: string;
 }
 
-export interface Contract {
-  type: 'pilotni' | 'provozni' | 'sandbox';
-  /** Konec platnosti (ISO datum); null = na dobu neurčitou nebo bez smlouvy. */
-  validUntil: string | null;
-  annualCostCzk: number | null;
+export interface Treatment {
+  name: string;
+  done: number;
+  total: number;
+  unit: string;
+  started: string;
+  plannedEnd: string;
 }
 
-export interface ActiveApp {
+export interface Patient {
   id: string;
   name: string;
-  vendor: string;
-  category: string;
-  description: string;
-  departments: string[];
-  status: AppStatus;
-  hosting: Hosting;
-  readiness: Readiness;
-  /** Vysvětlení u omezeného provozu – které funkce nepoběží a proč. */
-  readinessNote?: string;
-  compliance: Compliance;
-  contract: Contract;
-  usage: { activeUsers: number; uptimePct: number | null };
-  openIncidents: number;
+  sex: 'muž' | 'žena';
+  age: number;
+  /** Interní číslo pacienta v NIS (ne rodné číslo). */
+  nisId: string;
+  attending: string;
+  tags: Diagnosis[];
+  /** Krátký popisek do seznamu nedávných pacientů. */
+  summary: string;
+  treatment?: Treatment;
 }
 
-export interface Hospital {
+/** Aplikace licencovaná nemocnicí (z katalogu TheraHUB). */
+export interface CatalogApp {
+  id: string;
   name: string;
-  nis: string;
+  tagline: string;
+  icon: IconName;
+  /** Barva ikony / akcentu karty. */
+  tint: string;
+}
+
+export type IconName =
+  | 'onco' | 'heart' | 'scribe' | 'droplet' | 'leaf' | 'camera' | 'smile' | 'gauge' | 'pill' | 'watch';
+
+export interface ToxicityItem {
+  label: string;
+  grade: 0 | 1 | 2 | 3 | 4;
+}
+
+/** Data, která aplikace poskytuje do karty pacienta (widget aplikace). */
+export type AppWidget =
+  | {
+      kind: 'toxicity';
+      alert?: { text: string; time: string };
+      items: ToxicityItem[];
+      completed: number;
+      total: number;
+      next: string;
+    }
+  | {
+      kind: 'ecg';
+      bpm: number;
+      rhythm: string;
+      qtc: number;
+      pr: number;
+      qrs: number;
+      lastRecord: string;
+    }
+  | {
+      kind: 'scribe';
+      title: string;
+      meta: string;
+      summary: string;
+      tasks: { id: string; text: string; done: boolean }[];
+    }
+  | { kind: 'pending' };
+
+export interface ActivePatientApp {
+  appId: string;
+  since: string;
+  widget: AppWidget;
+}
+
+export interface Recommendation {
+  appId: string;
+  /** Důvod doporučení odvozený z dat pacienta. */
+  reason: string;
 }
