@@ -10,11 +10,12 @@
 
 **TheraHUB je neziskový „důvěryhodný prostředník“ mezi nemocnicemi a digitálními inovacemi.** Postavený na **HL7 FHIR** a **InterSystems IRIS for Health** propojuje nemocnice, jejich NIS a certifikované aplikace / startupy přes společný framework (data, bezpečnost, GDPR, safety, legal, výzkum).
 
-Platforma má **čtyři hlavní záložky** a pod nimi společné základy:
+Platforma má **čtyři hlavní záložky**, **pohled lékaře na pacienta** a pod nimi společné základy:
 
 | Záložka | K čemu slouží |
 |---|---|
 | 🛒 **App Store** | katalog certifikovaných aplikací, hodnocení, kde běží, kompatibilita s mou nemocnicí a mým NIS, sandbox, pilot, online smlouva |
+| 🩺 **Pacient** | klinický pracovní prostor: aktivní aplikace u konkrétního pacienta, jejich widgety a aktivace dalších jedním kliknutím |
 | 📊 **Dashboard** | co máme k dispozici a v provozu, stav smluv, certifikací, incidentů, využití, nákladů |
 | 🔗 **Workflow** | propojování aplikací do logických celků (klinické a provozní cesty) |
 | 🔬 **Science** | pseudonymizovaná data na vyžádání pro výzkumné projekty, i napříč nemocnicemi |
@@ -309,6 +310,18 @@ Pro nemocnici vypadá jako obchod s aplikacemi, pod kapotou je to **registr ově
 
 Kritéria úspěchu pilotu se nastaví na začátku. Přechod do produkce je předem definovaný.
 
+### 6.3 Klinický pracovní prostor – aplikace u pacienta
+
+Lékař nepracuje s aplikacemi jako se seznamem licencí, ale **u konkrétního pacienta**. Proto má TheraHUB vedle katalogu i pohled lékaře na pacienta:
+
+- **Hlavička pacienta** z NIS: diagnózy, staging, probíhající léčba a její průběh (např. frakce radioterapie).
+- **Aktivní aplikace** pacienta jako karty. Každá aplikace dodává **vlastní widget** (souhrn svých dat a hlavní akce): např. dotazník toxicity s upozorněním, EKG křivku, AI souhrn návštěvy s úkoly. Widget vzniká přes standardní rozhraní (SMART on FHIR, CDS Hooks), ne proprietárně.
+- **Dostupné aplikace** – ty, které má nemocnice licencované. Aktivace u pacienta je jedno kliknutí; pacient dostane SMS odkaz, nic se neinstaluje. Aktivace je v rámci již podepsané smlouvy, nové smluvní jednání nevzniká.
+- **Doporučení z dat pacienta** – platforma zvýrazní aplikace, které odpovídají stavu pacienta (např. „při dysfagii G2“). Doporučení je jen nabídka, rozhoduje lékař.
+- Stejná karta pacienta má záložky **Workflow** (léčebná cesta pacienta) a **Science** (zařazení do výzkumu, souhlasy).
+
+**Kde to běží:** pohled pracuje se zdravotními daty, proto běží **v kontextu nemocnice** – v TheraHUB Node nebo jako aplikace spouštěná z NIS (SMART on FHIR launch). Centrální část zná jen katalog a licence, ne pacienty.
+
 ---
 
 ## 7. 📊 Dashboard
@@ -602,7 +615,7 @@ Každý krok má jasný výstup, dá se dokončit samostatně a před dalším k
 - **1.5** TheraHUB FHIR Implementation Guide v0.1 – postavený na HL7 Europe a HL7 CZ.
 
 ### Fáze 2 – App Store MVP (centrální část)
-- **2.1** Kostra aplikace (přihlášení, role, navigace se 4 záložkami).
+- **2.1** Kostra aplikace (navigace, design systém) a klikací prototyp klinického pracovního prostoru (kap. 6.3) na demo datech. ✅ *(prototyp)*
 - **2.2** Katalog aplikací + karta aplikace.
 - **2.3** Profil dodavatele a aplikace (formuláře podle schématu 1.2).
 - **2.4** Profil nemocnice (formuláře podle schématu 1.3, šablony).
