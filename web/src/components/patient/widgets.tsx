@@ -161,7 +161,7 @@ export function ScribeActions() {
 export function PendingBody() {
   return (
     <div className="pending">
-      <Send size={22} />
+      <Send size={20} />
       <p>
         Pacientovi byl odeslán SMS odkaz.
         <br />

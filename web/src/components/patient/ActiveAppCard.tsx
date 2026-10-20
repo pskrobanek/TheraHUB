@@ -30,7 +30,7 @@ export default function ActiveAppCard({ app, active, onToggleTask }: Props) {
           </div>
         </div>
         <button className="btn ghost icon" aria-label="Další volby">
-          <MoreHorizontal size={20} />
+          <MoreHorizontal size={18} />
         </button>
       </header>
 

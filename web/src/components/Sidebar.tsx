@@ -42,7 +42,7 @@ function NavLink({ item, active }: { item: NavItem; active: boolean }) {
   const href = item.id === 'pacienti' ? patientHref(patients[0].id) : `#/${item.id}`;
   return (
     <Link href={href} className={active ? 'nav-item active' : 'nav-item'}>
-      <Icon size={20} strokeWidth={1.8} />
+      <Icon size={18} strokeWidth={1.8} />
       <span>{item.label}</span>
       {item.badge ? <span className="nav-badge">{item.badge}</span> : null}
       {item.count ? <span className="nav-count">{item.count}</span> : null}

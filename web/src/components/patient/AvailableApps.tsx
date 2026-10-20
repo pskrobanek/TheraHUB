@@ -27,7 +27,7 @@ export default function AvailableApps({ hospitalShort, apps, recommendations, on
           const reason = reasonOf(app.id);
           return (
             <div key={app.id} className={reason ? 'available glass recommended' : 'available glass'}>
-              <AppIcon app={app} size={40} />
+              <AppIcon app={app} size={36} />
               <div className="available-text">
                 <b>{app.name}</b>
                 <span className="muted small">{app.tagline}</span>
@@ -42,21 +42,21 @@ export default function AvailableApps({ hospitalShort, apps, recommendations, on
                 onClick={() => onActivate(app.id)}
                 aria-label={`Aktivovat ${app.name}`}
               >
-                <Plus size={20} />
+                <Plus size={18} />
               </button>
             </div>
           );
         })}
 
         <Link href="#/appstore" className="available glass more">
-          <span className="app-icon" style={{ width: 40, height: 40, color: 'var(--accent)', background: 'var(--accent-soft)' }}>
-            <LayoutGrid size={20} />
+          <span className="app-icon" style={{ width: 36, height: 36, color: 'var(--accent)', background: 'var(--accent-soft)' }}>
+            <LayoutGrid size={18} />
           </span>
           <div className="available-text">
             <b>App Store</b>
             <span className="muted small">Požádat o další aplikace</span>
           </div>
-          <ArrowRight size={20} className="muted" />
+          <ArrowRight size={18} className="muted" />
         </Link>
       </div>
     </section>

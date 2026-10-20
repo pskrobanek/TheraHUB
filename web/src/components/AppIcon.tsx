@@ -26,7 +26,7 @@ const icons: Record<IconName, LucideIcon> = {
   watch: Watch,
 };
 
-export default function AppIcon({ app, size = 44 }: { app: CatalogApp; size?: number }) {
+export default function AppIcon({ app, size = 40 }: { app: CatalogApp; size?: number }) {
   const Icon = icons[app.icon];
   return (
     <span
