@@ -2,7 +2,6 @@ import { Check as CheckIcon, Clock, Star, User } from 'lucide-react';
 import type { Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
 import { adoptionIndex, usesAi } from '../../lib/score';
-import AppPreview from './AppPreview';
 import { aiModeLabel } from './StoreFilters';
 import AppIcon from '../AppIcon';
 
@@ -64,8 +63,6 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
           </span>
         )}
       </header>
-
-      <AppPreview app={app} />
 
       <p className="pitch">{s.pitch}</p>
 

@@ -310,7 +310,6 @@ Pro nemocnici vypadá jako obchod s aplikacemi, pod kapotou je to **registr ově
   - u AI s **kodexem asociace pro AI v ČR**,
   - **záštita odborné společnosti**, pokud ji aplikace má.
 - **Adoption index (0–100)** shrnuje připravenost aplikace k nasazení v mé nemocnici do jednoho čísla s úrovní Vysoká (85+) / Střední (70+) / Nízká. Váhy: soulad s nemocnicí 35 %, datový prostor 25 %, odborné společnosti 20 %, TheraHUB integrace 20 %. V katalogu je vidět jen souhrn, rozpad na dílčí kontroly až v detailu aplikace. Váhy jsou veřejné a verzované spolu s Frameworkem.
-- **Náhled obrazovky** aplikace přímo na kartě v katalogu.
 - **Filtry katalogu:** specializace, řazení (adoption index, hodnocení), minimální adoption index, jednotlivá kritéria indexu, pro koho, třída MDR, režim AI (bez AI, asistující, vedená, autonomní), minimální hodnocení.
 - Tlačítka: **Vyzkoušet v sandboxu → Požádat o pilot → Uzavřít smlouvu**.
 

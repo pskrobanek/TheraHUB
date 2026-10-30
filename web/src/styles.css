@@ -325,7 +325,6 @@ h1, h2, h3, p { margin: 0; }
 .score { border-radius: var(--radius-sm); background: rgba(255, 255, 255, 0.55); border: 1px solid var(--glass-border); padding: 8px 12px; display: flex; align-items: center; gap: 10px; }
 .score > div { display: flex; flex-direction: column; line-height: 1.2; }
 .score b { font-size: 0.85rem; }
-.preview { width: 100%; height: auto; display: block; border-radius: 6px; border: 1px solid var(--glass-line); }
 .score-level { font-size: 0.78rem; font-weight: 600; }
 .level-vysoke { color: var(--ok); }
 .level-stredni { color: #d97706; }
