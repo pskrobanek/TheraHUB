@@ -35,7 +35,8 @@ export const patients: Patient[] = [
       { code: 'TNM', label: 'cT2 N1 M0' },
       { code: 'Léčba', label: 'Chemoradioterapie 70 Gy / 35 fx + cisplatina' },
     ],
-    summary: 'C10.9 · Fx 18/35',
+    birthNumber: '680412/1234',
+    mainDiagnosis: 'C10.9',
     treatment: { name: 'Radioterapie', done: 18, total: 35, unit: 'Fx', started: '31. 8.', plannedEnd: '19. 10.' },
   },
   {
@@ -49,7 +50,8 @@ export const patients: Patient[] = [
       { code: 'C50.4', label: 'Karcinom prsu, HER2−' },
       { code: 'Léčba', label: 'Adjuvantní RT 40 Gy / 15 fx' },
     ],
-    summary: 'C50.4 · Fx 9/15',
+    birthNumber: '795318/2240',
+    mainDiagnosis: 'C50.4',
     treatment: { name: 'Radioterapie', done: 9, total: 15, unit: 'Fx', started: '29. 9.', plannedEnd: '17. 10.' },
   },
   {
@@ -63,7 +65,8 @@ export const patients: Patient[] = [
       { code: 'C61', label: 'Karcinom prostaty' },
       { code: 'Stav', label: 'Dispenzarizace po RT' },
     ],
-    summary: 'C61 · Kontrola',
+    birthNumber: '550923/4417',
+    mainDiagnosis: 'C61',
   },
 ];
 

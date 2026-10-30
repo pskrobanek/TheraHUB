@@ -70,7 +70,9 @@ export default function Sidebar({ route, openPatients, onClosePatient }: Props) 
               <div key={p.id} className={route.patientId === p.id ? 'sub-item active' : 'sub-item'}>
                 <Link href={patientHref(p.id, route.tab)} className="sub-link">
                   <span className="sub-name">{p.name}</span>
-                  <span className="sub-meta">{p.summary}</span>
+                  <span className="sub-meta">
+                    <span className="mono">{p.mainDiagnosis}</span> · <span className="mono">{p.birthNumber}</span>
+                  </span>
                 </Link>
                 <button className="sub-close" onClick={() => onClosePatient(p.id)} aria-label={`Zavřít ${p.name}`}>
                   <X size={14} />

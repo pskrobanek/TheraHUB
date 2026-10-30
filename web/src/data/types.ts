@@ -24,8 +24,10 @@ export interface Patient {
   nisId: string;
   attending: string;
   tags: Diagnosis[];
-  /** Krátký popisek do seznamu nedávných pacientů. */
-  summary: string;
+  /** Rodné číslo (v demu fiktivní). */
+  birthNumber: string;
+  /** Hlavní diagnóza dle MKN-10. */
+  mainDiagnosis: string;
   treatment?: Treatment;
 }
 
