@@ -1,4 +1,4 @@
-import { FlaskConical, Home, LayoutGrid, Search, SlidersHorizontal, Users, X, type LucideIcon } from 'lucide-react';
+import { FlaskConical, Home, LayoutGrid, Search, SlidersHorizontal, Store, Users, X, type LucideIcon } from 'lucide-react';
 import { currentUser, hospital } from '../data/demo';
 import type { Patient } from '../data/types';
 import { patientHref, type Route, type SectionId } from '../lib/route';
@@ -13,7 +13,6 @@ interface NavItem {
 
 const before: NavItem[] = [{ id: 'domu', label: 'Domů', icon: Home }];
 const after: NavItem[] = [
-  { id: 'aplikace', label: 'Aplikace', icon: LayoutGrid },
   { id: 'workflow', label: 'Workflow', icon: FlowBranch },
   { id: 'science', label: 'Science', icon: FlaskConical },
   { id: 'nastaveni', label: 'Nastavení', icon: SlidersHorizontal },
@@ -82,6 +81,20 @@ export default function Sidebar({ route, openPatients, onClosePatient }: Props) 
             ))}
           </div>
         )}
+
+        <NavLink
+          item={{ id: 'aplikace', label: 'Aplikace', icon: LayoutGrid }}
+          href="#/aplikace"
+          active={route.section === 'aplikace'}
+        />
+        <div className="subnav">
+          <Link href="#/aplikace" className={route.section === 'aplikace' && route.sub !== 'store' ? 'sub-item sub-plain active' : 'sub-item sub-plain'}>
+            <LayoutGrid size={15} /> Zakoupené
+          </Link>
+          <Link href="#/aplikace/store" className={route.section === 'aplikace' && route.sub === 'store' ? 'sub-item sub-plain active' : 'sub-item sub-plain'}>
+            <Store size={15} /> App Store
+          </Link>
+        </div>
 
         {after.map((item) => (
           <NavLink key={item.id} item={item} href={`#/${item.id}`} active={route.section === item.id} />
