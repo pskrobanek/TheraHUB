@@ -13,7 +13,7 @@ npm run build      # typová kontrola + produkční build
 
 ## Struktura
 
-- `src/components/Sidebar.tsx` – navigace a sekce Nemocnice
+- `src/components/Sidebar.tsx` – navigace: Domů, Pacienti (otevření pacienti jako podpoložky), Aplikace, Workflow, Science, Nastavení
 - `src/pages/PatientPage.tsx` – karta pacienta se záložkami Přehled / Aplikace / Workflow / Science
 - `src/components/patient/` – hlavička pacienta, karty aktivních aplikací (widgety), dostupné aplikace
 - `src/data/types.ts` – datový model podle `docs/ENDGAME.md`

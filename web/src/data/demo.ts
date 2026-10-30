@@ -135,5 +135,3 @@ export const recommendations: Record<string, Recommendation[]> = {
   p2: [{ appId: 'dermafoto', reason: 'Při dermatitidě G2' }],
   p3: [{ appId: 'krokomer', reason: 'Pohyb po léčbě' }],
 };
-
-export const sidebarCounts = { alerts: 4, tasks: 6 };

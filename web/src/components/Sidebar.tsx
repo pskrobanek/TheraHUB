@@ -1,16 +1,6 @@
-import {
-  CalendarDays,
-  CheckSquare,
-  Home,
-  Inbox,
-  LayoutGrid,
-  LineChart,
-  Search,
-  SlidersHorizontal,
-  Users,
-  type LucideIcon,
-} from 'lucide-react';
-import { currentUser, hospital, patients, sidebarCounts } from '../data/demo';
+import { FlaskConical, Home, LayoutGrid, Search, SlidersHorizontal, Users, Workflow, X, type LucideIcon } from 'lucide-react';
+import { currentUser, hospital } from '../data/demo';
+import type { Patient } from '../data/types';
 import { patientHref, type Route, type SectionId } from '../lib/route';
 import Link from './Link';
 
@@ -18,41 +8,40 @@ interface NavItem {
   id: SectionId;
   label: string;
   icon: LucideIcon;
-  badge?: number;
-  count?: number;
 }
 
-const mainNav: NavItem[] = [
-  { id: 'domu', label: 'Domů', icon: Home },
-  { id: 'pacienti', label: 'Pacienti', icon: Users },
-  { id: 'upozorneni', label: 'Upozornění', icon: Inbox, badge: sidebarCounts.alerts },
-  { id: 'ukoly', label: 'Úkoly', icon: CheckSquare, count: sidebarCounts.tasks },
-  { id: 'plan', label: 'Plán', icon: CalendarDays },
-];
-
-const hospitalNav: NavItem[] = [
-  { id: 'appstore', label: 'App Store', icon: LayoutGrid },
-  { id: 'analytika', label: 'Analytika', icon: LineChart },
+const before: NavItem[] = [{ id: 'domu', label: 'Domů', icon: Home }];
+const after: NavItem[] = [
+  { id: 'aplikace', label: 'Aplikace', icon: LayoutGrid },
+  { id: 'workflow', label: 'Workflow', icon: Workflow },
+  { id: 'science', label: 'Science', icon: FlaskConical },
   { id: 'nastaveni', label: 'Nastavení', icon: SlidersHorizontal },
 ];
 
-function NavLink({ item, active }: { item: NavItem; active: boolean }) {
+function NavLink({ item, href, active }: { item: NavItem; href: string; active: boolean }) {
   const Icon = item.icon;
-  const href = item.id === 'pacienti' ? patientHref(patients[0].id) : `#/${item.id}`;
   return (
     <Link href={href} className={active ? 'nav-item active' : 'nav-item'}>
       <Icon size={18} strokeWidth={1.8} />
       <span>{item.label}</span>
-      {item.badge ? <span className="nav-badge">{item.badge}</span> : null}
-      {item.count ? <span className="nav-count">{item.count}</span> : null}
     </Link>
   );
 }
 
-export default function Sidebar({ route }: { route: Route }) {
+interface Props {
+  route: Route;
+  /** Pacienti, které má lékař otevřené. */
+  openPatients: Patient[];
+  onClosePatient: (patientId: string) => void;
+}
+
+export default function Sidebar({ route, openPatients, onClosePatient }: Props) {
+  const patientsItem: NavItem = { id: 'pacienti', label: 'Pacienti', icon: Users };
+  const patientsHref = openPatients.length ? patientHref(openPatients[0].id) : '#/pacienti';
+
   return (
     <aside className="sidebar glass">
-      <Link className="brand" href={patientHref(patients[0].id)}>
+      <Link className="brand" href="#/domu">
         <span className="brand-mark" aria-hidden>
           {Array.from({ length: 16 }, (_, i) => (
             <i key={i} />
@@ -70,15 +59,29 @@ export default function Sidebar({ route }: { route: Route }) {
       </label>
 
       <nav className="nav">
-        {mainNav.map((item) => (
-          <NavLink key={item.id} item={item} active={route.section === item.id} />
+        {before.map((item) => (
+          <NavLink key={item.id} item={item} href={`#/${item.id}`} active={route.section === item.id} />
         ))}
-      </nav>
 
-      <div className="nav-heading">Nemocnice</div>
-      <nav className="nav">
-        {hospitalNav.map((item) => (
-          <NavLink key={item.id} item={item} active={route.section === item.id} />
+        <NavLink item={patientsItem} href={patientsHref} active={route.section === 'pacienti' && !route.patientId} />
+        {openPatients.length > 0 && (
+          <div className="subnav">
+            {openPatients.map((p) => (
+              <div key={p.id} className={route.patientId === p.id ? 'sub-item active' : 'sub-item'}>
+                <Link href={patientHref(p.id, route.tab)} className="sub-link">
+                  <span className="sub-name">{p.name}</span>
+                  <span className="sub-meta">{p.summary}</span>
+                </Link>
+                <button className="sub-close" onClick={() => onClosePatient(p.id)} aria-label={`Zavřít ${p.name}`}>
+                  <X size={14} />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {after.map((item) => (
+          <NavLink key={item.id} item={item} href={`#/${item.id}`} active={route.section === item.id} />
         ))}
       </nav>
 
