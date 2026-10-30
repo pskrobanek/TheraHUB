@@ -297,8 +297,21 @@ Pro nemocnici vypadá jako obchod s aplikacemi, pod kapotou je to **registr ově
   - dimenze: klinický přínos, použitelnost, náročnost integrace, kvalita podpory, stabilita,
   - textové recenze podle rolí (lékař, sestra, IT, management),
   - **objektivní metriky z provozu** (se souhlasem nemocnic): dostupnost, počet incidentů, doba odezvy podpory, počet aktivních uživatelů.
-- **Ceník** ve standardní struktuře.
+- **Ceník** ve standardní struktuře: částka, za co se platí (pacient, uživatel, událost/vyšetření, lůžko, celá nemocnice) a frekvence (měsíčně, ročně, jednorázově).
+- **Pro koho je aplikace:** pacient, lékař, sestra, administrativa, výzkumník.
+- **Regulatorní zařazení** jako štítek: zdravotnický prostředek (třída MDR), administrativní aplikace, wellness, pouze pro výzkum; u AI navíc značka AI.
+- **Free trial:** délka zdarma a **2–3 měřitelná KPI**, podle kterých nemocnice po trialu jednoduše vyhodnotí, zda aplikaci koupí (např. „neplánované hospitalizace −15 %“, „čas na dokumentaci −30 %“). Po trialu je vidět cena.
+- **Soulad v jednom přehledu:**
+  - s **profilem mé nemocnice** – legal, GDPR, security,
+  - s **mým NIS** – míra integrace v % (readiness, kap. 4.2),
+  - s **TheraHUB** – zda aplikace dodává widget, data pro Science a kroky pro Workflow,
+  - s **datovým prostorem InterSystems** (IRIS for Health, kap. 11.4),
+  - s **evropským datovým standardem** (EHDS / EEHRxF, HL7 Europe, kap. 12),
+  - u AI s **kodexem asociace pro AI v ČR**,
+  - **záštita odborné společnosti**, pokud ji aplikace má.
 - Tlačítka: **Vyzkoušet v sandboxu → Požádat o pilot → Uzavřít smlouvu**.
+
+V nemocnici má sekce Aplikace dvě části: **Zakoupené** (licencované aplikace, které lékaři mohou aktivovat u pacientů) a **App Store** (celý katalog s kartami výše).
 
 ### 6.2 Sandbox → Pilot → Produkce
 
