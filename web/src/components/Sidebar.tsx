@@ -1,7 +1,8 @@
-import { FlaskConical, Home, LayoutGrid, Search, SlidersHorizontal, Users, Workflow, X, type LucideIcon } from 'lucide-react';
+import { FlaskConical, Home, LayoutGrid, Search, SlidersHorizontal, Users, X, type LucideIcon } from 'lucide-react';
 import { currentUser, hospital } from '../data/demo';
 import type { Patient } from '../data/types';
 import { patientHref, type Route, type SectionId } from '../lib/route';
+import { FlowBranch } from './icons';
 import Link from './Link';
 
 interface NavItem {
@@ -13,7 +14,7 @@ interface NavItem {
 const before: NavItem[] = [{ id: 'domu', label: 'Domů', icon: Home }];
 const after: NavItem[] = [
   { id: 'aplikace', label: 'Aplikace', icon: LayoutGrid },
-  { id: 'workflow', label: 'Workflow', icon: Workflow },
+  { id: 'workflow', label: 'Workflow', icon: FlowBranch },
   { id: 'science', label: 'Science', icon: FlaskConical },
   { id: 'nastaveni', label: 'Nastavení', icon: SlidersHorizontal },
 ];
