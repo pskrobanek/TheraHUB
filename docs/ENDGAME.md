@@ -309,9 +309,9 @@ Pro nemocnici vypadá jako obchod s aplikacemi, pod kapotou je to **registr ově
   - s **evropským datovým standardem** (EHDS / EEHRxF, HL7 Europe, kap. 12),
   - u AI s **kodexem asociace pro AI v ČR**,
   - **záštita odborné společnosti**, pokud ji aplikace má.
-- **Index důvěry (0–100)** shrnuje soulad do jednoho čísla s úrovní Vysoké (85+) / Střední (70+) / Nízké. Váhy: soulad s nemocnicí 35 %, datový prostor 25 %, odborné společnosti 20 %, TheraHUB integrace 20 %. Každá část ukazuje své dílčí kontroly, takže je vidět, co přesně chybí. Váhy jsou veřejné a verzované spolu s Frameworkem.
-- **Odhad nákladů na oddělení** – z cenového modelu přepočtený hrubý měsíční odhad pro typické oddělení, aby šly porovnat aplikace s různými cenovými modely.
-- **Filtry katalogu:** specializace, řazení (index důvěry, cena, hodnocení), minimální index důvěry, jednotlivá kritéria důvěry, pro koho, třída MDR, režim AI (bez AI, asistující, vedená, autonomní), minimální hodnocení.
+- **Adoption index (0–100)** shrnuje připravenost aplikace k nasazení v mé nemocnici do jednoho čísla s úrovní Vysoká (85+) / Střední (70+) / Nízká. Váhy: soulad s nemocnicí 35 %, datový prostor 25 %, odborné společnosti 20 %, TheraHUB integrace 20 %. V katalogu je vidět jen souhrn, rozpad na dílčí kontroly až v detailu aplikace. Váhy jsou veřejné a verzované spolu s Frameworkem.
+- **Náhled obrazovky** aplikace přímo na kartě v katalogu.
+- **Filtry katalogu:** specializace, řazení (adoption index, hodnocení), minimální adoption index, jednotlivá kritéria indexu, pro koho, třída MDR, režim AI (bez AI, asistující, vedená, autonomní), minimální hodnocení.
 - Tlačítka: **Vyzkoušet v sandboxu → Požádat o pilot → Uzavřít smlouvu**.
 
 V nemocnici má sekce Aplikace dvě části: **Zakoupené** (licencované aplikace, které lékaři mohou aktivovat u pacientů) a **App Store** (celý katalog s kartami výše).

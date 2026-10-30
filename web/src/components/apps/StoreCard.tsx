@@ -1,7 +1,8 @@
 import { Check as CheckIcon, Clock, Star, User } from 'lucide-react';
 import type { Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
-import { complianceScore, departmentEstimate, usesAi } from '../../lib/score';
+import { adoptionIndex, usesAi } from '../../lib/score';
+import AppPreview from './AppPreview';
 import { aiModeLabel } from './StoreFilters';
 import AppIcon from '../AppIcon';
 
@@ -27,16 +28,6 @@ function Ring({ value, level }: { value: number; level: string }) {
   );
 }
 
-function Dots({ values }: { values: number[] }) {
-  return (
-    <span className="dots" aria-hidden>
-      {values.map((v, i) => (
-        <i key={i} className={v >= 1 ? 'ok' : v > 0 ? 'partial' : ''} />
-      ))}
-    </span>
-  );
-}
-
 interface Props {
   app: StoreApp;
   purchased: boolean;
@@ -47,8 +38,7 @@ interface Props {
 export default function StoreCard({ app, purchased, trialRequested, onTrial }: Props) {
   const s = app.store;
   const spec = specialtyOf(app.category);
-  const score = complianceScore(app);
-  const estimate = departmentEstimate(app);
+  const score = adoptionIndex(app);
 
   return (
     <article className="store-card glass">
@@ -75,6 +65,8 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
         )}
       </header>
 
+      <AppPreview app={app} />
+
       <p className="pitch">{s.pitch}</p>
 
       <div className="store-meta">
@@ -95,53 +87,30 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
       </div>
 
       <div className="score">
-        <div className="score-head">
-          <Ring value={score.total} level={score.level} />
-          <div>
-            <b>Index důvěry</b>
-            <span className={`score-level level-${score.level}`}>{score.levelLabel}</span>
-          </div>
-        </div>
-        <div className="score-rows">
-          {score.parts.map((p) => (
-            <div key={p.id} className="score-row">
-              <span className="muted">{p.label}</span>
-              <Dots values={p.dots} />
-              <span className="mono pct">{p.pct} %</span>
-            </div>
-          ))}
+        <Ring value={score.total} level={score.level} />
+        <div>
+          <b>Adoption index</b>
+          <span className={`score-level level-${score.level}`}>{score.levelLabel}</span>
         </div>
       </div>
 
       <footer className="store-foot">
-        <button
-          className={trialRequested ? 'trial sent' : 'trial'}
-          onClick={onTrial}
-          disabled={purchased || trialRequested || !s.trial}
-        >
+        <button className={trialRequested ? 'trial sent' : 'trial'} onClick={onTrial} disabled={purchased || trialRequested || !s.trial}>
           <span className="c-label">
             <Clock size={11} /> Trial
           </span>
           {purchased ? (
             <b className="muted">Zakoupeno</b>
           ) : trialRequested ? (
-            <b>Odesláno</b>
+            <b>Žádost odeslána</b>
           ) : s.trial ? (
-            <>
-              <b>{s.trial.days} dní</b>
-              <small>zdarma</small>
-            </>
+            <b>
+              {s.trial.days} dní <small>zdarma</small>
+            </b>
           ) : (
-            <b className="muted">—</b>
+            <b className="muted">Bez trialu</b>
           )}
         </button>
-        <div className="estimate">
-          <span className="c-label">Odhad na oddělení</span>
-          <b>
-            ≈ {estimate.monthly.toLocaleString('cs-CZ')} Kč <small>/ měs.</small>
-          </b>
-          <span className="muted small">{estimate.unit}</span>
-        </div>
       </footer>
     </article>
   );

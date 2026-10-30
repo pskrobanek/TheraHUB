@@ -22,10 +22,10 @@ export interface Score {
 export const usesAi = (app: StoreApp): boolean => app.store.ai !== 'none';
 
 /**
- * Index důvěry: nemocnice 35 % + datový prostor 25 % + odborné společnosti 20 % + TheraHUB integrace 20 %.
+ * Adoption index: nemocnice 35 % + datový prostor 25 % + odborné společnosti 20 % + TheraHUB integrace 20 %.
  * U aplikací bez AI se kritérium asociace pro AI nepočítá.
  */
-export function complianceScore(app: StoreApp): Score {
+export function adoptionIndex(app: StoreApp): Score {
   const c = app.store.compliance;
   const hospital = [checkValue(c.hospital.legal), checkValue(c.hospital.gdpr), checkValue(c.hospital.security), c.nis / 100];
   const data = [checkValue(c.intersystems), checkValue(c.euStandard)];
@@ -41,15 +41,4 @@ export function complianceScore(app: StoreApp): Score {
   const total = Math.round(parts.reduce((sum, p) => sum + p.pct * p.weight, 0));
   const level = total >= 85 ? 'vysoke' : total >= 70 ? 'stredni' : 'nizke';
   return { total, level, levelLabel: { vysoke: 'Vysoké', stredni: 'Střední', nizke: 'Nízké' }[level], parts };
-}
-
-/** Hrubý odhad měsíčních nákladů pro jedno oddělení podle cenového modelu. */
-export function departmentEstimate(app: StoreApp): { monthly: number; unit: string } {
-  const p = app.store.price;
-  const volume: Record<typeof p.per, number> = { pacient: 120, uživatel: 10, událost: 800, lůžko: 30, nemocnice: 1 };
-  const perMonth = p.period === 'rok' ? p.amount / 12 : p.amount;
-  const monthly = Math.round((perMonth * volume[p.per]) / 100) * 100;
-  const per = p.per === 'událost' ? 'vyšetření' : p.per;
-  const unit = p.period === 'jednorázově' ? `${p.amount.toLocaleString('cs-CZ')} Kč / ${per}` : `${p.amount.toLocaleString('cs-CZ')} Kč / ${per} / ${p.period === 'rok' ? 'rok' : 'měs.'}`;
-  return { monthly, unit };
 }

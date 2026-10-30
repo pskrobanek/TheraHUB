@@ -1,14 +1,14 @@
 import { Star } from 'lucide-react';
 import type { AiMode, Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
-import { complianceScore, departmentEstimate, usesAi } from '../../lib/score';
+import { adoptionIndex, usesAi } from '../../lib/score';
 import { audienceLabel } from './StoreCard';
 
 export type MinScore = 0 | 70 | 85 | 95;
-export type Sort = 'score' | 'price' | 'rating';
+export type Sort = 'score' | 'rating';
 export type MinRating = 0 | 3 | 3.5 | 4 | 4.5;
 
-export const sortLabel: Record<Sort, string> = { score: 'Index důvěry', price: 'Cena', rating: 'Hodnocení' };
+export const sortLabel: Record<Sort, string> = { score: 'Adoption index', rating: 'Hodnocení' };
 
 export const aiModeLabel: Record<AiMode, { label: string; hint: string }> = {
   none: { label: 'Bez AI', hint: 'Aplikace AI nepoužívá.' },
@@ -19,8 +19,7 @@ export const aiModeLabel: Record<AiMode, { label: string; hint: string }> = {
 
 export function sortApps(apps: StoreApp[], sort: Sort): StoreApp[] {
   return [...apps].sort((a, b) => {
-    if (sort === 'score') return complianceScore(b).total - complianceScore(a).total;
-    if (sort === 'price') return departmentEstimate(a).monthly - departmentEstimate(b).monthly;
+    if (sort === 'score') return adoptionIndex(b).total - adoptionIndex(a).total;
     return b.store.rating - a.store.rating;
   });
 }
@@ -75,7 +74,7 @@ export function applyFilters(apps: StoreApp[], f: Filters): StoreApp[] {
   return apps.filter(
     (a) =>
       (!f.category || a.category === f.category) &&
-      complianceScore(a).total >= f.minScore &&
+      adoptionIndex(a).total >= f.minScore &&
       [...f.criteria].every((id) => criteria[id].test(a)) &&
       (f.audience.size === 0 || a.store.audience.some((x) => f.audience.has(x))) &&
       (f.regClass.size === 0 || f.regClass.has(regClassOf(a))) &&
@@ -156,7 +155,7 @@ export default function StoreFilters({ apps, filters, onChange }: Props) {
       </section>
 
       <section>
-        <h4>Index důvěry</h4>
+        <h4>Adoption index</h4>
         <div className="segmented small">
           {([0, 70, 85, 95] as MinScore[]).map((v) => (
             <button key={v} className={filters.minScore === v ? 'on' : ''} onClick={() => set({ minScore: v })}>
@@ -167,7 +166,7 @@ export default function StoreFilters({ apps, filters, onChange }: Props) {
       </section>
 
       <section>
-        <h4>Kritéria důvěry</h4>
+        <h4>Kritéria indexu</h4>
         {groups.map((g) => (
           <div key={g} className="crit-group">
             <b>{g}</b>
