@@ -1,5 +1,6 @@
-import { FlaskConical, Home, LayoutGrid, Search, SlidersHorizontal, Store, Users, X, type LucideIcon } from 'lucide-react';
+import { FlaskConical, Home, LayoutGrid, Search, SlidersHorizontal, Users, X, type LucideIcon } from 'lucide-react';
 import { currentUser, hospital } from '../data/demo';
+import { purchasedIds, storeApps } from '../data/store';
 import type { Patient } from '../data/types';
 import { patientHref, type Route, type SectionId } from '../lib/route';
 import { FlowBranch } from './icons';
@@ -88,11 +89,17 @@ export default function Sidebar({ route, openPatients, onClosePatient }: Props) 
           active={route.section === 'aplikace'}
         />
         <div className="subnav">
-          <Link href="#/aplikace" className={route.section === 'aplikace' && route.sub !== 'store' ? 'sub-item sub-plain active' : 'sub-item sub-plain'}>
-            <LayoutGrid size={15} /> Zakoupené
+          <Link href="#/aplikace" className={route.section === 'aplikace' && route.sub !== 'store' ? 'sub-item active' : 'sub-item'}>
+            <span className="sub-link">
+              <span className="sub-name">Zakoupené</span>
+              <span className="sub-meta">{purchasedIds.size} aplikací v nemocnici</span>
+            </span>
           </Link>
-          <Link href="#/aplikace/store" className={route.section === 'aplikace' && route.sub === 'store' ? 'sub-item sub-plain active' : 'sub-item sub-plain'}>
-            <Store size={15} /> App Store
+          <Link href="#/aplikace/store" className={route.section === 'aplikace' && route.sub === 'store' ? 'sub-item active' : 'sub-item'}>
+            <span className="sub-link">
+              <span className="sub-name">App Store</span>
+              <span className="sub-meta">{storeApps.length} aplikací v katalogu</span>
+            </span>
           </Link>
         </div>
 
