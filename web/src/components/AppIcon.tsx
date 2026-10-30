@@ -1,11 +1,16 @@
 import {
+  Activity,
+  BedDouble,
+  CalendarClock,
   Camera,
+  Database,
   Droplet,
   Gauge,
   HeartPulse,
   Leaf,
   Loader,
   Pill,
+  ScanLine,
   Smile,
   Sparkles,
   Watch,
@@ -24,6 +29,11 @@ const icons: Record<IconName, LucideIcon> = {
   gauge: Gauge,
   pill: Pill,
   watch: Watch,
+  bed: BedDouble,
+  scan: ScanLine,
+  activity: Activity,
+  database: Database,
+  calendar: CalendarClock,
 };
 
 export default function AppIcon({ app, size = 40 }: { app: CatalogApp; size?: number }) {

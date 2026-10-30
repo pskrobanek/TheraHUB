@@ -1,7 +1,8 @@
 // Demo data – fiktivní pacienti, lékaři a aplikace. Nejde o reálné osoby ani produkty.
+import { purchasedIds, storeApps } from './store';
 import type { ActivePatientApp, CatalogApp, Patient, Recommendation } from './types';
 
-export const hospital = { short: 'FN Demo', name: 'Fakultní nemocnice Demo' };
+export const hospital = { short: 'FN Demo', name: 'Fakultní nemocnice Demo', nis: 'Demo NIS 4.2' };
 
 export const currentUser = {
   name: 'MUDr. Eva Malá',
@@ -9,18 +10,8 @@ export const currentUser = {
   department: 'Radiační onkologie',
 };
 
-export const catalog: CatalogApp[] = [
-  { id: 'toxitrack', name: 'ToxiTrack', tagline: 'Telemonitoring toxicity', icon: 'onco', tint: '#3b4cf5' },
-  { id: 'cardiowatch', name: 'CardioWatch', tagline: 'Monitoring srdce', icon: 'heart', tint: '#b0306a' },
-  { id: 'visitscribe', name: 'VisitScribe', tagline: 'Záznam návštěvy a AI souhrn', icon: 'scribe', tint: '#1f2a44' },
-  { id: 'polykej', name: 'Polykej', tagline: 'Rehabilitace polykání', icon: 'droplet', tint: '#3b4cf5' },
-  { id: 'nutriplan', name: 'NutriPlán', tagline: 'Výživa a hmotnost', icon: 'leaf', tint: '#15803d' },
-  { id: 'dermafoto', name: 'DermaFoto', tagline: 'Fotodeník kůže', icon: 'camera', tint: '#b45309' },
-  { id: 'klid', name: 'Klid', tagline: 'Screening distresu', icon: 'smile', tint: '#7c3aed' },
-  { id: 'bolestdenik', name: 'Bolest deník', tagline: 'Deník bolesti', icon: 'gauge', tint: '#be123c' },
-  { id: 'lekyhlidac', name: 'LékyHlídač', tagline: 'Adherence k lékům', icon: 'pill', tint: '#0e7490' },
-  { id: 'krokomer', name: 'Krokoměr', tagline: 'Sledování aktivity', icon: 'watch', tint: '#334155' },
-];
+/** Aplikace licencované nemocnicí – dostupné k aktivaci u pacienta. */
+export const catalog: CatalogApp[] = storeApps.filter((a) => purchasedIds.has(a.id));
 
 export const patients: Patient[] = [
   {

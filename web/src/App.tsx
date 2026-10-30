@@ -3,6 +3,7 @@ import Sidebar from './components/Sidebar';
 import { activeApps as initialActive, patients } from './data/demo';
 import type { ActivePatientApp } from './data/types';
 import { navigate, onNavigate, parseHash, patientHref, type Route } from './lib/route';
+import AppsPage from './pages/AppsPage';
 import PatientPage from './pages/PatientPage';
 import Placeholder from './pages/Placeholder';
 
@@ -66,6 +67,8 @@ export default function App() {
               onActivate={activate}
               onToggleTask={toggleTask}
             />
+          ) : route.section === 'aplikace' ? (
+            <AppsPage sub={route.sub} />
           ) : (
             <Placeholder section={route.section} />
           )}

@@ -1,4 +1,4 @@
-// Jednoduché hash routování: #/pacienti/<id>/<záložka> nebo #/<sekce>.
+// Jednoduché hash routování: #/pacienti/<id>/<záložka> nebo #/<sekce>[/<podstránka>].
 
 export const sectionIds = ['domu', 'pacienti', 'aplikace', 'workflow', 'science', 'nastaveni'] as const;
 export type SectionId = (typeof sectionIds)[number];
@@ -10,13 +10,16 @@ export interface Route {
   section: SectionId;
   patientId?: string;
   tab: PatientTab;
+  /** Podstránka sekce, např. #/aplikace/store. */
+  sub?: string;
 }
 
 export function parseHash(hash: string): Route {
   const [section, patientId, tab] = hash.replace(/^#\/?/, '').split('/');
   const s = (sectionIds as readonly string[]).includes(section) ? (section as SectionId) : 'pacienti';
   const t = (patientTabs as readonly string[]).includes(tab) ? (tab as PatientTab) : 'aplikace';
-  return { section: s, patientId: s === 'pacienti' ? patientId || undefined : undefined, tab: t };
+  if (s === 'pacienti') return { section: s, patientId: patientId || undefined, tab: t };
+  return { section: s, tab: t, sub: patientId || undefined };
 }
 
 export function patientHref(patientId: string, tab: PatientTab = 'aplikace'): string {

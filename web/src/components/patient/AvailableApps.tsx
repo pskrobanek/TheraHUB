@@ -48,7 +48,7 @@ export default function AvailableApps({ hospitalShort, apps, recommendations, on
           );
         })}
 
-        <Link href="#/aplikace" className="available glass more">
+        <Link href="#/aplikace/store" className="available glass more">
           <span className="app-icon" style={{ width: 36, height: 36, color: 'var(--accent)', background: 'var(--accent-soft)' }}>
             <LayoutGrid size={18} />
           </span>

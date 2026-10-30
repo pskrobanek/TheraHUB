@@ -31,18 +31,57 @@ export interface Patient {
   treatment?: Treatment;
 }
 
-/** Aplikace licencovaná nemocnicí (z katalogu TheraHUB). */
+/** Aplikace z katalogu TheraHUB. */
 export interface CatalogApp {
   id: string;
   name: string;
   tagline: string;
+  category: string;
   icon: IconName;
   /** Barva ikony / akcentu karty. */
   tint: string;
 }
 
 export type IconName =
-  | 'onco' | 'heart' | 'scribe' | 'droplet' | 'leaf' | 'camera' | 'smile' | 'gauge' | 'pill' | 'watch';
+  | 'onco' | 'heart' | 'scribe' | 'droplet' | 'leaf' | 'camera' | 'smile' | 'gauge' | 'pill' | 'watch'
+  | 'bed' | 'scan' | 'activity' | 'database' | 'calendar';
+
+/** Splněno / částečně / nesplněno. */
+export type Check = 'ok' | 'partial' | 'no';
+
+export type Audience = 'pacient' | 'lekar' | 'sestra' | 'admin' | 'vyzkumnik';
+
+export interface StoreInfo {
+  /** Jedna věta, proč aplikaci chtít. */
+  pitch: string;
+  audience: Audience[];
+  /** Regulatorní zařazení (ENDGAME kap. 3.4). */
+  regulatory: { kind: 'mdr' | 'admin' | 'research' | 'wellness'; label: string };
+  trial: { days: number; kpis: string[] } | null;
+  price: { amount: number; per: 'pacient' | 'uživatel' | 'událost' | 'lůžko' | 'nemocnice'; period: 'měsíc' | 'rok' | 'jednorázově' };
+  rating: number;
+  reviews: number;
+  /** V kolika nemocnicích aplikace aktivně běží. */
+  hospitals: number;
+  compliance: {
+    /** Soulad s profilem vaší nemocnice (ENDGAME kap. 4). */
+    hospital: { legal: Check; gdpr: Check; security: Check };
+    /** Míra integrace s vaším NIS v % (readiness, kap. 4.2). */
+    nis: number;
+    therahub: { widget: boolean; science: boolean; workflow: boolean };
+    intersystems: Check;
+    /** Evropský datový standard (EHDS / EEHRxF, HL7 Europe). */
+    euStandard: Check;
+    /** Soulad s kodexem asociace pro AI; null = aplikace AI nepoužívá. */
+    aiAssociation: Check | null;
+    /** Záštita odborné společnosti, pokud ji aplikace má. */
+    society: string | null;
+  };
+}
+
+export interface StoreApp extends CatalogApp {
+  store: StoreInfo;
+}
 
 export interface ToxicityItem {
   label: string;
