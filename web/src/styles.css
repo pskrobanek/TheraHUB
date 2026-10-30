@@ -121,7 +121,8 @@ h1, h2, h3, p { margin: 0; }
 .patient-header { padding: 31px 36px 0; }
 .patient-top { display: flex; gap: 22px; align-items: flex-start; flex-wrap: wrap; }
 .patient-id { flex: 1; min-width: 252px; }
-.patient-id h1 { font-size: 2.1rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 5px; }
+.patient-id h1 { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 5px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.birth-number { font-size: 1.05rem; font-weight: 400; letter-spacing: 0; color: var(--muted); }
 .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
 .chip { padding: 6px 12px; border-radius: var(--radius-sm); background: rgba(255, 255, 255, 0.65); border: 1px solid var(--glass-border); font-size: 0.95rem; }
 .chip b { font-weight: 600; margin-right: 4px; }

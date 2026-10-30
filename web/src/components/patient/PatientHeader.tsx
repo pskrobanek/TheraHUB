@@ -23,7 +23,9 @@ export default function PatientHeader({ patient, tab, activeCount }: Props) {
       <div className="patient-top">
         <span className="avatar xl">{initials(patient.name)}</span>
         <div className="patient-id">
-          <h1>{patient.name}</h1>
+          <h1>
+            {patient.name} <span className="birth-number mono">{patient.birthNumber}</span>
+          </h1>
           <div className="muted">
             {patient.sex === 'muž' ? 'Muž' : 'Žena'}, {patient.age} let · <span className="mono">{patient.nisId}</span> ·
             Ošetřující {patient.attending}
