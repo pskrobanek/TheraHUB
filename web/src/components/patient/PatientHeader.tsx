@@ -17,7 +17,6 @@ interface Props {
 }
 
 export default function PatientHeader({ patient, tab, activeCount }: Props) {
-  const t = patient.treatment;
   return (
     <header className="patient-header glass">
       <div className="patient-top">
@@ -26,34 +25,7 @@ export default function PatientHeader({ patient, tab, activeCount }: Props) {
           <h1>
             {patient.name} <span className="birth-number mono">{patient.birthNumber}</span>
           </h1>
-          <div className="muted">
-            {patient.sex === 'muž' ? 'Muž' : 'Žena'}, {patient.age} let · <span className="mono">{patient.nisId}</span> ·
-            Ošetřující {patient.attending}
-          </div>
-          <div className="chips">
-            {patient.tags.map((d) => (
-              <span key={d.code + d.label} className="chip">
-                <b className="mono">{d.code}</b> {d.label}
-              </span>
-            ))}
-          </div>
         </div>
-        {t && (
-          <div className="treatment">
-            <div className="treatment-row">
-              <span className="muted">{t.name}</span>
-              <span className="mono strong">
-                {t.unit} {t.done} / {t.total}
-              </span>
-            </div>
-            <div className="progress" role="progressbar" aria-valuenow={t.done} aria-valuemax={t.total}>
-              <span style={{ width: `${(t.done / t.total) * 100}%` }} />
-            </div>
-            <div className="muted small">
-              Zahájeno {t.started} · plánovaný konec {t.plannedEnd}
-            </div>
-          </div>
-        )}
       </div>
 
       <nav className="tabs" aria-label="Záložky pacienta">

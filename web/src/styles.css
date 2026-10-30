@@ -31,7 +31,6 @@ h1, h2, h3, p { margin: 0; }
 .muted { color: var(--muted); }
 .small { font-size: 0.85rem; }
 .mono { font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace; }
-.strong { font-weight: 600; }
 
 /* ---------- Pozadí: barevné skvrny pod sklem ---------- */
 .backdrop {
@@ -113,26 +112,19 @@ h1, h2, h3, p { margin: 0; }
 }
 .avatar.dark { width: 40px; height: 40px; background: var(--dark); color: #fff; border: 0; }
 .avatar.xl {
-  width: 76px; height: 76px; font-size: 1.6rem; color: var(--accent);
+  width: 56px; height: 56px; font-size: 1.2rem; color: var(--accent);
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(214, 219, 255, 0.8)); border: 1px solid var(--glass-border);
 }
 
 /* ---------- Hlavička pacienta ---------- */
-.patient-header { padding: 31px 36px 0; }
-.patient-top { display: flex; gap: 22px; align-items: flex-start; flex-wrap: wrap; }
+.patient-header { padding: 22px 32px 0; }
+.patient-top { display: flex; gap: 18px; align-items: center; }
 .patient-id { flex: 1; min-width: 252px; }
-.patient-id h1 { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 5px; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.patient-id h1 { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.02em; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
 .birth-number { font-size: 1.05rem; font-weight: 400; letter-spacing: 0; color: var(--muted); }
-.chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 14px; }
-.chip { padding: 6px 12px; border-radius: var(--radius-sm); background: rgba(255, 255, 255, 0.65); border: 1px solid var(--glass-border); font-size: 0.95rem; }
-.chip b { font-weight: 600; margin-right: 4px; }
 
-.treatment { width: 306px; display: flex; flex-direction: column; gap: 9px; padding-top: 5px; }
-.treatment-row { display: flex; justify-content: space-between; }
-.progress { height: 6px; border-radius: 89px; background: rgba(17, 20, 42, 0.08); overflow: hidden; }
-.progress span { display: block; height: 100%; border-radius: 89px; background: linear-gradient(90deg, #4f57ff, var(--accent)); }
 
-.tabs { display: flex; gap: 5px; margin-top: 25px; padding: 13px 0; border-top: 1px solid var(--glass-line); flex-wrap: wrap; }
+.tabs { display: flex; gap: 5px; margin-top: 20px; padding: 13px 0; border-top: 1px solid var(--glass-line); flex-wrap: wrap; }
 .tab { padding: 8px 16px; border-radius: var(--radius-sm); font-size: 1.02rem; color: var(--muted); display: inline-flex; gap: 7px; align-items: center; transition: background 0.15s; }
 .tab:hover { background: rgba(255, 255, 255, 0.6); color: var(--text); }
 .tab.active { background: var(--dark); color: #fff; font-weight: 500; }
@@ -239,6 +231,5 @@ h1, h2, h3, p { margin: 0; }
   .sub-meta { display: none; }
   .nav-item { white-space: nowrap; }
   .patient-header { padding: 22px 18px 0; }
-  .treatment { width: 100%; }
   .active-grid, .available-grid { grid-template-columns: 1fr; }
 }
