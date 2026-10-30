@@ -2,20 +2,10 @@ import { ArrowRight, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon }
 import { useState } from 'react';
 import AppIcon from '../components/AppIcon';
 import StoreCard from '../components/apps/StoreCard';
-import StoreFilters, { applyFilters, emptyFilters, type Filters } from '../components/apps/StoreFilters';
+import StoreFilters, { applyFilters, emptyFilters, sortApps, type Filters } from '../components/apps/StoreFilters';
 import Link from '../components/Link';
 import { hospital } from '../data/demo';
 import { purchasedIds, storeApps } from '../data/store';
-import { complianceScore } from '../lib/score';
-
-type Sort = 'score' | 'rating' | 'hospitals' | 'name';
-
-const sortLabel: Record<Sort, string> = {
-  score: 'Compliance score',
-  rating: 'Hodnocení',
-  hospitals: 'Počet nemocnic',
-  name: 'Název',
-};
 
 const purchased = storeApps.filter((a) => purchasedIds.has(a.id));
 
@@ -71,19 +61,14 @@ function Purchased() {
 function Store() {
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<Filters>(emptyFilters);
-  const [sort, setSort] = useState<Sort>('score');
   const [trials, setTrials] = useState<Set<string>>(new Set());
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const q = query.trim().toLowerCase();
-  const visible = applyFilters(storeApps, filters)
-    .filter((a) => !q || `${a.name} ${a.store.pitch} ${a.category}`.toLowerCase().includes(q))
-    .sort((a, b) => {
-      if (sort === 'score') return complianceScore(b).total - complianceScore(a).total;
-      if (sort === 'rating') return b.store.rating - a.store.rating;
-      if (sort === 'hospitals') return b.store.hospitals - a.store.hospitals;
-      return a.name.localeCompare(b.name, 'cs');
-    });
+  const visible = sortApps(
+    applyFilters(storeApps, filters).filter((a) => !q || `${a.name} ${a.store.pitch} ${a.category}`.toLowerCase().includes(q)),
+    filters.sort,
+  );
 
   return (
     <div className={filtersOpen ? 'store-layout filters-open' : 'store-layout'}>
@@ -97,16 +82,6 @@ function Store() {
           <label className="search inline">
             <Search size={16} />
             <input id="store-search" placeholder="Hledat aplikace…" value={query} onChange={(e) => setQuery(e.target.value)} />
-          </label>
-          <label className="sort">
-            <span className="muted small">Řadit</span>
-            <select id="store-sort" className="select" value={sort} onChange={(e) => setSort(e.target.value as Sort)}>
-              {(Object.keys(sortLabel) as Sort[]).map((k) => (
-                <option key={k} value={k}>
-                  {sortLabel[k]}
-                </option>
-              ))}
-            </select>
           </label>
           <span className="muted small shown">
             Zobrazeno {visible.length} z {storeApps.length}

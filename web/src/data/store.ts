@@ -7,7 +7,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Pacient hlásí nežádoucí účinky léčby z mobilu, lékař vidí závažné stavy dřív, než přijde na kontrolu.',
       audience: ['pacient', 'lekar', 'sestra'],
-      regulatory: { kind: 'mdr', label: 'MDR IIa' },
+      regulatory: { kind: 'mdr', label: 'MDR IIa' }, ai: 'none',
       trial: { days: 60, kpis: ['≥ 70 % vyplněných dotazníků', 'Neplánované hospitalizace −15 %'] },
       price: { amount: 190, per: 'pacient', period: 'měsíc' },
       rating: 4.7, reviews: 38, hospitals: 14,
@@ -23,7 +23,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Domácí EKG s AI vyhodnocením rytmu, upozorní na arytmie a prodloužení QTc během léčby.',
       audience: ['pacient', 'lekar'],
-      regulatory: { kind: 'mdr', label: 'MDR IIb · AI' },
+      regulatory: { kind: 'mdr', label: 'MDR IIb · AI' }, ai: 'assisted',
       trial: { days: 30, kpis: ['Zachycené arytmie na 100 pacientů', 'Doba do reakce lékaře < 24 h'] },
       price: { amount: 320, per: 'pacient', period: 'měsíc' },
       rating: 4.5, reviews: 21, hospitals: 9,
@@ -39,7 +39,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Nahraje konzultaci a připraví strukturovaný zápis do NIS, lékař jen zkontroluje a podepíše.',
       audience: ['lekar', 'sestra'],
-      regulatory: { kind: 'admin', label: 'Administrativní · AI' },
+      regulatory: { kind: 'admin', label: 'Administrativní · AI' }, ai: 'guided',
       trial: { days: 30, kpis: ['Čas na dokumentaci −30 %', '≥ 80 % zápisů bez větších úprav'] },
       price: { amount: 1490, per: 'uživatel', period: 'měsíc' },
       rating: 4.8, reviews: 64, hospitals: 22,
@@ -55,7 +55,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Videocviky polykání podle logopeda, pacient cvičí doma a terapeut vidí pokrok.',
       audience: ['pacient', 'lekar'],
-      regulatory: { kind: 'mdr', label: 'MDR I' },
+      regulatory: { kind: 'mdr', label: 'MDR I' }, ai: 'none',
       trial: { days: 45, kpis: ['≥ 4 cvičení týdně', 'Zlepšení skóre dysfagie o 1 stupeň'] },
       price: { amount: 90, per: 'pacient', period: 'měsíc' },
       rating: 4.4, reviews: 12, hospitals: 6,
@@ -71,7 +71,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Hlídá hmotnost a příjem během léčby a včas pošle pacienta k nutričnímu terapeutovi.',
       audience: ['pacient', 'sestra'],
-      regulatory: { kind: 'wellness', label: 'Wellness' },
+      regulatory: { kind: 'wellness', label: 'Wellness' }, ai: 'none',
       trial: { days: 30, kpis: ['Úbytek hmotnosti > 5 % zachycen do 7 dní'] },
       price: { amount: 60, per: 'pacient', period: 'měsíc' },
       rating: 4.2, reviews: 9, hospitals: 5,
@@ -87,7 +87,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Pacient fotí ozářenou kůži podle návodu, sestra porovná vývoj v čase.',
       audience: ['pacient', 'sestra'],
-      regulatory: { kind: 'mdr', label: 'MDR I' },
+      regulatory: { kind: 'mdr', label: 'MDR I' }, ai: 'none',
       trial: { days: 30, kpis: ['≥ 2 fotografie týdně', 'Dermatitida G3 zachycena do 48 h'] },
       price: { amount: 2900, per: 'nemocnice', period: 'měsíc' },
       rating: 4.1, reviews: 7, hospitals: 4,
@@ -103,7 +103,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Krátký screening distresu před každou návštěvou a doporučení psychologické podpory.',
       audience: ['pacient', 'lekar'],
-      regulatory: { kind: 'mdr', label: 'MDR I' },
+      regulatory: { kind: 'mdr', label: 'MDR I' }, ai: 'none',
       trial: { days: 60, kpis: ['≥ 60 % pacientů vyplní screening', 'Počet doporučení k psychologovi'] },
       price: { amount: 40, per: 'pacient', period: 'měsíc' },
       rating: 4.6, reviews: 15, hospitals: 8,
@@ -119,7 +119,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Denní záznam bolesti a analgetik, lékař vidí, kdy upravit léčbu.',
       audience: ['pacient', 'lekar'],
-      regulatory: { kind: 'mdr', label: 'MDR I' },
+      regulatory: { kind: 'mdr', label: 'MDR I' }, ai: 'none',
       trial: null,
       price: { amount: 50, per: 'pacient', period: 'měsíc' },
       rating: 4.0, reviews: 11, hospitals: 7,
@@ -135,7 +135,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Připomíná užití léků podle e-receptu a hlásí vynechané dávky.',
       audience: ['pacient', 'sestra'],
-      regulatory: { kind: 'mdr', label: 'MDR I' },
+      regulatory: { kind: 'mdr', label: 'MDR I' }, ai: 'none',
       trial: { days: 30, kpis: ['Adherence ≥ 85 %'] },
       price: { amount: 35, per: 'pacient', period: 'měsíc' },
       rating: 4.3, reviews: 19, hospitals: 11,
@@ -151,7 +151,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Načte kroky z hodinek nebo telefonu a ukáže trend fyzické aktivity během léčby.',
       audience: ['pacient'],
-      regulatory: { kind: 'wellness', label: 'Wellness' },
+      regulatory: { kind: 'wellness', label: 'Wellness' }, ai: 'none',
       trial: { days: 90, kpis: ['≥ 50 % pacientů sdílí data'] },
       price: { amount: 20, per: 'pacient', period: 'měsíc' },
       rating: 3.9, reviews: 6, hospitals: 3,
@@ -167,7 +167,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'AI seřadí snímky hrudníku podle naléhavosti, akutní nálezy má radiolog na prvním místě.',
       audience: ['lekar'],
-      regulatory: { kind: 'mdr', label: 'MDR IIb · AI' },
+      regulatory: { kind: 'mdr', label: 'MDR IIb · AI' }, ai: 'guided',
       trial: { days: 90, kpis: ['Doba do popisu akutního nálezu −40 %', 'Senzitivita ≥ 95 % na místních datech'] },
       price: { amount: 18, per: 'událost', period: 'jednorázově' },
       rating: 4.6, reviews: 17, hospitals: 10,
@@ -183,7 +183,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Z laboratoře a vitálních funkcí odhadne riziko sepse hodiny před klinickými příznaky.',
       audience: ['lekar', 'sestra'],
-      regulatory: { kind: 'mdr', label: 'MDR IIa · AI' },
+      regulatory: { kind: 'mdr', label: 'MDR IIa · AI' }, ai: 'assisted',
       trial: { days: 60, kpis: ['Čas do podání ATB −1 h', 'Falešné poplachy < 3 na lůžko/týden'] },
       price: { amount: 450, per: 'lůžko', period: 'měsíc' },
       rating: 4.4, reviews: 13, hospitals: 6,
@@ -199,7 +199,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Živý přehled obsazenosti lůžek a predikce propuštění pro plánování příjmů.',
       audience: ['admin', 'sestra'],
-      regulatory: { kind: 'admin', label: 'Administrativní' },
+      regulatory: { kind: 'admin', label: 'Administrativní' }, ai: 'none',
       trial: { days: 30, kpis: ['Čekání na lůžko −20 %', 'Obsazenost ≥ 90 %'] },
       price: { amount: 24000, per: 'nemocnice', period: 'měsíc' },
       rating: 4.5, reviews: 26, hospitals: 18,
@@ -215,7 +215,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Sestaví pseudonymizovanou kohortu napříč nemocnicemi a spustí analýzu bez přesunu dat.',
       audience: ['vyzkumnik', 'lekar'],
-      regulatory: { kind: 'research', label: 'Pouze pro výzkum' },
+      regulatory: { kind: 'research', label: 'Pouze pro výzkum' }, ai: 'none',
       trial: { days: 90, kpis: ['Feasibility dotaz < 1 den', 'Schválení projektu < 6 týdnů'] },
       price: { amount: 150000, per: 'nemocnice', period: 'rok' },
       rating: 4.7, reviews: 8, hospitals: 5,
@@ -231,7 +231,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'Rozpis směn sester podle kvalifikací a zákonných limitů, výměny směn v mobilu.',
       audience: ['sestra', 'admin'],
-      regulatory: { kind: 'admin', label: 'Administrativní' },
+      regulatory: { kind: 'admin', label: 'Administrativní' }, ai: 'none',
       trial: { days: 60, kpis: ['Čas na tvorbu rozpisu −50 %'] },
       price: { amount: 39, per: 'uživatel', period: 'měsíc' },
       rating: 4.2, reviews: 31, hospitals: 15,

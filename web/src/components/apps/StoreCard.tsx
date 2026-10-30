@@ -2,6 +2,7 @@ import { Check as CheckIcon, Clock, Star, User } from 'lucide-react';
 import type { Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
 import { complianceScore, departmentEstimate, usesAi } from '../../lib/score';
+import { aiModeLabel } from './StoreFilters';
 import AppIcon from '../AppIcon';
 
 export const audienceLabel: Record<Audience, string> = {
@@ -60,7 +61,11 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
               {app.category}
             </span>
             <span className="tag outline">{s.regulatory.label.replace(/\s*·\s*AI$/, '')}</span>
-            {usesAi(app) && <span className="tag ai">AI</span>}
+            {usesAi(app) && (
+              <span className="tag ai" title={aiModeLabel[s.ai].hint}>
+                {aiModeLabel[s.ai].label}
+              </span>
+            )}
           </div>
         </div>
         {purchased && (
@@ -93,7 +98,7 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
         <div className="score-head">
           <Ring value={score.total} level={score.level} />
           <div>
-            <b>Compliance score</b>
+            <b>Index důvěry</b>
             <span className={`score-level level-${score.level}`}>{score.levelLabel}</span>
           </div>
         </div>

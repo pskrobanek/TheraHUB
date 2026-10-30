@@ -51,12 +51,16 @@ export type Check = 'ok' | 'partial' | 'no';
 
 export type Audience = 'pacient' | 'lekar' | 'sestra' | 'admin' | 'vyzkumnik';
 
+/** Míra zapojení AI: žádná / AI navrhuje / AI rozhoduje a člověk schvaluje / AI jedná samostatně. */
+export type AiMode = 'none' | 'assisted' | 'guided' | 'autonomous';
+
 export interface StoreInfo {
   /** Jedna věta, proč aplikaci chtít. */
   pitch: string;
   audience: Audience[];
   /** Regulatorní zařazení (ENDGAME kap. 3.4). */
   regulatory: { kind: 'mdr' | 'admin' | 'research' | 'wellness'; label: string };
+  ai: AiMode;
   trial: { days: number; kpis: string[] } | null;
   price: { amount: number; per: 'pacient' | 'uživatel' | 'událost' | 'lůžko' | 'nemocnice'; period: 'měsíc' | 'rok' | 'jednorázově' };
   rating: number;

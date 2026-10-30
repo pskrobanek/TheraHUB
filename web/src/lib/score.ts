@@ -19,10 +19,10 @@ export interface Score {
   parts: ScorePart[];
 }
 
-export const usesAi = (app: StoreApp): boolean => /\bAI\b/.test(app.store.regulatory.label);
+export const usesAi = (app: StoreApp): boolean => app.store.ai !== 'none';
 
 /**
- * Compliance score: nemocnice 35 % + datový prostor 25 % + odborné společnosti 20 % + TheraHUB integrace 20 %.
+ * Index důvěry: nemocnice 35 % + datový prostor 25 % + odborné společnosti 20 % + TheraHUB integrace 20 %.
  * U aplikací bez AI se kritérium asociace pro AI nepočítá.
  */
 export function complianceScore(app: StoreApp): Score {
