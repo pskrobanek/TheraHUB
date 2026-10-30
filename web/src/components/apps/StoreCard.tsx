@@ -1,8 +1,10 @@
-import { Check as CheckIcon, CircleCheck, CircleDashed, CircleX, Clock, Star, Users } from 'lucide-react';
-import type { Audience, Check, StoreApp } from '../../data/types';
+import { Check as CheckIcon, Clock, Star, User } from 'lucide-react';
+import type { Audience, StoreApp } from '../../data/types';
+import { specialtyOf } from '../../data/specialties';
+import { complianceScore, departmentEstimate, usesAi } from '../../lib/score';
 import AppIcon from '../AppIcon';
 
-const audienceLabel: Record<Audience, string> = {
+export const audienceLabel: Record<Audience, string> = {
   pacient: 'Pacient',
   lekar: 'Lékař',
   sestra: 'Sestra',
@@ -10,56 +12,60 @@ const audienceLabel: Record<Audience, string> = {
   vyzkumnik: 'Výzkumník',
 };
 
-const checkLabel: Record<Check, string> = { ok: 'Splňuje', partial: 'Částečně', no: 'Nesplňuje' };
-
-function CheckMark({ value }: { value: Check }) {
-  const Icon = value === 'ok' ? CircleCheck : value === 'partial' ? CircleDashed : CircleX;
-  return <Icon size={16} className={`check check-${value}`} aria-label={checkLabel[value]} />;
-}
-
-/** Malý štítek se stavem: zelený, oranžový, nebo přeškrtnutý šedý. */
-function Flag({ label, value }: { label: string; value: Check | boolean }) {
-  const v: Check = value === true ? 'ok' : value === false ? 'no' : value;
-  return <span className={`flag flag-${v}`}>{label}</span>;
-}
-
-function Row({ label, children }: { label: string; children: React.ReactNode }) {
+function Ring({ value, level }: { value: number; level: string }) {
+  const r = 17;
+  const c = 2 * Math.PI * r;
   return (
-    <div className="c-row">
-      <span className="c-label">{label}</span>
-      <span className="c-value">{children}</span>
-    </div>
+    <svg className={`ring ring-${level}`} viewBox="0 0 44 44" aria-hidden>
+      <circle cx="22" cy="22" r={r} className="ring-bg" />
+      <circle cx="22" cy="22" r={r} className="ring-fg" strokeDasharray={`${(c * value) / 100} ${c}`} />
+      <text x="22" y="22" dy="0.36em" textAnchor="middle">
+        {value}
+      </text>
+    </svg>
   );
 }
 
-function formatPrice(p: StoreApp['store']['price']): string {
-  const amount = p.amount.toLocaleString('cs-CZ');
-  const per = p.per === 'událost' ? 'vyšetření' : p.per;
-  return p.period === 'jednorázově' ? `${amount} Kč / ${per}` : `${amount} Kč / ${per} / ${p.period}`;
+function Dots({ values }: { values: number[] }) {
+  return (
+    <span className="dots" aria-hidden>
+      {values.map((v, i) => (
+        <i key={i} className={v >= 1 ? 'ok' : v > 0 ? 'partial' : ''} />
+      ))}
+    </span>
+  );
 }
 
 interface Props {
   app: StoreApp;
-  nisName: string;
   purchased: boolean;
   trialRequested: boolean;
   onTrial: () => void;
 }
 
-export default function StoreCard({ app, nisName, purchased, trialRequested, onTrial }: Props) {
+export default function StoreCard({ app, purchased, trialRequested, onTrial }: Props) {
   const s = app.store;
-  const c = s.compliance;
+  const spec = specialtyOf(app.category);
+  const score = complianceScore(app);
+  const estimate = departmentEstimate(app);
+
   return (
     <article className="store-card glass">
       <header className="store-head">
-        <AppIcon app={app} size={44} />
+        <AppIcon app={app} size={44} filled />
         <div className="store-title">
           <h3>{app.name}</h3>
-          <span className="muted small">{app.category}</span>
+          <div className="tags">
+            <span className="tag cat" style={{ color: spec.color, background: `${spec.color}18` }}>
+              {app.category}
+            </span>
+            <span className="tag outline">{s.regulatory.label.replace(/\s*·\s*AI$/, '')}</span>
+            {usesAi(app) && <span className="tag ai">AI</span>}
+          </div>
         </div>
         {purchased && (
-          <span className="owned">
-            <CheckIcon size={13} /> Zakoupeno
+          <span className="owned" title="Zakoupeno">
+            <CheckIcon size={13} />
           </span>
         )}
       </header>
@@ -67,92 +73,70 @@ export default function StoreCard({ app, nisName, purchased, trialRequested, onT
       <p className="pitch">{s.pitch}</p>
 
       <div className="store-meta">
-        <span className="rating" aria-label={`Hodnocení ${s.rating} z 5`}>
-          <Star size={14} fill="currentColor" /> {s.rating.toFixed(1)} <span className="muted">({s.reviews})</span>
+        <span className="rating">
+          <Star size={13} fill="currentColor" /> {s.rating.toFixed(1).replace('.', ',')}
         </span>
-        <span className="muted">Aktivní v {s.hospitals} nemocnicích</span>
+        <span className="muted">
+          ({s.reviews}) · {s.hospitals} nemocnic
+        </span>
       </div>
 
       <div className="tags">
         {s.audience.map((a) => (
           <span key={a} className="tag">
-            <Users size={12} /> {audienceLabel[a]}
+            <User size={11} /> {audienceLabel[a]}
           </span>
         ))}
-        <span className={`tag reg reg-${s.regulatory.kind}`}>{s.regulatory.label}</span>
       </div>
 
-      <div className="commercial">
-        <div>
-          <span className="c-label">Trial</span>
-          {s.trial ? (
+      <div className="score">
+        <div className="score-head">
+          <Ring value={score.total} level={score.level} />
+          <div>
+            <b>Compliance score</b>
+            <span className={`score-level level-${score.level}`}>{score.levelLabel}</span>
+          </div>
+        </div>
+        <div className="score-rows">
+          {score.parts.map((p) => (
+            <div key={p.id} className="score-row">
+              <span className="muted">{p.label}</span>
+              <Dots values={p.dots} />
+              <span className="mono pct">{p.pct} %</span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <footer className="store-foot">
+        <button
+          className={trialRequested ? 'trial sent' : 'trial'}
+          onClick={onTrial}
+          disabled={purchased || trialRequested || !s.trial}
+        >
+          <span className="c-label">
+            <Clock size={11} /> Trial
+          </span>
+          {purchased ? (
+            <b className="muted">Zakoupeno</b>
+          ) : trialRequested ? (
+            <b>Odesláno</b>
+          ) : s.trial ? (
             <>
-              <b>
-                <Clock size={13} /> {s.trial.days} dní zdarma
-              </b>
-              <ul className="kpis">
-                {s.trial.kpis.map((k) => (
-                  <li key={k}>{k}</li>
-                ))}
-              </ul>
+              <b>{s.trial.days} dní</b>
+              <small>zdarma</small>
             </>
           ) : (
-            <b className="muted">Bez trialu</b>
+            <b className="muted">—</b>
           )}
+        </button>
+        <div className="estimate">
+          <span className="c-label">Odhad na oddělení</span>
+          <b>
+            ≈ {estimate.monthly.toLocaleString('cs-CZ')} Kč <small>/ měs.</small>
+          </b>
+          <span className="muted small">{estimate.unit}</span>
         </div>
-        <div>
-          <span className="c-label">{s.trial ? 'Cena po trialu' : 'Cena'}</span>
-          <b>{formatPrice(s.price)}</b>
-        </div>
-      </div>
-
-      <div className="compliance">
-        <Row label="Vaše nemocnice">
-          <Flag label="Legal" value={c.hospital.legal} />
-          <Flag label="GDPR" value={c.hospital.gdpr} />
-          <Flag label="Security" value={c.hospital.security} />
-        </Row>
-        <Row label={`Váš NIS (${nisName})`}>
-          <span className="meter" aria-label={`Integrace ${c.nis} %`}>
-            <span style={{ width: `${c.nis}%` }} className={c.nis >= 80 ? 'hi' : c.nis >= 50 ? 'mid' : 'lo'} />
-          </span>
-          <span className="mono small">{c.nis} %</span>
-        </Row>
-        <Row label="TheraHUB integrace">
-          <Flag label="Widget" value={c.therahub.widget} />
-          <Flag label="Science" value={c.therahub.science} />
-          <Flag label="Workflow" value={c.therahub.workflow} />
-        </Row>
-        <Row label="InterSystems datový prostor">
-          <CheckMark value={c.intersystems} />
-        </Row>
-        <Row label="Evropský datový standard">
-          <CheckMark value={c.euStandard} />
-        </Row>
-        <Row label="Asociace pro AI ČR">
-          {c.aiAssociation ? <CheckMark value={c.aiAssociation} /> : <span className="muted small">bez AI</span>}
-        </Row>
-        <Row label="Záštita odborné společnosti">
-          {c.society ? <span className="small">{c.society}</span> : <span className="muted small">—</span>}
-        </Row>
-      </div>
-
-      <footer className="store-actions">
-        {purchased ? (
-          <span className="muted small">Dostupné u pacientů v záložce Aplikace.</span>
-        ) : trialRequested ? (
-          <span className="trial-sent">
-            <CheckIcon size={15} /> Žádost o trial odeslána
-          </span>
-        ) : s.trial ? (
-          <button className="btn primary" onClick={onTrial}>
-            Vyzkoušet {s.trial.days} dní zdarma
-          </button>
-        ) : (
-          <button className="btn" onClick={onTrial}>
-            Požádat o nabídku
-          </button>
-        )}
       </footer>
     </article>
   );

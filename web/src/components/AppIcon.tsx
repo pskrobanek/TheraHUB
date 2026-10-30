@@ -36,12 +36,22 @@ const icons: Record<IconName, LucideIcon> = {
   calendar: CalendarClock,
 };
 
-export default function AppIcon({ app, size = 40 }: { app: CatalogApp; size?: number }) {
+interface Props {
+  app: CatalogApp;
+  size?: number;
+  /** Plná barevná dlaždice s bílým symbolem (App Store). */
+  filled?: boolean;
+}
+
+export default function AppIcon({ app, size = 40, filled = false }: Props) {
   const Icon = icons[app.icon];
+  const style = filled
+    ? { width: size, height: size, color: '#fff', background: app.tint }
+    : { width: size, height: size, color: app.tint, background: `${app.tint}14` };
   return (
     <span
       className="app-icon"
-      style={{ width: size, height: size, color: app.tint, background: `${app.tint}14` }}
+      style={style}
       aria-hidden
     >
       <Icon size={size * 0.5} strokeWidth={1.8} />

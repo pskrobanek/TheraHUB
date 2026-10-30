@@ -17,7 +17,8 @@ npm run build      # typová kontrola + produkční build
 - `src/pages/PatientPage.tsx` – karta pacienta se záložkami Přehled / Aplikace / Workflow / Science
 - `src/components/patient/` – hlavička pacienta, karty aktivních aplikací (widgety), dostupné aplikace
 - `src/pages/AppsPage.tsx` – Aplikace: zakoupené aplikace a App Store (`src/components/apps/StoreCard.tsx`)
-- `src/data/store.ts` – demo katalog App Store a zakoupené aplikace
+- `src/components/apps/StoreFilters.tsx` – levý panel filtrů App Store; `src/lib/score.ts` – compliance score a odhad nákladů
+- `src/data/store.ts` – demo katalog App Store a zakoupené aplikace; `src/data/specialties.ts` – ikony a barvy specializací
 - `src/data/types.ts` – datový model podle `docs/ENDGAME.md`
 - `src/lib/route.ts` – hash routování (`#/pacienti/<id>/<záložka>`)
 
