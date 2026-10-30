@@ -11,7 +11,6 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { currentUser, hospital, patients, sidebarCounts } from '../data/demo';
-import { initials } from '../lib/format';
 import { patientHref, type Route, type SectionId } from '../lib/route';
 import Link from './Link';
 
@@ -76,23 +75,6 @@ export default function Sidebar({ route }: { route: Route }) {
         ))}
       </nav>
 
-      <div className="nav-heading">Nedávní pacienti</div>
-      <div className="recent">
-        {patients.map((p) => (
-          <Link
-            key={p.id}
-            href={patientHref(p.id, route.tab)}
-            className={route.patientId === p.id ? 'recent-item active' : 'recent-item'}
-          >
-            <span className="avatar sm">{initials(p.name)}</span>
-            <span>
-              <span className="recent-name">{p.name}</span>
-              <span className="recent-meta">{p.summary}</span>
-            </span>
-          </Link>
-        ))}
-      </div>
-
       <div className="nav-heading">Nemocnice</div>
       <nav className="nav">
         {hospitalNav.map((item) => (
@@ -104,7 +86,7 @@ export default function Sidebar({ route }: { route: Route }) {
         <span className="avatar dark">{currentUser.initials}</span>
         <span>
           <span className="user-name">{currentUser.name}</span>
-          <span className="recent-meta">
+          <span className="user-meta">
             {hospital.short} · {currentUser.department}
           </span>
         </span>

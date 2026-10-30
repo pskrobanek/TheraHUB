@@ -90,12 +90,8 @@ h1, h2, h3, p { margin: 0; }
 .nav-count { margin-left: auto; color: var(--muted); font-size: 0.9rem; padding-right: 5px; }
 
 .nav-heading { margin: 23px 13px 7px; font-size: 0.88rem; color: var(--muted); }
-.recent { display: flex; flex-direction: column; gap: 2px; }
-.recent-item { display: flex; align-items: center; gap: 11px; padding: 8px 11px; border-radius: var(--radius-sm); }
-.recent-item:hover { background: rgba(255, 255, 255, 0.55); }
-.recent-item.active { background: var(--glass-strong); box-shadow: 0 4px 14px rgba(40, 48, 110, 0.06); }
-.recent-name, .user-name { display: block; font-weight: 500; }
-.recent-meta { display: block; font-size: 0.82rem; color: var(--muted); }
+.user-name { display: block; font-weight: 500; }
+.user-meta { display: block; font-size: 0.82rem; color: var(--muted); }
 
 .user { margin-top: auto; padding: 16px 7px 4px; display: flex; gap: 11px; align-items: center; border-top: 1px solid var(--glass-line); }
 
@@ -225,7 +221,7 @@ h1, h2, h3, p { margin: 0; }
 @media (max-width: 980px) {
   .shell { grid-template-columns: 1fr; padding: 11px; }
   .sidebar { position: static; height: auto; }
-  .recent, .nav-heading, .user, .search { display: none; }
+  .nav-heading, .user, .search { display: none; }
   .sidebar .nav { flex-direction: row; overflow-x: auto; }
   .nav-item { white-space: nowrap; }
   .patient-header { padding: 22px 18px 0; }
