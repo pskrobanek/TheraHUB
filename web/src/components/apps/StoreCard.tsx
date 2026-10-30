@@ -45,17 +45,7 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
         <AppIcon app={app} size={44} filled />
         <div className="store-title">
           <h3>{app.name}</h3>
-          <div className="tags">
-            <span className="tag cat" style={{ color: spec.color, background: `${spec.color}18` }}>
-              {app.category}
-            </span>
-            <span className="tag outline">{s.regulatory.label.replace(/\s*·\s*AI$/, '')}</span>
-            {usesAi(app) && (
-              <span className="tag ai" title={aiModeLabel[s.ai].hint}>
-                {aiModeLabel[s.ai].label}
-              </span>
-            )}
-          </div>
+          <span className="muted small">{app.tagline}</span>
         </div>
         {purchased && (
           <span className="owned" title="Zakoupeno">
@@ -63,6 +53,18 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
           </span>
         )}
       </header>
+
+      <div className="tags">
+        <span className="tag cat" style={{ color: spec.color, background: `${spec.color}18` }}>
+          {app.category}
+        </span>
+        <span className="tag outline">{s.regulatory.label.replace(/\s*·\s*AI$/, '')}</span>
+        {usesAi(app) && (
+          <span className="tag ai" title={aiModeLabel[s.ai].hint}>
+            {aiModeLabel[s.ai].label}
+          </span>
+        )}
+      </div>
 
       <p className="pitch">{s.pitch}</p>
 
