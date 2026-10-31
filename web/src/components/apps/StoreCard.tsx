@@ -69,19 +69,11 @@ export default function StoreCard({ app }: { app: StoreApp }) {
         <span className="muted">({s.reviews})</span>
       </div>
 
-      <div className="hosp-row">
-        <span className="hosp-badge">{s.hospitals}</span>
-        <span className="muted">poskytovatelů</span>
-      </div>
-
       <footer className={open ? 'store-foot open' : 'store-foot'}>
         <button className="idx-toggle" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls={detailId}>
           <span className="idx-head">
-            <span className="idx-title">
-              <span className="c-label">Adoption index</span>
-              <span className={`idx-level level-${score.level}`}>{score.levelLabel}</span>
-            </span>
-            <b className="idx-total">{score.total}</b>
+            <span className="c-label">Adoption index</span>
+            <b className={`idx-total level-${score.level}`}>{score.total}</b>
             <ChevronDown size={16} className="idx-chevron" />
           </span>
           <Bar pct={score.total} />
