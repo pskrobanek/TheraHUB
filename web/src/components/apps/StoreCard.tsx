@@ -23,6 +23,19 @@ function Bar({ pct, thin = false }: { pct: number; thin?: boolean }) {
   );
 }
 
+/** Pět hvězd, vybarvených podle hodnocení (i zlomkově, např. 4,6). */
+function Stars({ value }: { value: number }) {
+  const row = () => Array.from({ length: 5 }, (_, i) => <Star key={i} size={13} fill="currentColor" strokeWidth={0} />);
+  return (
+    <span className="stars" role="img" aria-label={`Hodnocení ${value.toLocaleString('cs-CZ')} z 5`}>
+      <span className="stars-base">{row()}</span>
+      <span className="stars-fill" style={{ width: `${(value / 5) * 100}%` }}>
+        {row()}
+      </span>
+    </span>
+  );
+}
+
 function CheckRow({ check }: { check: ScoreCheck }) {
   const Icon = check.value >= 1 ? CircleCheck : check.value > 0 ? CircleDashed : CircleX;
   const state = check.value >= 1 ? 'ok' : check.value > 0 ? 'partial' : 'no';
@@ -58,9 +71,8 @@ export default function StoreCard({ app }: { app: StoreApp }) {
       </header>
 
       <div className="store-meta">
-        <span className="rating">
-          <Star size={13} fill="currentColor" /> {s.rating.toFixed(1).replace('.', ',')}
-        </span>
+        <Stars value={s.rating} />
+        <span className="rating">{s.rating.toFixed(1).replace('.', ',')}</span>
         <span className="muted">
           ({s.reviews}) · {s.hospitals} nemocnic
         </span>
