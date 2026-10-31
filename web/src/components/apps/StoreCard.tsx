@@ -1,6 +1,7 @@
 import { ChevronDown, CircleCheck, CircleDashed, CircleX, Star } from 'lucide-react';
 import { useState } from 'react';
 import type { Audience, StoreApp } from '../../data/types';
+import { hospitalsFor } from '../../data/hospitals';
 import { specialtyOf } from '../../data/specialties';
 import { adoptionIndex, type ScoreCheck } from '../../lib/score';
 import AppIcon from '../AppIcon';
@@ -35,6 +36,9 @@ function Stars({ value }: { value: number }) {
     </span>
   );
 }
+
+/** „nemocnici / nemocnicích“ podle počtu (6. pád po předložce „v“). */
+const hospitalWord = (n: number) => (n === 1 ? 'nemocnici' : 'nemocnicích');
 
 function CheckRow({ check }: { check: ScoreCheck }) {
   const Icon = check.value >= 1 ? CircleCheck : check.value > 0 ? CircleDashed : CircleX;
@@ -73,8 +77,19 @@ export default function StoreCard({ app }: { app: StoreApp }) {
       <div className="store-meta">
         <Stars value={s.rating} />
         <span className="rating">{s.rating.toFixed(1).replace('.', ',')}</span>
+        <span className="muted">({s.reviews})</span>
+      </div>
+
+      <div className="hosp-row">
+        <span className="hosp-logos">
+          {hospitalsFor(app.id, Math.min(3, s.hospitals)).map((h) => (
+            <span key={h.id} className="hosp-logo" style={{ background: h.color }} title={`${h.name} (demo)`}>
+              {h.mark}
+            </span>
+          ))}
+        </span>
         <span className="muted">
-          ({s.reviews}) · {s.hospitals} nemocnic
+          Aktivní v <b className="hosp-count">{s.hospitals}</b> {hospitalWord(s.hospitals)}
         </span>
       </div>
 
