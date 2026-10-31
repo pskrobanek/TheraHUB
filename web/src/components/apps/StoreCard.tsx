@@ -1,4 +1,4 @@
-import { Check as CheckIcon, Clock, Star } from 'lucide-react';
+import { Clock, Star } from 'lucide-react';
 import type { Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
 import { adoptionIndex, usesAi } from '../../lib/score';
@@ -47,11 +47,6 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
           <h3>{app.name}</h3>
           <span className="muted small">{app.tagline}</span>
         </div>
-        {purchased && (
-          <span className="owned" title="Zakoupeno">
-            <CheckIcon size={13} />
-          </span>
-        )}
       </header>
 
       <div className="tags">
