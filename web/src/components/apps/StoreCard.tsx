@@ -56,7 +56,7 @@ export default function StoreCard({ app }: { app: StoreApp }) {
   return (
     <article className="store-card glass">
       <header className="store-head">
-        <AppIcon app={app} size={44} />
+        <AppIcon app={app} size={63} />
         <div className="store-title">
           <h3>{app.name}</h3>
           <span className="store-tagline">{app.tagline}</span>
