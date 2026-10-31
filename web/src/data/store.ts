@@ -10,7 +10,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'mdr', label: 'MDR IIa' }, ai: 'none',
       trial: { days: 60, kpis: ['≥ 70 % vyplněných dotazníků', 'Neplánované hospitalizace −15 %'] },
       price: { amount: 190, per: 'pacient', period: 'měsíc' },
-      rating: 4.7, reviews: 38, hospitals: 14,
+      rating: 4.7, reviews: 38, hospitals: 14, activeUsers: 3850,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 92,
         therahub: { widget: true, science: true, workflow: true },
@@ -26,7 +26,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'mdr', label: 'MDR IIb · AI' }, ai: 'assisted',
       trial: { days: 30, kpis: ['Zachycené arytmie na 100 pacientů', 'Doba do reakce lékaře < 24 h'] },
       price: { amount: 320, per: 'pacient', period: 'měsíc' },
-      rating: 4.5, reviews: 21, hospitals: 9,
+      rating: 4.5, reviews: 21, hospitals: 9, activeUsers: 1420,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 78,
         therahub: { widget: true, science: true, workflow: false },
@@ -42,7 +42,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'admin', label: 'Administrativní · AI' }, ai: 'guided',
       trial: { days: 30, kpis: ['Čas na dokumentaci −30 %', '≥ 80 % zápisů bez větších úprav'] },
       price: { amount: 1490, per: 'uživatel', period: 'měsíc' },
-      rating: 4.8, reviews: 64, hospitals: 22,
+      rating: 4.8, reviews: 64, hospitals: 22, activeUsers: 640,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'partial', security: 'ok' }, nis: 85,
         therahub: { widget: true, science: false, workflow: true },
@@ -58,7 +58,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'mdr', label: 'MDR I' }, ai: 'none',
       trial: { days: 45, kpis: ['≥ 4 cvičení týdně', 'Zlepšení skóre dysfagie o 1 stupeň'] },
       price: { amount: 90, per: 'pacient', period: 'měsíc' },
-      rating: 4.4, reviews: 12, hospitals: 6,
+      rating: 4.4, reviews: 12, hospitals: 6, activeUsers: 380,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'ok', security: 'partial' }, nis: 60,
         therahub: { widget: true, science: false, workflow: true },
@@ -74,7 +74,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'wellness', label: 'Wellness' }, ai: 'none',
       trial: { days: 30, kpis: ['Úbytek hmotnosti > 5 % zachycen do 7 dní'] },
       price: { amount: 60, per: 'pacient', period: 'měsíc' },
-      rating: 4.2, reviews: 9, hospitals: 5,
+      rating: 4.2, reviews: 9, hospitals: 5, activeUsers: 510,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 70,
         therahub: { widget: true, science: true, workflow: false },
@@ -90,7 +90,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'mdr', label: 'MDR I' }, ai: 'none',
       trial: { days: 30, kpis: ['≥ 2 fotografie týdně', 'Dermatitida G3 zachycena do 48 h'] },
       price: { amount: 2900, per: 'nemocnice', period: 'měsíc' },
-      rating: 4.1, reviews: 7, hospitals: 4,
+      rating: 4.1, reviews: 7, hospitals: 4, activeUsers: 290,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 55,
         therahub: { widget: true, science: false, workflow: false },
@@ -106,7 +106,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'mdr', label: 'MDR I' }, ai: 'none',
       trial: { days: 60, kpis: ['≥ 60 % pacientů vyplní screening', 'Počet doporučení k psychologovi'] },
       price: { amount: 40, per: 'pacient', period: 'měsíc' },
-      rating: 4.6, reviews: 15, hospitals: 8,
+      rating: 4.6, reviews: 15, hospitals: 8, activeUsers: 1120,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 80,
         therahub: { widget: true, science: true, workflow: true },
@@ -122,7 +122,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'mdr', label: 'MDR I' }, ai: 'none',
       trial: null,
       price: { amount: 50, per: 'pacient', period: 'měsíc' },
-      rating: 4.0, reviews: 11, hospitals: 7,
+      rating: 4.0, reviews: 11, hospitals: 7, activeUsers: 760,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 65,
         therahub: { widget: true, science: false, workflow: false },
@@ -138,7 +138,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'mdr', label: 'MDR I' }, ai: 'none',
       trial: { days: 30, kpis: ['Adherence ≥ 85 %'] },
       price: { amount: 35, per: 'pacient', period: 'měsíc' },
-      rating: 4.3, reviews: 19, hospitals: 11,
+      rating: 4.3, reviews: 19, hospitals: 11, activeUsers: 2310,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 88,
         therahub: { widget: true, science: true, workflow: true },
@@ -154,7 +154,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'wellness', label: 'Wellness' }, ai: 'none',
       trial: { days: 90, kpis: ['≥ 50 % pacientů sdílí data'] },
       price: { amount: 20, per: 'pacient', period: 'měsíc' },
-      rating: 3.9, reviews: 6, hospitals: 3,
+      rating: 3.9, reviews: 6, hospitals: 3, activeUsers: 340,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'partial', security: 'ok' }, nis: 40,
         therahub: { widget: true, science: true, workflow: false },
@@ -170,7 +170,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'mdr', label: 'MDR IIb · AI' }, ai: 'guided',
       trial: { days: 90, kpis: ['Doba do popisu akutního nálezu −40 %', 'Senzitivita ≥ 95 % na místních datech'] },
       price: { amount: 18, per: 'událost', period: 'jednorázově' },
-      rating: 4.6, reviews: 17, hospitals: 10,
+      rating: 4.6, reviews: 17, hospitals: 10, activeUsers: 85,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 95,
         therahub: { widget: true, science: true, workflow: true },
@@ -186,7 +186,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'mdr', label: 'MDR IIa · AI' }, ai: 'assisted',
       trial: { days: 60, kpis: ['Čas do podání ATB −1 h', 'Falešné poplachy < 3 na lůžko/týden'] },
       price: { amount: 450, per: 'lůžko', period: 'měsíc' },
-      rating: 4.4, reviews: 13, hospitals: 6,
+      rating: 4.4, reviews: 13, hospitals: 6, activeUsers: 210,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'ok', security: 'partial' }, nis: 62,
         therahub: { widget: true, science: true, workflow: true },
@@ -202,7 +202,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'admin', label: 'Administrativní' }, ai: 'none',
       trial: { days: 30, kpis: ['Čekání na lůžko −20 %', 'Obsazenost ≥ 90 %'] },
       price: { amount: 24000, per: 'nemocnice', period: 'měsíc' },
-      rating: 4.5, reviews: 26, hospitals: 18,
+      rating: 4.5, reviews: 26, hospitals: 18, activeUsers: 1060,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 90,
         therahub: { widget: false, science: false, workflow: true },
@@ -218,7 +218,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'research', label: 'Pouze pro výzkum' }, ai: 'none',
       trial: { days: 90, kpis: ['Feasibility dotaz < 1 den', 'Schválení projektu < 6 týdnů'] },
       price: { amount: 150000, per: 'nemocnice', period: 'rok' },
-      rating: 4.7, reviews: 8, hospitals: 5,
+      rating: 4.7, reviews: 8, hospitals: 5, activeUsers: 48,
       compliance: {
         hospital: { legal: 'partial', gdpr: 'ok', security: 'ok' }, nis: 75,
         therahub: { widget: false, science: true, workflow: false },
@@ -234,7 +234,7 @@ export const storeApps: StoreApp[] = [
       regulatory: { kind: 'admin', label: 'Administrativní' }, ai: 'none',
       trial: { days: 60, kpis: ['Čas na tvorbu rozpisu −50 %'] },
       price: { amount: 39, per: 'uživatel', period: 'měsíc' },
-      rating: 4.2, reviews: 31, hospitals: 15,
+      rating: 4.2, reviews: 31, hospitals: 15, activeUsers: 1930,
       compliance: {
         hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 30,
         therahub: { widget: false, science: false, workflow: true },

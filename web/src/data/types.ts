@@ -67,6 +67,8 @@ export interface StoreInfo {
   reviews: number;
   /** V kolika nemocnicích aplikace aktivně běží. */
   hospitals: number;
+  /** Aktivní uživatelé za posledních 30 dní napříč nemocnicemi. */
+  activeUsers: number;
   compliance: {
     /** Soulad s profilem vaší nemocnice (ENDGAME kap. 4). */
     hospital: { legal: Check; gdpr: Check; security: Check };

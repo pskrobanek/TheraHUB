@@ -1,8 +1,6 @@
-import { ChevronDown, CircleCheck, CircleDashed, CircleX, Star } from 'lucide-react';
+import { ChevronDown, CircleCheck, CircleDashed, CircleX, Hospital, Star, Users } from 'lucide-react';
 import { useState } from 'react';
 import type { Audience, StoreApp } from '../../data/types';
-import { hospitalsFor } from '../../data/hospitals';
-import { specialtyOf } from '../../data/specialties';
 import { adoptionIndex, levelFor, type ScoreCheck } from '../../lib/score';
 import AppIcon from '../AppIcon';
 
@@ -52,24 +50,17 @@ function CheckRow({ check }: { check: ScoreCheck }) {
 
 export default function StoreCard({ app }: { app: StoreApp }) {
   const s = app.store;
-  const spec = specialtyOf(app.category);
-  const SpecIcon = spec.icon;
   const score = adoptionIndex(app);
   const [open, setOpen] = useState(false);
   const detailId = `idx-${app.id}`;
 
   return (
     <article className="store-card glass">
-      <div className="spec-band" style={{ background: `${spec.color}1a`, color: spec.color }}>
-        <SpecIcon size={14} />
-        <span>{app.category}</span>
-      </div>
-
       <header className="store-head">
         <AppIcon app={app} size={44} />
         <div className="store-title">
           <h3>{app.name}</h3>
-          <span className="muted small">{app.tagline}</span>
+          <span className="store-tagline">{app.tagline}</span>
         </div>
       </header>
 
@@ -80,15 +71,17 @@ export default function StoreCard({ app }: { app: StoreApp }) {
       </div>
 
       <div className="hosp-row">
-        <span className="hosp-logos">
-          {hospitalsFor(app.id, Math.min(3, s.hospitals)).map((h) => (
-            <span key={h.id} className="hosp-logo" style={{ background: h.color }} title={`${h.name} (demo)`}>
-              {h.mark}
-            </span>
-          ))}
+        <span className="hosp-item">
+          <Hospital size={15} className="hosp-icon" aria-hidden />
+          <span className="muted">
+            <b className="hosp-count">{s.hospitals}</b> {hospitalWord(s.hospitals)}
+          </span>
         </span>
-        <span className="muted">
-          <b className="hosp-count">{s.hospitals}</b> {hospitalWord(s.hospitals)}
+        <span className="hosp-item">
+          <Users size={15} className="hosp-icon" aria-hidden />
+          <span className="muted">
+            aktivních uživatelů <b className="hosp-count">{s.activeUsers.toLocaleString('cs-CZ')}</b>
+          </span>
         </span>
       </div>
 
