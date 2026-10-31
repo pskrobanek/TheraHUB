@@ -80,7 +80,7 @@ export default function StoreCard({ app }: { app: StoreApp }) {
 
       <p className="pitch">{s.pitch}</p>
 
-      <footer className={open ? 'store-foot open' : 'store-foot'}>
+      <footer className={`store-foot foot-${score.level}${open ? ' open' : ''}`}>
         <button className="idx-toggle" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls={detailId}>
           <span className="idx-head">
             <span className="c-label">Adoption index</span>
