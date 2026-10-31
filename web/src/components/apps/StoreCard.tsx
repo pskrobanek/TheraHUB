@@ -46,22 +46,18 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
         <div className="store-title">
           <h3>{app.name}</h3>
           <span className="muted small">{app.tagline}</span>
-          <span className="tag cat" style={{ color: spec.color, background: `${spec.color}18` }}>
-            {app.category}
+          <span className="title-tags">
+            <span className="tag cat" style={{ color: spec.color, background: `${spec.color}18` }}>
+              {app.category}
+            </span>
+            {usesAi(app) && (
+              <span className="tag ai" title={aiModeLabel[s.ai].hint}>
+                {aiModeLabel[s.ai].label}
+              </span>
+            )}
           </span>
         </div>
       </header>
-
-      <div className="tags">
-        <span className="tag outline">{s.regulatory.label.replace(/\s*·\s*AI$/, '')}</span>
-        {usesAi(app) && (
-          <span className="tag ai" title={aiModeLabel[s.ai].hint}>
-            {aiModeLabel[s.ai].label}
-          </span>
-        )}
-      </div>
-
-      <p className="pitch">{s.pitch}</p>
 
       <div className="store-meta">
         <span className="rating">
@@ -71,6 +67,8 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
           ({s.reviews}) · {s.hospitals} nemocnic
         </span>
       </div>
+
+      <p className="pitch">{s.pitch}</p>
 
 
       <div className="score">
