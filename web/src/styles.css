@@ -315,6 +315,9 @@ h1, h2, h3, p { margin: 0; }
 .store-tagline { font-size: 0.86rem; font-weight: 500; color: #3a3f5c; line-height: 1.3; }
 .pitch { line-height: 1.5; color: #2a2e45; padding-block: 4px 2px; }
 .store-meta { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; font-size: 0.85rem; }
+.store-facts { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 0.8rem; margin-top: -4px; }
+.fact { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; font-weight: 500; }
+.fact-num { color: var(--text); font-weight: 600; }
 .rating { color: var(--accent); font-weight: 600; }
 .stars { position: relative; display: inline-flex; color: var(--accent); line-height: 0; }
 .stars-base, .stars-fill { display: inline-flex; gap: 1px; }
@@ -329,7 +332,7 @@ h1, h2, h3, p { margin: 0; }
 
 
 .store-foot { margin: auto -16px 0; border-top: 1px solid var(--glass-line); background: #fff; border-radius: 0 0 var(--radius) var(--radius); overflow: hidden; }
-.idx-toggle { display: flex; flex-direction: column; gap: 7px; width: 100%; padding: 11px 16px 13px; border: 0; background: none; font: inherit; color: var(--text); text-align: left; cursor: pointer; }
+.idx-toggle { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 14px 8px 16px; border: 0; background: none; font: inherit; color: var(--text); text-align: left; cursor: pointer; }
 .idx-toggle:hover { background: #f7f8fc; }
 /* Patička jen lehce tónovaná do barvy pásma indexu. */
 .foot-vysoka { background: #f4fbf6; }
@@ -341,8 +344,8 @@ h1, h2, h3, p { margin: 0; }
 .foot-nizka .idx-toggle:hover { background: #fcefe2; }
 .foot-velmi-nizka .idx-toggle:hover { background: #fbe9e9; }
 .idx-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
-.idx-head { display: flex; align-items: center; gap: 8px; }
-.idx-total { margin-left: auto; font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.idx-toggle .bar { flex: 1; height: 4px; }
+.idx-total { font-size: 0.98rem; font-weight: 700; font-variant-numeric: tabular-nums; min-width: 24px; text-align: right; }
 .idx-chevron { color: var(--muted); transition: transform 0.2s; }
 .store-foot.open .idx-chevron { transform: rotate(180deg); }
 .bar { display: block; height: 7px; border-radius: 99px; background: rgba(17, 20, 42, 0.08); overflow: hidden; }
@@ -372,7 +375,7 @@ h1, h2, h3, p { margin: 0; }
 .check-ok { color: var(--ok); }
 .check-partial { color: #d97706; }
 .check-no { color: #9aa0b4; }
-.store-foot .c-label { display: inline-flex; align-items: center; gap: 4px; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+.store-foot .c-label { display: inline-flex; align-items: center; gap: 4px; white-space: nowrap; font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
 
 /* ---------- Responzivita ---------- */
 @media (max-width: 980px) {

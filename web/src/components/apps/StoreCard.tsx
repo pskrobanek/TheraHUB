@@ -1,6 +1,7 @@
-import { ChevronDown, CircleCheck, CircleDashed, CircleX, Star } from 'lucide-react';
+import { ChevronDown, CircleCheck, CircleDashed, CircleX, Hospital, Star } from 'lucide-react';
 import { useState } from 'react';
 import type { Audience, StoreApp } from '../../data/types';
+import { specialtyOf } from '../../data/specialties';
 import { adoptionIndex, levelFor, type ScoreCheck } from '../../lib/score';
 import AppIcon from '../AppIcon';
 
@@ -48,6 +49,8 @@ function CheckRow({ check }: { check: ScoreCheck }) {
 export default function StoreCard({ app }: { app: StoreApp }) {
   const s = app.store;
   const score = adoptionIndex(app);
+  const spec = specialtyOf(app.category);
+  const SpecIcon = spec.icon;
   const [open, setOpen] = useState(false);
   const detailId = `idx-${app.id}`;
 
@@ -69,14 +72,21 @@ export default function StoreCard({ app }: { app: StoreApp }) {
         <span className="muted">({s.reviews})</span>
       </div>
 
+      <div className="store-facts">
+        <span className="fact" style={{ color: spec.color }}>
+          <SpecIcon size={13} aria-hidden /> {app.category}
+        </span>
+        <span className="fact muted">
+          <Hospital size={13} aria-hidden /> <b className="fact-num">{s.hospitals}</b> poskytovatelů
+        </span>
+      </div>
+
       <footer className={`store-foot foot-${score.level}${open ? ' open' : ''}`}>
         <button className="idx-toggle" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls={detailId}>
-          <span className="idx-head">
-            <span className="c-label">Adoption index</span>
-            <b className={`idx-total level-${score.level}`}>{score.total}</b>
-            <ChevronDown size={16} className="idx-chevron" />
-          </span>
+          <span className="c-label">Adoption index</span>
           <Bar pct={score.total} />
+          <b className={`idx-total level-${score.level}`}>{score.total}</b>
+          <ChevronDown size={15} className="idx-chevron" />
         </button>
 
         {open && (
