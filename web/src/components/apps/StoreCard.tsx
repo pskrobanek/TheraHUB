@@ -1,4 +1,4 @@
-import { ChevronDown, CircleCheck, CircleDashed, CircleX, Hospital, Star } from 'lucide-react';
+import { ChevronDown, CircleCheck, CircleDashed, CircleX, Star } from 'lucide-react';
 import { useState } from 'react';
 import type { Audience, StoreApp } from '../../data/types';
 import { adoptionIndex, levelFor, type ScoreCheck } from '../../lib/score';
@@ -70,10 +70,8 @@ export default function StoreCard({ app }: { app: StoreApp }) {
       </div>
 
       <div className="hosp-row">
-        <Hospital size={15} className="hosp-icon" aria-hidden />
-        <span className="muted">
-          aktivních poskytovatelů <b className="hosp-count">{s.hospitals}</b>
-        </span>
+        <span className="hosp-badge">{s.hospitals}</span>
+        <span className="muted">poskytovatelů</span>
       </div>
 
       <footer className={open ? 'store-foot open' : 'store-foot'}>
