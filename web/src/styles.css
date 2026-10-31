@@ -332,7 +332,7 @@ h1, h2, h3, p { margin: 0; }
 
 
 .store-foot { margin: auto -16px 0; border-top: 1px solid var(--glass-line); background: #f5f6f9; border-radius: 0 0 var(--radius) var(--radius); overflow: hidden; }
-.idx-toggle { display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 14px 8px 16px; border: 0; background: none; font: inherit; color: var(--text); text-align: left; cursor: pointer; }
+.idx-toggle { display: flex; align-items: center; gap: 10px; width: 100%; padding: 11.5px 14px 11.5px 16px; border: 0; background: none; font: inherit; color: var(--text); text-align: left; cursor: pointer; }
 .idx-toggle:hover { background: #eceef3; }
 .idx-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
 .idx-toggle .bar { flex: 1; height: 4px; }
