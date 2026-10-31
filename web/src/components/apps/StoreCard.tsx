@@ -1,7 +1,8 @@
-import { Clock, Star } from 'lucide-react';
+import { ChevronDown, CircleCheck, CircleDashed, CircleX, Star } from 'lucide-react';
+import { useState } from 'react';
 import type { Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
-import { adoptionIndex } from '../../lib/score';
+import { adoptionIndex, type ScoreCheck } from '../../lib/score';
 import AppIcon from '../AppIcon';
 
 export const audienceLabel: Record<Audience, string> = {
@@ -12,31 +13,34 @@ export const audienceLabel: Record<Audience, string> = {
   vyzkumnik: 'Výzkumník',
 };
 
-function Ring({ value, level }: { value: number; level: string }) {
-  const r = 17;
-  const c = 2 * Math.PI * r;
+const levelOf = (pct: number) => (pct >= 85 ? 'vysoke' : pct >= 70 ? 'stredni' : 'nizke');
+
+function Bar({ pct, thin = false }: { pct: number; thin?: boolean }) {
   return (
-    <svg className={`ring ring-${level}`} viewBox="0 0 44 44" aria-hidden>
-      <circle cx="22" cy="22" r={r} className="ring-bg" />
-      <circle cx="22" cy="22" r={r} className="ring-fg" strokeDasharray={`${(c * value) / 100} ${c}`} />
-      <text x="22" y="22" dy="0.36em" textAnchor="middle">
-        {value}
-      </text>
-    </svg>
+    <span className={thin ? 'bar thin' : 'bar'} aria-hidden>
+      <span className={`bar-fill fill-${levelOf(pct)}`} style={{ width: `${pct}%` }} />
+    </span>
   );
 }
 
-interface Props {
-  app: StoreApp;
-  purchased: boolean;
-  trialRequested: boolean;
-  onTrial: () => void;
+function CheckRow({ check }: { check: ScoreCheck }) {
+  const Icon = check.value >= 1 ? CircleCheck : check.value > 0 ? CircleDashed : CircleX;
+  const state = check.value >= 1 ? 'ok' : check.value > 0 ? 'partial' : 'no';
+  return (
+    <li className="idx-check">
+      <Icon size={14} className={`check check-${state}`} />
+      <span className="idx-check-label">{check.label}</span>
+      {check.note && <span className="muted idx-note">{check.note}</span>}
+    </li>
+  );
 }
 
-export default function StoreCard({ app, purchased, trialRequested, onTrial }: Props) {
+export default function StoreCard({ app }: { app: StoreApp }) {
   const s = app.store;
   const spec = specialtyOf(app.category);
   const score = adoptionIndex(app);
+  const [open, setOpen] = useState(false);
+  const detailId = `idx-${app.id}`;
 
   return (
     <article className="store-card glass">
@@ -64,32 +68,36 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
 
       <p className="pitch">{s.pitch}</p>
 
-
-      <div className="score">
-        <Ring value={score.total} level={score.level} />
-        <div>
-          <b>Adoption index</b>
-          <span className={`score-level level-${score.level}`}>{score.levelLabel}</span>
-        </div>
-      </div>
-
-      <footer className="store-foot">
-        <button className={trialRequested ? 'trial sent' : 'trial'} onClick={onTrial} disabled={purchased || trialRequested || !s.trial}>
-          <span className="c-label">
-            <Clock size={11} /> Trial
+      <footer className={open ? 'store-foot open' : 'store-foot'}>
+        <button className="idx-toggle" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls={detailId}>
+          <span className="idx-head">
+            <span className="c-label">Adoption index</span>
+            <span className={`idx-level level-${score.level}`}>{score.levelLabel}</span>
+            <b className="idx-total">{score.total}</b>
+            <ChevronDown size={16} className="idx-chevron" />
           </span>
-          {purchased ? (
-            <b className="muted">Zakoupeno</b>
-          ) : trialRequested ? (
-            <b>Žádost odeslána</b>
-          ) : s.trial ? (
-            <b>
-              {s.trial.days} dní <small>zdarma</small>
-            </b>
-          ) : (
-            <b className="muted">Bez trialu</b>
-          )}
+          <Bar pct={score.total} />
         </button>
+
+        {open && (
+          <div className="idx-detail" id={detailId}>
+            {score.parts.map((p) => (
+              <section key={p.id} className="idx-part">
+                <div className="idx-part-head">
+                  <b>{p.label}</b>
+                  <span className="muted">váha {Math.round(p.weight * 100)} %</span>
+                  <span className="mono idx-pct">{p.pct} %</span>
+                </div>
+                <Bar pct={p.pct} thin />
+                <ul className="idx-checks">
+                  {p.checks.map((c) => (
+                    <CheckRow key={c.label} check={c} />
+                  ))}
+                </ul>
+              </section>
+            ))}
+          </div>
+        )}
       </footer>
     </article>
   );

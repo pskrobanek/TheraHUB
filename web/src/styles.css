@@ -322,32 +322,39 @@ h1, h2, h3, p { margin: 0; }
 .tag.outline { background: transparent; border-color: rgba(17, 20, 42, 0.15); font-weight: 600; }
 .tag.ai { background: var(--accent-soft); color: var(--accent); border-color: transparent; font-weight: 700; }
 
-.score { border-radius: var(--radius-sm); background: rgba(255, 255, 255, 0.55); border: 1px solid var(--glass-border); padding: 8px 12px; display: flex; align-items: center; gap: 10px; }
-.score > div { display: flex; flex-direction: column; line-height: 1.2; }
-.score b { font-size: 0.85rem; }
-.score-level { font-size: 0.78rem; font-weight: 600; }
 .level-vysoke { color: var(--ok); }
 .level-stredni { color: #d97706; }
 .level-nizke { color: var(--danger); }
-.ring { width: 44px; height: 44px; flex-shrink: 0; transform: rotate(-90deg); }
-.ring circle { fill: none; stroke-width: 4; }
-.ring-bg { stroke: rgba(17, 20, 42, 0.08); }
-.ring-fg { stroke-linecap: round; }
-.ring-vysoke .ring-fg { stroke: var(--ok); }
-.ring-stredni .ring-fg { stroke: #d97706; }
-.ring-nizke .ring-fg { stroke: var(--danger); }
-.ring text { transform: rotate(90deg); transform-origin: 22px 22px; font-size: 13px; font-weight: 700; fill: var(--text); font-family: inherit; }
 
-.store-foot { display: grid; grid-template-columns: 1fr; margin: 4px -16px 0; border-top: 1px solid var(--glass-line); background: #fff; border-radius: 0 0 var(--radius) var(--radius); overflow: hidden; }
+.store-foot { margin: auto -16px 0; border-top: 1px solid var(--glass-line); background: #f7f8fc; border-radius: 0 0 var(--radius) var(--radius); overflow: hidden; }
+.idx-toggle { display: flex; flex-direction: column; gap: 7px; width: 100%; padding: 11px 16px 13px; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.idx-toggle:hover { background: #eef0f7; }
+.idx-head { display: flex; align-items: center; gap: 8px; }
+.idx-level { font-size: 0.78rem; font-weight: 600; }
+.idx-total { margin-left: auto; font-size: 1.05rem; font-weight: 700; font-variant-numeric: tabular-nums; }
+.idx-chevron { color: var(--muted); transition: transform 0.2s; }
+.store-foot.open .idx-chevron { transform: rotate(180deg); }
+.bar { display: block; height: 7px; border-radius: 99px; background: rgba(17, 20, 42, 0.08); overflow: hidden; }
+.bar.thin { height: 4px; }
+.bar-fill { display: block; height: 100%; border-radius: 99px; }
+.fill-vysoke { background: var(--ok); }
+.fill-stredni { background: #d97706; }
+.fill-nizke { background: var(--danger); }
+.idx-detail { display: flex; flex-direction: column; gap: 12px; padding: 4px 16px 14px; border-top: 1px solid var(--glass-line); background: #fff; }
+.idx-part { display: flex; flex-direction: column; gap: 6px; padding-top: 10px; }
+.idx-part-head { display: flex; align-items: baseline; gap: 8px; font-size: 0.84rem; }
+.idx-part-head b { flex: 1; min-width: 0; line-height: 1.25; }
+.idx-part-head .muted { font-size: 0.72rem; white-space: nowrap; }
+.idx-pct { font-size: 0.8rem; white-space: nowrap; min-width: 40px; text-align: right; }
+.idx-checks { list-style: none; margin: 2px 0 0; padding: 0; display: flex; flex-direction: column; gap: 4px; font-size: 0.8rem; }
+.idx-check { display: flex; align-items: flex-start; gap: 7px; }
+.idx-check svg { flex-shrink: 0; margin-top: 1px; }
+.idx-check-label { flex: 1; min-width: 0; }
+.idx-note { font-size: 0.74rem; text-align: right; max-width: 50%; }
+.check-ok { color: var(--ok); }
+.check-partial { color: #d97706; }
+.check-no { color: #9aa0b4; }
 .store-foot .c-label { display: inline-flex; align-items: center; gap: 4px; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
-.trial { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; padding: 10px 12px 12px; border: 0; background: #eef0ff; color: var(--accent); cursor: pointer; text-align: left; border-radius: 0 0 var(--radius) var(--radius); font: inherit; }
-.trial .c-label { color: var(--accent); }
-.trial b { font-size: 1rem; font-weight: 700; line-height: 1.1; }
-.trial small { font-size: 0.78rem; font-weight: 600; }
-.trial:hover:not(:disabled) { background: rgba(47, 55, 232, 0.18); }
-.trial:disabled { cursor: default; }
-.trial.sent { background: #e6f6ec; color: var(--ok); }
-.trial.sent .c-label { color: var(--ok); }
 
 /* ---------- Responzivita ---------- */
 @media (max-width: 980px) {

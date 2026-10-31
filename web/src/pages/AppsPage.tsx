@@ -61,7 +61,6 @@ function Purchased() {
 function Store() {
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<Filters>(emptyFilters);
-  const [trials, setTrials] = useState<Set<string>>(new Set());
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   const q = query.trim().toLowerCase();
@@ -93,9 +92,6 @@ function Store() {
             <StoreCard
               key={app.id}
               app={app}
-              purchased={purchasedIds.has(app.id)}
-              trialRequested={trials.has(app.id)}
-              onTrial={() => setTrials((prev) => new Set(prev).add(app.id))}
             />
           ))}
           {visible.length === 0 && <div className="empty glass">Žádná aplikace neodpovídá filtru.</div>}
