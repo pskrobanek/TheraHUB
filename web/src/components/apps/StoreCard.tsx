@@ -3,7 +3,7 @@ import { useState } from 'react';
 import type { Audience, StoreApp } from '../../data/types';
 import { hospitalsFor } from '../../data/hospitals';
 import { specialtyOf } from '../../data/specialties';
-import { adoptionIndex, type ScoreCheck } from '../../lib/score';
+import { adoptionIndex, levelFor, type ScoreCheck } from '../../lib/score';
 import AppIcon from '../AppIcon';
 
 export const audienceLabel: Record<Audience, string> = {
@@ -14,12 +14,10 @@ export const audienceLabel: Record<Audience, string> = {
   vyzkumnik: 'Výzkumník',
 };
 
-const levelOf = (pct: number) => (pct >= 85 ? 'vysoke' : pct >= 70 ? 'stredni' : 'nizke');
-
 function Bar({ pct, thin = false }: { pct: number; thin?: boolean }) {
   return (
     <span className={thin ? 'bar thin' : 'bar'} aria-hidden>
-      <span className={`bar-fill fill-${levelOf(pct)}`} style={{ width: `${pct}%` }} />
+      <span className={`bar-fill fill-${levelFor(pct)}`} style={{ width: `${pct}%` }} />
     </span>
   );
 }
@@ -37,8 +35,8 @@ function Stars({ value }: { value: number }) {
   );
 }
 
-/** „nemocnici / nemocnicích“ podle počtu (6. pád po předložce „v“). */
-const hospitalWord = (n: number) => (n === 1 ? 'nemocnici' : 'nemocnicích');
+/** „nemocnice / nemocnic“ podle počtu. */
+const hospitalWord = (n: number) => (n === 1 ? 'nemocnice' : n >= 2 && n <= 4 ? 'nemocnice' : 'nemocnic');
 
 function CheckRow({ check }: { check: ScoreCheck }) {
   const Icon = check.value >= 1 ? CircleCheck : check.value > 0 ? CircleDashed : CircleX;
@@ -55,22 +53,23 @@ function CheckRow({ check }: { check: ScoreCheck }) {
 export default function StoreCard({ app }: { app: StoreApp }) {
   const s = app.store;
   const spec = specialtyOf(app.category);
+  const SpecIcon = spec.icon;
   const score = adoptionIndex(app);
   const [open, setOpen] = useState(false);
   const detailId = `idx-${app.id}`;
 
   return (
     <article className="store-card glass">
+      <div className="spec-band" style={{ background: spec.color }}>
+        <SpecIcon size={14} />
+        <span>{app.category}</span>
+      </div>
+
       <header className="store-head">
         <AppIcon app={app} size={44} filled />
         <div className="store-title">
           <h3>{app.name}</h3>
           <span className="muted small">{app.tagline}</span>
-          <span className="title-tags">
-            <span className="tag cat" style={{ color: spec.color, background: `${spec.color}18` }}>
-              {app.category}
-            </span>
-          </span>
         </div>
       </header>
 
@@ -89,17 +88,19 @@ export default function StoreCard({ app }: { app: StoreApp }) {
           ))}
         </span>
         <span className="muted">
-          Aktivní v <b className="hosp-count">{s.hospitals}</b> {hospitalWord(s.hospitals)}
+          <b className="hosp-count">{s.hospitals}</b> {hospitalWord(s.hospitals)}
         </span>
       </div>
 
       <p className="pitch">{s.pitch}</p>
 
-      <footer className={`store-foot foot-${score.level}${open ? ' open' : ''}`}>
+      <footer className={open ? 'store-foot open' : 'store-foot'}>
         <button className="idx-toggle" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls={detailId}>
           <span className="idx-head">
-            <span className="c-label">Adoption index</span>
-            <span className={`idx-level level-${score.level}`}>{score.levelLabel}</span>
+            <span className="idx-title">
+              <span className="c-label">Adoption index</span>
+              <span className={`idx-level level-${score.level}`}>{score.levelLabel}</span>
+            </span>
             <b className="idx-total">{score.total}</b>
             <ChevronDown size={16} className="idx-chevron" />
           </span>

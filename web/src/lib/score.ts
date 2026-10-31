@@ -18,9 +18,21 @@ export interface ScorePart {
   weight: number;
 }
 
+export type Level = 'vysoka' | 'stredni' | 'nizka' | 'velmi-nizka';
+
+export const levelLabel: Record<Level, string> = {
+  vysoka: 'Vysoká',
+  stredni: 'Střední',
+  nizka: 'Nízká',
+  'velmi-nizka': 'Velmi nízká',
+};
+
+/** Čtyři pásma indexu: 85+ zelená, 70+ žlutá, 55+ oranžová, jinak červená. */
+export const levelFor = (pct: number): Level => (pct >= 85 ? 'vysoka' : pct >= 70 ? 'stredni' : pct >= 55 ? 'nizka' : 'velmi-nizka');
+
 export interface Score {
   total: number;
-  level: 'vysoke' | 'stredni' | 'nizke';
+  level: Level;
   levelLabel: string;
   parts: ScorePart[];
 }
@@ -67,6 +79,6 @@ export function adoptionIndex(app: StoreApp): Score {
     part('therahub', 'TheraHUB integrace', therahub, 0.2),
   ];
   const total = Math.round(parts.reduce((sum, p) => sum + p.pct * p.weight, 0));
-  const level = total >= 85 ? 'vysoke' : total >= 70 ? 'stredni' : 'nizke';
-  return { total, level, levelLabel: { vysoke: 'Vysoká', stredni: 'Střední', nizke: 'Nízká' }[level], parts };
+  const level = levelFor(total);
+  return { total, level, levelLabel: levelLabel[level], parts };
 }
