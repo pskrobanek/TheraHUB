@@ -1,4 +1,4 @@
-import { ChevronDown, CircleCheck, CircleDashed, CircleX, Hospital, Star } from 'lucide-react';
+import { ChevronDown, CircleCheck, CircleDashed, CircleX, Star, Stethoscope } from 'lucide-react';
 import { useState } from 'react';
 import type { Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
@@ -61,6 +61,9 @@ export default function StoreCard({ app }: { app: StoreApp }) {
         <div className="store-title">
           <h3>{app.name}</h3>
           <span className="store-tagline">{app.tagline}</span>
+          <span className="store-spec" style={{ color: spec.color }}>
+            <SpecIcon size={12} aria-hidden /> {app.category}
+          </span>
         </div>
       </header>
 
@@ -72,16 +75,11 @@ export default function StoreCard({ app }: { app: StoreApp }) {
         <span className="muted">({s.reviews})</span>
       </div>
 
-      <div className="store-facts">
-        <span className="fact" style={{ color: spec.color }}>
-          <SpecIcon size={13} aria-hidden /> {app.category}
-        </span>
-        <span className="fact muted">
-          <Hospital size={13} aria-hidden /> <b className="fact-num">{s.hospitals}</b> poskytovatelů
-        </span>
+      <div className="store-providers muted">
+        <Stethoscope size={14} aria-hidden /> <b className="fact-num">{s.hospitals}</b> poskytovatelů
       </div>
 
-      <footer className={`store-foot foot-${score.level}${open ? ' open' : ''}`}>
+      <footer className={open ? 'store-foot open' : 'store-foot'}>
         <button className="idx-toggle" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls={detailId}>
           <span className="c-label">Adoption index</span>
           <Bar pct={score.total} />
