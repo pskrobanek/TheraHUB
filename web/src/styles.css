@@ -331,13 +331,22 @@ h1, h2, h3, p { margin: 0; }
 .level-stredni { color: #d97706; }
 .level-nizke { color: var(--danger); }
 
-.store-foot { margin: auto -16px 0; border-top: 1px solid var(--glass-line); background: #f7f8fc; border-radius: 0 0 var(--radius) var(--radius); overflow: hidden; }
-.idx-toggle { display: flex; flex-direction: column; gap: 7px; width: 100%; padding: 11px 16px 13px; border: 0; background: none; font: inherit; color: inherit; text-align: left; cursor: pointer; }
-.idx-toggle:hover { background: #eef0f7; }
+.store-foot { margin: auto -16px 0; background: var(--accent); border-radius: 0 0 var(--radius) var(--radius); overflow: hidden; }
+.idx-toggle { display: flex; flex-direction: column; gap: 7px; width: 100%; padding: 11px 16px 13px; border: 0; background: none; font: inherit; color: #fff; text-align: left; cursor: pointer; }
+.idx-toggle:hover { background: #262ed0; }
+.idx-toggle:focus-visible { outline: 2px solid #fff; outline-offset: -4px; }
+/* Na modrém pozadí světlejší odstíny úrovní kvůli kontrastu. */
+.idx-toggle .level-vysoke { color: #86efac; }
+.idx-toggle .level-stredni { color: #fcd34d; }
+.idx-toggle .level-nizke { color: #fca5a5; }
+.idx-toggle .bar { background: rgba(255, 255, 255, 0.22); }
+.idx-toggle .fill-vysoke { background: #4ade80; }
+.idx-toggle .fill-stredni { background: #fbbf24; }
+.idx-toggle .fill-nizke { background: #f87171; }
 .idx-head { display: flex; align-items: center; gap: 8px; }
 .idx-level { font-size: 0.78rem; font-weight: 600; }
 .idx-total { margin-left: auto; font-size: 1.05rem; font-weight: 700; font-variant-numeric: tabular-nums; }
-.idx-chevron { color: var(--muted); transition: transform 0.2s; }
+.idx-chevron { color: rgba(255, 255, 255, 0.85); transition: transform 0.2s; }
 .store-foot.open .idx-chevron { transform: rotate(180deg); }
 .bar { display: block; height: 7px; border-radius: 99px; background: rgba(17, 20, 42, 0.08); overflow: hidden; }
 .bar.thin { height: 4px; }
@@ -359,7 +368,7 @@ h1, h2, h3, p { margin: 0; }
 .check-ok { color: var(--ok); }
 .check-partial { color: #d97706; }
 .check-no { color: #9aa0b4; }
-.store-foot .c-label { display: inline-flex; align-items: center; gap: 4px; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+.store-foot .c-label { display: inline-flex; align-items: center; gap: 4px; font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.05em; color: rgba(255, 255, 255, 0.8); }
 
 /* ---------- Responzivita ---------- */
 @media (max-width: 980px) {
