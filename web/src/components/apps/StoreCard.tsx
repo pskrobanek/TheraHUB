@@ -1,4 +1,4 @@
-import { Check as CheckIcon, Clock, Star, User } from 'lucide-react';
+import { Check as CheckIcon, Clock, Star } from 'lucide-react';
 import type { Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
 import { adoptionIndex, usesAi } from '../../lib/score';
@@ -77,13 +77,6 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
         </span>
       </div>
 
-      <div className="tags">
-        {s.audience.map((a) => (
-          <span key={a} className="tag">
-            <User size={11} /> {audienceLabel[a]}
-          </span>
-        ))}
-      </div>
 
       <div className="score">
         <Ring value={score.total} level={score.level} />
