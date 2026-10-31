@@ -1,8 +1,7 @@
 import { Clock, Star } from 'lucide-react';
 import type { Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
-import { adoptionIndex, usesAi } from '../../lib/score';
-import { aiModeLabel } from './StoreFilters';
+import { adoptionIndex } from '../../lib/score';
 import AppIcon from '../AppIcon';
 
 export const audienceLabel: Record<Audience, string> = {
@@ -50,11 +49,6 @@ export default function StoreCard({ app, purchased, trialRequested, onTrial }: P
             <span className="tag cat" style={{ color: spec.color, background: `${spec.color}18` }}>
               {app.category}
             </span>
-            {usesAi(app) && (
-              <span className="tag ai" title={aiModeLabel[s.ai].hint}>
-                {aiModeLabel[s.ai].label}
-              </span>
-            )}
           </span>
         </div>
       </header>
