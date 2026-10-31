@@ -315,8 +315,7 @@ h1, h2, h3, p { margin: 0; }
 .store-tagline { font-size: 0.86rem; font-weight: 500; color: #3a3f5c; line-height: 1.3; }
 .pitch { line-height: 1.5; color: #2a2e45; padding-block: 4px 2px; }
 .store-meta { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; font-size: 0.85rem; }
-.store-providers { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; margin-top: -4px; }
-.store-providers svg { color: var(--text); }
+.store-providers { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; margin-top: -4px; }
 .fact-num { color: var(--text); font-weight: 600; }
 .store-spec { display: inline-flex; align-items: center; gap: 5px; margin-top: 3px; font-size: 0.74rem; font-weight: 600; }
 .rating { color: var(--text); font-weight: 600; }

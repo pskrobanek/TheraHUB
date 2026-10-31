@@ -1,4 +1,4 @@
-import { ChevronDown, CircleCheck, CircleDashed, CircleX, Star, Stethoscope } from 'lucide-react';
+import { ChevronDown, CircleCheck, CircleDashed, CircleX, Star } from 'lucide-react';
 import { useState } from 'react';
 import type { Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
@@ -76,7 +76,7 @@ export default function StoreCard({ app }: { app: StoreApp }) {
       </div>
 
       <div className="store-providers muted">
-        <Stethoscope size={14} aria-hidden /> <b className="fact-num">{s.hospitals}</b> poskytovatelů
+        <b className="fact-num">{s.hospitals}</b> poskytovatelů
       </div>
 
       <footer className={open ? 'store-foot open' : 'store-foot'}>
