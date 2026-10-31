@@ -331,6 +331,15 @@ h1, h2, h3, p { margin: 0; }
 .store-foot { margin: auto -16px 0; border-top: 1px solid var(--glass-line); background: #fff; border-radius: 0 0 var(--radius) var(--radius); overflow: hidden; }
 .idx-toggle { display: flex; flex-direction: column; gap: 7px; width: 100%; padding: 11px 16px 13px; border: 0; background: none; font: inherit; color: var(--text); text-align: left; cursor: pointer; }
 .idx-toggle:hover { background: #f7f8fc; }
+/* Patička jen lehce tónovaná do barvy pásma indexu. */
+.foot-vysoka { background: #f4fbf6; }
+.foot-stredni { background: #fefbec; }
+.foot-nizka { background: #fef7f0; }
+.foot-velmi-nizka { background: #fdf4f4; }
+.foot-vysoka .idx-toggle:hover { background: #eaf6ee; }
+.foot-stredni .idx-toggle:hover { background: #fcf5dc; }
+.foot-nizka .idx-toggle:hover { background: #fcefe2; }
+.foot-velmi-nizka .idx-toggle:hover { background: #fbe9e9; }
 .idx-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: -4px; }
 .idx-head { display: flex; align-items: center; gap: 8px; }
 .idx-total { margin-left: auto; font-size: 1.25rem; font-weight: 700; font-variant-numeric: tabular-nums; }
