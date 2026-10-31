@@ -50,7 +50,6 @@ export default function StoreCard({ app }: { app: StoreApp }) {
   const s = app.store;
   const score = adoptionIndex(app);
   const spec = specialtyOf(app.category);
-  const SpecIcon = spec.icon;
   const [open, setOpen] = useState(false);
   const detailId = `idx-${app.id}`;
 
@@ -61,8 +60,8 @@ export default function StoreCard({ app }: { app: StoreApp }) {
         <div className="store-title">
           <h3>{app.name}</h3>
           <span className="store-tagline">{app.tagline}</span>
-          <span className="store-spec" style={{ color: spec.color }}>
-            <SpecIcon size={12} aria-hidden /> {app.category}
+          <span className="store-spec" style={{ color: spec.color, background: `${spec.color}14`, borderColor: `${spec.color}33` }}>
+            {app.category}
           </span>
         </div>
       </header>
