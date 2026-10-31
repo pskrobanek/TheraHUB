@@ -203,7 +203,7 @@ export default function AppLogo({ appId, size }: { appId: string; size: number }
           <stop offset="1" stopColor={logo.to} />
         </linearGradient>
       </defs>
-      <rect width="48" height="48" rx="12" fill={`url(#${gid})`} />
+      <rect width="48" height="48" rx="7" fill={`url(#${gid})`} />
       {logo.mark}
     </svg>
   );

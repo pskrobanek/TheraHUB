@@ -1,4 +1,4 @@
-import { ChevronDown, CircleCheck, CircleDashed, CircleX, Hospital, Star, Users } from 'lucide-react';
+import { ChevronDown, CircleCheck, CircleDashed, CircleX, Hospital, Star } from 'lucide-react';
 import { useState } from 'react';
 import type { Audience, StoreApp } from '../../data/types';
 import { adoptionIndex, levelFor, type ScoreCheck } from '../../lib/score';
@@ -33,9 +33,6 @@ function Stars({ value }: { value: number }) {
   );
 }
 
-/** „nemocnice / nemocnic“ podle počtu. */
-const hospitalWord = (n: number) => (n === 1 ? 'nemocnice' : n >= 2 && n <= 4 ? 'nemocnice' : 'nemocnic');
-
 function CheckRow({ check }: { check: ScoreCheck }) {
   const Icon = check.value >= 1 ? CircleCheck : check.value > 0 ? CircleDashed : CircleX;
   const state = check.value >= 1 ? 'ok' : check.value > 0 ? 'partial' : 'no';
@@ -64,6 +61,8 @@ export default function StoreCard({ app }: { app: StoreApp }) {
         </div>
       </header>
 
+      <p className="pitch">{s.pitch}</p>
+
       <div className="store-meta">
         <Stars value={s.rating} />
         <span className="rating">{s.rating.toFixed(1).replace('.', ',')}</span>
@@ -71,21 +70,11 @@ export default function StoreCard({ app }: { app: StoreApp }) {
       </div>
 
       <div className="hosp-row">
-        <span className="hosp-item">
-          <Hospital size={15} className="hosp-icon" aria-hidden />
-          <span className="muted">
-            <b className="hosp-count">{s.hospitals}</b> {hospitalWord(s.hospitals)}
-          </span>
-        </span>
-        <span className="hosp-item">
-          <Users size={15} className="hosp-icon" aria-hidden />
-          <span className="muted">
-            aktivních uživatelů <b className="hosp-count">{s.activeUsers.toLocaleString('cs-CZ')}</b>
-          </span>
+        <Hospital size={15} className="hosp-icon" aria-hidden />
+        <span className="muted">
+          aktivních poskytovatelů <b className="hosp-count">{s.hospitals}</b>
         </span>
       </div>
-
-      <p className="pitch">{s.pitch}</p>
 
       <footer className={open ? 'store-foot open' : 'store-foot'}>
         <button className="idx-toggle" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls={detailId}>
