@@ -60,13 +60,13 @@ export default function StoreCard({ app }: { app: StoreApp }) {
 
   return (
     <article className="store-card glass">
-      <div className="spec-band" style={{ background: spec.color }}>
+      <div className="spec-band" style={{ background: `${spec.color}1a`, color: spec.color }}>
         <SpecIcon size={14} />
         <span>{app.category}</span>
       </div>
 
       <header className="store-head">
-        <AppIcon app={app} size={44} filled />
+        <AppIcon app={app} size={44} />
         <div className="store-title">
           <h3>{app.name}</h3>
           <span className="muted small">{app.tagline}</span>

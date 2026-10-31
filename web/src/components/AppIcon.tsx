@@ -17,6 +17,7 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import type { CatalogApp, IconName } from '../data/types';
+import AppLogo, { hasLogo } from './AppLogo';
 
 const icons: Record<IconName, LucideIcon> = {
   onco: Loader,
@@ -39,21 +40,14 @@ const icons: Record<IconName, LucideIcon> = {
 interface Props {
   app: CatalogApp;
   size?: number;
-  /** Plná barevná dlaždice s bílým symbolem (App Store). */
-  filled?: boolean;
 }
 
-export default function AppIcon({ app, size = 40, filled = false }: Props) {
+/** Logo aplikace; pro aplikace bez vlastního loga obecná ikona v barvě aplikace. */
+export default function AppIcon({ app, size = 40 }: Props) {
+  if (hasLogo(app.id)) return <AppLogo appId={app.id} size={size} />;
   const Icon = icons[app.icon];
-  const style = filled
-    ? { width: size, height: size, color: '#fff', background: app.tint }
-    : { width: size, height: size, color: app.tint, background: `${app.tint}14` };
   return (
-    <span
-      className="app-icon"
-      style={style}
-      aria-hidden
-    >
+    <span className="app-icon" style={{ width: size, height: size, color: app.tint, background: `${app.tint}14` }} aria-hidden>
       <Icon size={size * 0.5} strokeWidth={1.8} />
     </span>
   );

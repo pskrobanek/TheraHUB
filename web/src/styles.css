@@ -320,7 +320,7 @@ h1, h2, h3, p { margin: 0; }
 .hosp-logo:first-child { margin-left: 0; }
 .pitch { line-height: 1.5; color: #2a2e45; padding-block: 6px; }
 .store-meta { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; font-size: 0.85rem; }
-.spec-band { display: flex; align-items: center; gap: 7px; margin: 0 -16px 4px; padding: 7px 16px; color: #fff; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.spec-band { display: flex; align-items: center; gap: 7px; margin: 0 -16px 4px; padding: 7px 16px; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
 .rating { color: var(--accent); font-weight: 600; }
 .stars { position: relative; display: inline-flex; color: var(--accent); line-height: 0; }
 .stars-base, .stars-fill { display: inline-flex; gap: 1px; }
@@ -347,6 +347,7 @@ h1, h2, h3, p { margin: 0; }
 .bar { display: block; height: 7px; border-radius: 99px; background: rgba(17, 20, 42, 0.08); overflow: hidden; }
 .bar.thin { height: 4px; }
 .bar-fill { display: block; height: 100%; border-radius: 99px; }
+.app-logo { flex-shrink: 0; display: block; border-radius: 25%; box-shadow: 0 2px 6px rgba(17, 20, 42, 0.12); }
 /* Adoption index: čtyři pastelová pásma; text úrovně v sytějším odstínu kvůli čitelnosti na bílé. */
 .fill-vysoka { background: #8fd6a8; }
 .fill-stredni { background: #f3d774; }
