@@ -225,7 +225,7 @@ h1, h2, h3, p { margin: 0; }
 .page-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
 .page-head h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; }
 .page-head p { margin-top: 2px; }
-.page.apps { gap: 18px; }
+.page.apps { gap: 18px; max-width: none; }
 
 .switch { display: inline-flex; gap: 6px; }
 .switch-item {
@@ -307,7 +307,7 @@ h1, h2, h3, p { margin: 0; }
 .fchip.on { background: var(--dark); color: #fff; border-color: var(--dark); }
 
 /* Karty */
-.store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 295px)); justify-content: start; gap: 14px; align-items: start; }
+.store-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; align-items: start; }
 .store-card { display: flex; flex-direction: column; gap: 10px; padding: 16px 16px 0; overflow: hidden; font-size: 0.88rem; background: #fff; backdrop-filter: none; -webkit-backdrop-filter: none; border-color: rgba(17, 20, 42, 0.08); }
 .store-head { display: flex; gap: 11px; align-items: flex-start; margin: 0 -16px; padding: 0 16px 14px; border-bottom: 1px solid var(--glass-line); }
 .store-title { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
