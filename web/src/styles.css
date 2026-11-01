@@ -317,7 +317,7 @@ h1, h2, h3, p { margin: 0; }
 .store-meta { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; font-size: 0.85rem; margin-top: 6px; }
 .store-providers { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; margin-top: -4px; margin-bottom: 8px; }
 .fact-num { color: var(--text); font-weight: 600; }
-.store-spec { align-self: flex-start; margin-top: 5px; padding: 2px 8px; border: 1px solid; border-radius: 5px; font-size: 0.72rem; font-weight: 600; line-height: 1.4; }
+.store-spec { align-self: flex-start; margin-top: 5px; padding: 3px 8px; border-radius: 5px; font-size: 0.72rem; font-weight: 600; line-height: 1.4; }
 .rating { color: var(--text); font-weight: 600; }
 .stars { position: relative; display: inline-flex; color: var(--text); line-height: 0; }
 .stars-base, .stars-fill { display: inline-flex; gap: 1px; }

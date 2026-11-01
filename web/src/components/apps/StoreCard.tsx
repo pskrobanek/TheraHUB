@@ -60,7 +60,7 @@ export default function StoreCard({ app }: { app: StoreApp }) {
         <div className="store-title">
           <h3>{app.name}</h3>
           <span className="store-tagline">{app.tagline}</span>
-          <span className="store-spec" style={{ color: spec.color, background: `${spec.color}14`, borderColor: `${spec.color}33` }}>
+          <span className="store-spec" style={{ color: spec.color, background: `${spec.color}1a` }}>
             {app.category}
           </span>
         </div>
