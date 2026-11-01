@@ -12,6 +12,8 @@ export interface Route {
   tab: PatientTab;
   /** Podstránka sekce, např. #/aplikace/store. */
   sub?: string;
+  /** Položka podstránky, např. id aplikace v #/aplikace/app/<id>. */
+  item?: string;
 }
 
 export function parseHash(hash: string): Route {
@@ -19,12 +21,20 @@ export function parseHash(hash: string): Route {
   const s = (sectionIds as readonly string[]).includes(section) ? (section as SectionId) : 'pacienti';
   const t = (patientTabs as readonly string[]).includes(tab) ? (tab as PatientTab) : 'aplikace';
   if (s === 'pacienti') return { section: s, patientId: patientId || undefined, tab: t };
-  return { section: s, tab: t, sub: patientId || undefined };
+  return { section: s, tab: t, sub: patientId || undefined, item: tab || undefined };
 }
 
 export function patientHref(patientId: string, tab: PatientTab = 'aplikace'): string {
   return `#/pacienti/${patientId}/${tab}`;
 }
+
+/** Otevřená aplikace jako podzáložka sekce Aplikace. */
+export function appHref(appId: string): string {
+  return `#/aplikace/app/${appId}`;
+}
+
+/** Id aplikace otevřené v sekci Aplikace, pokud nějaká je. */
+export const openAppId = (r: Route): string | undefined => (r.section === 'aplikace' && r.sub === 'app' ? r.item : undefined);
 
 const NAV_EVENT = 'therahub:navigate';
 

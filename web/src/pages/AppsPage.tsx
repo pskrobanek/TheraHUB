@@ -1,5 +1,6 @@
 import { ArrowRight, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react';
 import { useState } from 'react';
+import AppDetailPage from './AppDetailPage';
 import OverviewCard from '../components/apps/OverviewCard';
 import StoreCard from '../components/apps/StoreCard';
 import StoreFilters, { applyFilters, emptyFilters, sortApps, type Filters } from '../components/apps/StoreFilters';
@@ -10,7 +11,9 @@ import { purchasedIds, storeApps } from '../data/store';
 
 const purchased = storeApps.filter((a) => purchasedIds.has(a.id));
 
-export default function AppsPage({ sub }: { sub?: string }) {
+export default function AppsPage({ sub, appId }: { sub?: string; appId?: string }) {
+  const opened = appId ? purchased.find((a) => a.id === appId) : undefined;
+  if (opened) return <AppDetailPage app={opened} />;
   const view = sub === 'store' ? 'store' : 'zakoupene';
   return (
     <div className="page apps">

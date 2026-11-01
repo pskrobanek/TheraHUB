@@ -2,15 +2,15 @@ import { AlertCircle, AlertTriangle, CircleDot, Clock, MoreHorizontal } from 'lu
 import { patients } from '../../data/demo';
 import type { AppOverview, OverviewRow, OverviewWidget } from '../../data/overview';
 import type { CatalogApp } from '../../data/types';
-import { patientHref } from '../../lib/route';
+import { appHref, patientHref } from '../../lib/route';
 import AppIcon from '../AppIcon';
 import Link from '../Link';
 
-const num = (v: number) => v.toLocaleString('cs-CZ');
+export const num = (v: number) => v.toLocaleString('cs-CZ');
 const fmt = (unit: string, v: number) => unit.replace('{v}', num(v));
 
 /** Jméno pacienta; u pacientů z demo dat vede rovnou do jeho karty. */
-function PatientName({ name }: { name: string }) {
+export function PatientName({ name }: { name: string }) {
   const p = patients.find((x) => x.name === name);
   return p ? (
     <Link href={patientHref(p.id)} className="ov-patient">
@@ -21,10 +21,10 @@ function PatientName({ name }: { name: string }) {
   );
 }
 
-const severityIcon = { critical: AlertTriangle, warning: AlertCircle, info: CircleDot };
-const severityLabel = { critical: 'Závažné', warning: 'Upozornění', info: 'Informace' };
+export const severityIcon = { critical: AlertTriangle, warning: AlertCircle, info: CircleDot };
+export const severityLabel = { critical: 'Závažné', warning: 'Upozornění', info: 'Informace' };
 
-function Row({ row }: { row: OverviewRow }) {
+export function Row({ row }: { row: OverviewRow }) {
   const Icon = severityIcon[row.severity];
   return (
     <li className={`ov-row sev-${row.severity}`}>
@@ -38,7 +38,7 @@ function Row({ row }: { row: OverviewRow }) {
   );
 }
 
-function Trend({ w, tint }: { w: Extract<OverviewWidget, { kind: 'trend' }>; tint: string }) {
+export function Trend({ w, tint }: { w: Extract<OverviewWidget, { kind: 'trend' }>; tint: string }) {
   const max = Math.max(...w.values);
   const last = w.values[w.values.length - 1];
   return (
@@ -72,11 +72,13 @@ export default function OverviewCard({ app, o }: { app: CatalogApp; o: AppOvervi
   return (
     <article className="app-card glass">
       <header className="app-card-head">
-        <AppIcon app={app} />
-        <div>
-          <h3>{app.name}</h3>
-          <div className="muted small">{app.tagline}</div>
-        </div>
+        <Link href={appHref(app.id)} className="app-card-open">
+          <AppIcon app={app} />
+          <div>
+            <h3>{app.name}</h3>
+            <div className="muted small">{app.tagline}</div>
+          </div>
+        </Link>
         <button className="btn ghost icon" aria-label="Další volby">
           <MoreHorizontal size={18} />
         </button>
@@ -127,9 +129,9 @@ export default function OverviewCard({ app, o }: { app: CatalogApp; o: AppOvervi
       </div>
 
       <footer className="app-card-actions">
-        <button className="btn primary" style={{ background: app.tint }}>
-          {o.actions[0]}
-        </button>
+        <Link href={appHref(app.id)} className="btn primary" style={{ background: app.tint }}>
+          Otevřít
+        </Link>
         <button className="btn">{o.actions[1]}</button>
       </footer>
     </article>

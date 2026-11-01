@@ -1,8 +1,10 @@
 import { FlaskConical, Home, LayoutGrid, Search, SlidersHorizontal, Users, X, type LucideIcon } from 'lucide-react';
 import { currentUser, hospital } from '../data/demo';
 import { storeApps } from '../data/store';
-import type { Patient } from '../data/types';
-import { patientHref, type Route, type SectionId } from '../lib/route';
+import { overviews } from '../data/overview';
+import type { Patient, StoreApp } from '../data/types';
+import { appHref, openAppId, patientHref, type Route, type SectionId } from '../lib/route';
+import AppIcon from './AppIcon';
 import HospitalMark from './HospitalMark';
 import { FlowBranch } from './icons';
 import Link from './Link';
@@ -35,9 +37,16 @@ interface Props {
   /** Pacienti, které má lékař otevřené. */
   openPatients: Patient[];
   onClosePatient: (patientId: string) => void;
+  /** Aplikace otevřené jako podzáložky sekce Aplikace. */
+  openApps: StoreApp[];
+  onCloseApp: (appId: string) => void;
 }
 
-export default function Sidebar({ route, openPatients, onClosePatient }: Props) {
+const alertsLabel = (n: number) => (n === 0 ? 'bez alertů' : n === 1 ? '1 alert' : n < 5 ? `${n} alerty` : `${n} alertů`);
+
+export default function Sidebar({ route, openPatients, onClosePatient, openApps, onCloseApp }: Props) {
+  const shownApp = openAppId(route);
+  const inApps = route.section === 'aplikace';
   const patientsItem: NavItem = { id: 'pacienti', label: 'Pacienti', icon: Users };
   const patientsHref = openPatients.length ? patientHref(openPatients[0].id) : '#/pacienti';
 
@@ -87,16 +96,39 @@ export default function Sidebar({ route, openPatients, onClosePatient }: Props) 
         <NavLink
           item={{ id: 'aplikace', label: 'Aplikace', icon: LayoutGrid }}
           href="#/aplikace"
-          active={route.section === 'aplikace' && route.sub !== 'store'}
+          active={inApps && !route.sub}
         />
-        {route.section === 'aplikace' && (
+        {(inApps || openApps.length > 0) && (
           <div className="subnav">
-            <Link href="#/aplikace/store" className={route.section === 'aplikace' && route.sub === 'store' ? 'sub-item active' : 'sub-item'}>
-              <span className="sub-link">
-                <span className="sub-name">App Store</span>
-                <span className="sub-meta">{storeApps.length} aplikací v katalogu</span>
-              </span>
-            </Link>
+            {openApps.map((a) => {
+              const o = overviews[a.id];
+              return (
+                <div key={a.id} className={shownApp === a.id ? 'sub-item active' : 'sub-item'}>
+                  <Link href={appHref(a.id)} className="sub-link sub-app">
+                    <AppIcon app={a} size={22} />
+                    <span>
+                      <span className="sub-name">{a.name}</span>
+                      {o && (
+                        <span className="sub-meta">
+                          {o.patients} pacientů · {alertsLabel(o.alerts)}
+                        </span>
+                      )}
+                    </span>
+                  </Link>
+                  <button className="sub-close" onClick={() => onCloseApp(a.id)} aria-label={`Zavřít ${a.name}`}>
+                    <X size={14} />
+                  </button>
+                </div>
+              );
+            })}
+            {inApps && (
+              <Link href="#/aplikace/store" className={route.sub === 'store' ? 'sub-item active' : 'sub-item'}>
+                <span className="sub-link">
+                  <span className="sub-name">App Store</span>
+                  <span className="sub-meta">{storeApps.length} aplikací v katalogu</span>
+                </span>
+              </Link>
+            )}
           </div>
         )}
 

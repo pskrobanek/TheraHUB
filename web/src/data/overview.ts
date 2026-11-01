@@ -203,3 +203,31 @@ export const overviews: Record<string, AppOverview> = {
     actions: ['Otevřít přehled', 'Pacienti'],
   },
 };
+
+export interface RosterEntry {
+  patient: string;
+  status: Severity | 'ok';
+  detail: string;
+  when: string;
+}
+
+const pool = [
+  'Karel Dvořák', 'Jana Veselá', 'Tomáš Král', 'Marie Novotná', 'Petr Svoboda', 'Alena Černá', 'Jiří Procházka',
+  'Hana Kučerová', 'Josef Marek', 'Lenka Pokorná', 'Martin Beneš', 'Zdeňka Fialová', 'Pavel Doležal', 'Eva Holubová',
+];
+const whens = ['včera', '2 dny', '3 dny', '4 dny', 'týden'];
+
+/** Seznam pacientů v aplikaci pro detail (demo): nejdřív ti, kdo vyžadují pozornost. */
+export function rosterOf(o: AppOverview, limit = 8): RosterEntry[] {
+  const out: RosterEntry[] = [];
+  const add = (e: RosterEntry) => {
+    if (!out.some((x) => x.patient === e.patient)) out.push(e);
+  };
+  if (o.widget.kind === 'list') o.widget.rows.forEach((r) => add({ patient: r.patient, status: r.severity, detail: r.detail, when: r.meta }));
+  add({ patient: o.last.patient, status: 'ok', detail: o.last.text, when: o.last.time });
+  for (const name of pool) {
+    if (out.length >= Math.min(limit, o.patients)) break;
+    add({ patient: name, status: 'ok', detail: 'Bez nových událostí', when: whens[out.length % whens.length] });
+  }
+  return out.slice(0, Math.min(limit, o.patients));
+}

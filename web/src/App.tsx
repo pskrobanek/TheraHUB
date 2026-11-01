@@ -2,7 +2,8 @@ import { useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar';
 import { activeApps as initialActive, patients } from './data/demo';
 import type { ActivePatientApp } from './data/types';
-import { navigate, onNavigate, parseHash, patientHref, type Route } from './lib/route';
+import { purchasedIds, storeApps } from './data/store';
+import { navigate, onNavigate, openAppId, parseHash, patientHref, type Route } from './lib/route';
 import AppsPage from './pages/AppsPage';
 import PatientPage from './pages/PatientPage';
 import Placeholder from './pages/Placeholder';
@@ -15,7 +16,22 @@ export default function App() {
   const [active, setActive] = useState<Record<string, ActivePatientApp[]>>(initialActive);
   const [openIds, setOpenIds] = useState<string[]>(patients.map((p) => p.id));
 
+  const [openAppIds, setOpenAppIds] = useState<string[]>([]);
+
   useEffect(() => onNavigate((href) => setRoute(routeOf(href))), []);
+
+  // Otevřená aplikace se přidá do menu jako podzáložka (podobně jako pacient).
+  const shownAppId = openAppId(route);
+  useEffect(() => {
+    if (shownAppId && purchasedIds.has(shownAppId)) setOpenAppIds((ids) => (ids.includes(shownAppId) ? ids : [...ids, shownAppId]));
+  }, [shownAppId]);
+  const openApps = openAppIds.map((id) => storeApps.find((a) => a.id === id)!);
+
+  const closeApp = (id: string) => {
+    const rest = openAppIds.filter((x) => x !== id);
+    setOpenAppIds(rest);
+    if (shownAppId === id) navigate('#/aplikace');
+  };
 
   const openPatients = openIds.map((id) => patients.find((p) => p.id === id)!);
   const patient = patients.find((p) => p.id === route.patientId) ?? patients[0];
@@ -57,7 +73,7 @@ export default function App() {
         <span className="blob b3" />
       </div>
       <div className="shell">
-        <Sidebar route={route} openPatients={openPatients} onClosePatient={closePatient} />
+        <Sidebar route={route} openPatients={openPatients} onClosePatient={closePatient} openApps={openApps} onCloseApp={closeApp} />
         <main className="content">
           {route.section === 'pacienti' && route.patientId ? (
             <PatientPage
@@ -68,7 +84,7 @@ export default function App() {
               onToggleTask={toggleTask}
             />
           ) : route.section === 'aplikace' ? (
-            <AppsPage sub={route.sub} />
+            <AppsPage sub={route.sub} appId={shownAppId} />
           ) : (
             <Placeholder section={route.section} />
           )}
