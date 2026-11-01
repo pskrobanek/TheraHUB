@@ -1,6 +1,6 @@
 import { FlaskConical, Home, LayoutGrid, Search, SlidersHorizontal, Users, X, type LucideIcon } from 'lucide-react';
 import { currentUser, hospital } from '../data/demo';
-import { purchasedIds, storeApps } from '../data/store';
+import { storeApps } from '../data/store';
 import type { Patient } from '../data/types';
 import { patientHref, type Route, type SectionId } from '../lib/route';
 import HospitalMark from './HospitalMark';
@@ -87,15 +87,9 @@ export default function Sidebar({ route, openPatients, onClosePatient }: Props) 
         <NavLink
           item={{ id: 'aplikace', label: 'Aplikace', icon: LayoutGrid }}
           href="#/aplikace"
-          active={route.section === 'aplikace'}
+          active={route.section === 'aplikace' && route.sub !== 'store'}
         />
         <div className="subnav">
-          <Link href="#/aplikace" className={route.section === 'aplikace' && route.sub !== 'store' ? 'sub-item active' : 'sub-item'}>
-            <span className="sub-link">
-              <span className="sub-name">Zakoupené</span>
-              <span className="sub-meta">{purchasedIds.size} aplikací v nemocnici</span>
-            </span>
-          </Link>
           <Link href="#/aplikace/store" className={route.section === 'aplikace' && route.sub === 'store' ? 'sub-item active' : 'sub-item'}>
             <span className="sub-link">
               <span className="sub-name">App Store</span>

@@ -15,14 +15,14 @@ export default function AppsPage({ sub }: { sub?: string }) {
     <div className="page apps">
       <header className="page-head">
         <div>
-          <h1>{view === 'store' ? 'App Store' : 'Zakoupené aplikace'}</h1>
+          <h1>{view === 'store' ? 'App Store' : 'Moje aplikace'}</h1>
           <p className="muted small">
             {view === 'store' ? `${storeApps.length} aplikací v katalogu` : `${purchased.length} aplikací licencovaných pro ${hospital.short}`}
           </p>
         </div>
-        <nav className="switch" aria-label="Zakoupené nebo App Store">
+        <nav className="switch" aria-label="Moje aplikace nebo App Store">
           <Link href="#/aplikace" className={view === 'zakoupene' ? 'switch-item active' : 'switch-item'}>
-            <LayoutGrid size={16} /> Zakoupené <span className="tab-count">{purchased.length}</span>
+            <LayoutGrid size={16} /> Moje aplikace <span className="tab-count">{purchased.length}</span>
           </Link>
           <Link href="#/aplikace/store" className={view === 'store' ? 'switch-item active' : 'switch-item'}>
             <StoreIcon size={16} /> App Store <span className="tab-count">{storeApps.length}</span>
