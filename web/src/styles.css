@@ -314,8 +314,6 @@ h1, h2, h3, p { margin: 0; }
 .store-title h3 { font-size: 1.05rem; font-weight: 600; line-height: 1.2; }
 .store-tagline { font-size: 0.8rem; font-weight: 500; color: #3a3f5c; line-height: 1.3; }
 .pitch { line-height: 1.5; color: #2a2e45; padding-block: 4px 2px; }
-.app-screens { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 10px; margin: 0 -4px; border-radius: 8px; background: #f3f4f8; }
-.app-screen { display: block; width: 100%; height: auto; border-radius: 5px; box-shadow: 0 1px 2px rgba(17, 20, 42, 0.08), 0 4px 10px rgba(17, 20, 42, 0.06); }
 .store-meta { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; font-size: 0.85rem; margin-top: 6px; }
 .store-providers { display: flex; align-items: center; gap: 4px; font-size: 0.8rem; margin-top: -4px; margin-bottom: 8px; }
 .fact-num { color: var(--text); font-weight: 600; }
