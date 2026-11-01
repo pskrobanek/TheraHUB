@@ -242,52 +242,25 @@ h1, h2, h3, p { margin: 0; }
 .switch-item.active .tab-count { background: rgba(255, 255, 255, 0.18); color: #fff; }
 
 /* Moje aplikace: souhrnné widgety za nemocnici */
-.app-card-open { flex: 1; min-width: 0; display: flex; align-items: flex-start; gap: 13px; }
-.app-card-open > div { min-width: 0; }
-.app-card-open:hover h3 { color: var(--accent); }
 .sub-app { display: flex; align-items: center; gap: 9px; }
 .sub-app > span { min-width: 0; }
-/* Kompaktní dashboard karet */
-.ov-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: 12px; align-items: stretch; }
-.ov-card { padding: 14px 15px 0; }
-.ov-card .app-card-head { gap: 9px; align-items: center; }
-.ov-card .app-card-open { gap: 9px; align-items: center; }
-.ov-card .app-card-head h3 { font-size: 0.95rem; line-height: 1.2; }
-.ov-card .app-card-head .small { font-size: 0.75rem; }
-.ov-card .btn.ghost { padding: 3px; }
-.ov-card .app-card-body { gap: 9px; padding: 11px 0; }
-.ov-card .ov-kpis { padding-bottom: 9px; gap: 4px; }
-.ov-card .ov-kpis .small { font-size: 0.7rem; }
-.ov-card .ov-kpis b { font-size: 1rem; }
-.ov-card .ov-alerts { gap: 3px; }
-.ov-card .ov-alerts svg { width: 12px; height: 12px; }
-.ov-card .widget-label { font-size: 0.74rem; }
-.ov-card .ov-list { gap: 3px; }
-.ov-card .ov-row { gap: 7px; padding: 4px 0; font-size: 0.8rem; }
-.ov-card .ov-row > svg { width: 13px; height: 13px; }
-.ov-card .ov-row-main .muted { font-size: 0.72rem; }
-.ov-card .ov-meta { font-size: 0.7rem; }
-.ov-card .ov-trend { gap: 6px; }
-.ov-card .ov-trend-now b { font-size: 0.85rem; }
-.ov-card .ov-trend-now .small { font-size: 0.68rem; }
-.ov-card .ov-bars { min-height: 48px; gap: 3px; }
-.ov-card .ov-col { gap: 3px; }
-.ov-card .ov-bar { border-radius: 3px 3px 0 0; }
-.ov-card .ov-bar-label { font-size: 0.62rem; }
-.ov-card .ov-last { gap: 3px; padding-top: 8px; }
-.ov-card .ov-last-row { font-size: 0.74rem; gap: 5px; }
-.ov-card .ov-last-row .mono { font-size: 0.7rem; }
-.ov-card .app-card-actions { padding: 10px 0 12px; gap: 6px; }
-.ov-card .app-card-actions .btn { padding: 5px 10px; font-size: 0.78rem; }
-.ov-grid .store-more { min-height: 0; padding: 14px; }
-.ov-grid .store-more b { margin-top: 2px; font-size: 0.9rem; }
+/* Moje aplikace: dlaždice podle specializace */
+.myapps { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px 30px; }
+.myapps-group { display: flex; flex-direction: column; gap: 10px; }
+.myapps-head { display: flex; align-items: center; gap: 9px; font-size: 1.02rem; font-weight: 600; }
+.myapps-spec { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 6px; }
+.myapps-grid { display: flex; flex-wrap: wrap; gap: 12px; }
+.myapp-tile { width: 128px; }
+.myapp-tile { display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 18px 10px 14px; text-align: center; transition: background 0.15s, transform 0.15s; }
+.myapp-tile:hover { background: var(--glass-strong); transform: translateY(-1px); }
+.myapp-tile b { font-size: 0.9rem; font-weight: 600; line-height: 1.25; }
+.myapps-store { flex-basis: 100%; display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; color: var(--accent); }
+.myapps-store:hover { text-decoration: underline; }
 /* Otevřená aplikace */
-.app-detail .patient-header { padding-bottom: 20px; }
 .app-detail .patient-id { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
 .app-detail .store-spec { margin-top: 0; }
+.app-detail .patient-top { flex-wrap: wrap; }
 .app-detail-actions { display: flex; gap: 7px; flex-wrap: wrap; }
-.app-detail-kpis { grid-template-columns: repeat(4, 1fr); margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--glass-line); }
-.app-detail-kpis b { font-size: 1.5rem; font-weight: 600; font-variant-numeric: tabular-nums; }
 .app-detail-grid { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(280px, 1fr); gap: 18px; align-items: start; }
 .app-detail-side { display: flex; flex-direction: column; gap: 12px; }
 .app-panel { padding: 20px 22px; display: flex; flex-direction: column; gap: 14px; }
@@ -304,17 +277,8 @@ h1, h2, h3, p { margin: 0; }
 .roster-foot { margin-top: -4px; }
 .app-detail-note { display: flex; gap: 8px; align-items: flex-start; padding: 0 6px; line-height: 1.45; }
 .app-detail-note svg { flex-shrink: 0; margin-top: 1px; }
-@media (max-width: 1100px) { .app-detail-grid { grid-template-columns: 1fr; } .app-detail-kpis { grid-template-columns: repeat(2, 1fr); row-gap: 14px; } }
+@media (max-width: 1100px) { .app-detail-grid { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .roster th:nth-child(3), .roster td:nth-child(3) { display: none; } }
-.store-more { align-items: center; justify-content: center; text-align: center; gap: 6px; padding: 23px; min-height: 220px; border-style: dashed; border-color: rgba(47, 55, 232, 0.35); background: rgba(255, 255, 255, 0.35); }
-.store-more:hover { background: var(--glass-strong); }
-.store-more b { margin-top: 6px; font-weight: 600; }
-.store-more .small { display: inline-flex; align-items: center; gap: 4px; color: var(--accent); }
-.ov-kpis { padding-bottom: 14px; border-bottom: 1px solid var(--glass-line); }
-.ov-kpis .small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.ov-kpis b { font-size: 1.35rem; font-weight: 600; font-variant-numeric: tabular-nums; }
-.ov-alerts { display: inline-flex; align-items: center; gap: 5px; }
-.ov-alerts.on { color: var(--danger); }
 .ov-list { display: flex; flex-direction: column; gap: 8px; }
 .ov-list ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
 .ov-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; }

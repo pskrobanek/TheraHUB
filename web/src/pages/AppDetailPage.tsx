@@ -1,10 +1,19 @@
-import { AlertTriangle, CircleCheck, Clock, ShieldCheck } from 'lucide-react';
+import { CircleCheck, Clock, ShieldCheck } from 'lucide-react';
 import AppIcon from '../components/AppIcon';
-import { PatientName, Row, Trend, num, severityIcon, severityLabel } from '../components/apps/OverviewCard';
+import { PatientName, Row, Trend, severityIcon, severityLabel } from '../components/apps/overviewParts';
+import Link from '../components/Link';
 import { hospital } from '../data/demo';
 import { overviews, rosterOf, type RosterEntry } from '../data/overview';
 import { specialtyOf } from '../data/specialties';
 import type { StoreApp } from '../data/types';
+import { appHref, appTabs, type AppTab } from '../lib/route';
+
+const tabLabels: Record<AppTab, string> = { pacienti: 'Pacienti', workflow: 'Workflow', science: 'Science' };
+
+const tabPlans: Record<Exclude<AppTab, 'pacienti'>, string> = {
+  workflow: 'Léčebné cesty a postupy nemocnice, do kterých je aplikace zapojená, a kroky, které v nich obstarává.',
+  science: 'Výzkumné projekty, které využívají data z této aplikace, a jejich stav.',
+};
 
 function Status({ s }: { s: RosterEntry['status'] }) {
   if (s === 'ok')
@@ -22,7 +31,7 @@ function Status({ s }: { s: RosterEntry['status'] }) {
 }
 
 /** Aplikace otevřená v sekci Aplikace (podzáložka v menu). */
-export default function AppDetailPage({ app }: { app: StoreApp }) {
+export default function AppDetailPage({ app, tab }: { app: StoreApp; tab: AppTab }) {
   const o = overviews[app.id];
   const spec = specialtyOf(app.category);
   if (!o) return <div className="empty glass">Pro tuto aplikaci zatím není souhrnný přehled.</div>;
@@ -50,29 +59,21 @@ export default function AppDetailPage({ app }: { app: StoreApp }) {
           </div>
         </div>
 
-        <div className="metrics app-detail-kpis">
-          <div>
-            <span className="muted small">Pacienti</span>
-            <b>{num(o.patients)}</b>
-          </div>
-          <div>
-            <span className="muted small">Alerty</span>
-            <b className={o.alerts > 0 ? 'ov-alerts on' : 'ov-alerts'}>
-              {o.alerts > 0 && <AlertTriangle size={16} aria-hidden />}
-              {o.alerts}
-            </b>
-          </div>
-          <div>
-            <span className="muted small">{o.stat.label}</span>
-            <b>{o.stat.value}</b>
-          </div>
-          <div>
-            <span className="muted small">Poslední aktivita</span>
-            <b className="mono">{o.last.time}</b>
-          </div>
-        </div>
+        <nav className="tabs" aria-label="Záložky aplikace">
+          {appTabs.map((id) => (
+            <Link key={id} href={appHref(app.id, id)} className={id === tab ? 'tab active' : 'tab'}>
+              {tabLabels[id]}
+              {id === 'pacienti' && <span className="tab-count">{o.patients}</span>}
+            </Link>
+          ))}
+        </nav>
       </header>
 
+      {tab !== 'pacienti' ? (
+        <div className="empty glass">
+          <b>Připravujeme.</b> {tabPlans[tab]}
+        </div>
+      ) : (
       <div className="app-detail-grid">
         <section className="glass app-panel">
           <h2 className="section-title">
@@ -140,6 +141,7 @@ export default function AppDetailPage({ app }: { app: StoreApp }) {
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 }

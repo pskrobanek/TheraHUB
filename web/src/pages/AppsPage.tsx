@@ -1,19 +1,35 @@
 import { ArrowRight, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react';
 import { useState } from 'react';
 import AppDetailPage from './AppDetailPage';
-import OverviewCard from '../components/apps/OverviewCard';
+import AppIcon from '../components/AppIcon';
 import StoreCard from '../components/apps/StoreCard';
 import StoreFilters, { applyFilters, emptyFilters, sortApps, type Filters } from '../components/apps/StoreFilters';
 import Link from '../components/Link';
 import { hospital } from '../data/demo';
-import { overviews } from '../data/overview';
+import { specialtyOf } from '../data/specialties';
+import type { StoreApp } from '../data/types';
+import { appHref, type AppTab } from '../lib/route';
 import { purchasedIds, storeApps } from '../data/store';
 
 const purchased = storeApps.filter((a) => purchasedIds.has(a.id));
 
-export default function AppsPage({ sub, appId }: { sub?: string; appId?: string }) {
+/** Zakoupené aplikace seskupené podle specializace (v pořadí katalogu). */
+const groups = purchased.reduce<{ category: string; apps: StoreApp[] }[]>((acc, app) => {
+  const g = acc.find((x) => x.category === app.category);
+  if (g) g.apps.push(app);
+  else acc.push({ category: app.category, apps: [app] });
+  return acc;
+}, []);
+
+interface Props {
+  sub?: string;
+  appId?: string;
+  appTab: AppTab;
+}
+
+export default function AppsPage({ sub, appId, appTab }: Props) {
   const opened = appId ? purchased.find((a) => a.id === appId) : undefined;
-  if (opened) return <AppDetailPage app={opened} />;
+  if (opened) return <AppDetailPage app={opened} tab={appTab} />;
   const view = sub === 'store' ? 'store' : 'zakoupene';
   return (
     <div className="page apps">
@@ -41,16 +57,32 @@ export default function AppsPage({ sub, appId }: { sub?: string; appId?: string 
 
 function Purchased() {
   return (
-    <div className="ov-grid">
-      {purchased.map((app) => (overviews[app.id] ? <OverviewCard key={app.id} app={app} o={overviews[app.id]} /> : null))}
-      <Link href="#/aplikace/store" className="app-card glass store-more">
-        <span className="app-icon" style={{ width: 36, height: 36, color: 'var(--accent)', background: 'var(--accent-soft)' }}>
-          <StoreIcon size={18} />
-        </span>
-        <b>App Store</b>
-        <span className="muted small">
-          Objevit další aplikace <ArrowRight size={13} />
-        </span>
+    <div className="myapps">
+      {groups.map(({ category, apps }) => {
+        const spec = specialtyOf(category);
+        const Icon = spec.icon;
+        return (
+          <section key={category} className="myapps-group">
+            <h2 className="myapps-head">
+              <span className="myapps-spec" style={{ color: spec.color, background: `${spec.color}1a` }}>
+                <Icon size={15} />
+              </span>
+              {category}
+              <span className="muted small">{apps.length}</span>
+            </h2>
+            <div className="myapps-grid">
+              {apps.map((app) => (
+                <Link key={app.id} href={appHref(app.id)} className="myapp-tile glass">
+                  <AppIcon app={app} size={44} />
+                  <b>{app.name}</b>
+                </Link>
+              ))}
+            </div>
+          </section>
+        );
+      })}
+      <Link href="#/aplikace/store" className="myapps-store muted small">
+        <StoreIcon size={15} /> Objevit další aplikace v App Storu <ArrowRight size={13} />
       </Link>
     </div>
   );

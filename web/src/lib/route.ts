@@ -6,6 +6,9 @@ export type SectionId = (typeof sectionIds)[number];
 export const patientTabs = ['prehled', 'aplikace', 'workflow', 'science'] as const;
 export type PatientTab = (typeof patientTabs)[number];
 
+export const appTabs = ['pacienti', 'workflow', 'science'] as const;
+export type AppTab = (typeof appTabs)[number];
+
 export interface Route {
   section: SectionId;
   patientId?: string;
@@ -14,14 +17,17 @@ export interface Route {
   sub?: string;
   /** Položka podstránky, např. id aplikace v #/aplikace/app/<id>. */
   item?: string;
+  /** Záložka otevřené aplikace, např. #/aplikace/app/<id>/workflow. */
+  appTab: AppTab;
 }
 
 export function parseHash(hash: string): Route {
-  const [section, patientId, tab] = hash.replace(/^#\/?/, '').split('/');
+  const [section, patientId, tab, view] = hash.replace(/^#\/?/, '').split('/');
   const s = (sectionIds as readonly string[]).includes(section) ? (section as SectionId) : 'pacienti';
   const t = (patientTabs as readonly string[]).includes(tab) ? (tab as PatientTab) : 'aplikace';
-  if (s === 'pacienti') return { section: s, patientId: patientId || undefined, tab: t };
-  return { section: s, tab: t, sub: patientId || undefined, item: tab || undefined };
+  const a = (appTabs as readonly string[]).includes(view) ? (view as AppTab) : 'pacienti';
+  if (s === 'pacienti') return { section: s, patientId: patientId || undefined, tab: t, appTab: a };
+  return { section: s, tab: t, sub: patientId || undefined, item: tab || undefined, appTab: a };
 }
 
 export function patientHref(patientId: string, tab: PatientTab = 'aplikace'): string {
@@ -29,8 +35,8 @@ export function patientHref(patientId: string, tab: PatientTab = 'aplikace'): st
 }
 
 /** Otevřená aplikace jako podzáložka sekce Aplikace. */
-export function appHref(appId: string): string {
-  return `#/aplikace/app/${appId}`;
+export function appHref(appId: string, tab: AppTab = 'pacienti'): string {
+  return `#/aplikace/app/${appId}/${tab}`;
 }
 
 /** Id aplikace otevřené v sekci Aplikace, pokud nějaká je. */
