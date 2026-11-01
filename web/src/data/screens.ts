@@ -16,7 +16,7 @@ export type Screen =
 export const screens: Record<string, [Screen, Screen]> = {
   toxitrack: [
     { kind: 'form', title: 'Dotazník toxicity', rows: [['Mukozitida', 3], ['Dysfagie', 2], ['Únava', 2], ['Kůže', 1]], button: 'Odeslat' },
-    { kind: 'line', title: 'Vývoj příznaků', values: [1, 1, 2, 2, 3, 3, 2], rows: [['Nejvyšší', 'G3'], ['Další dotazník', 'pá']] },
+    { kind: 'line', title: 'Vývoj příznaků', values: [1, 1, 2, 2, 3, 3, 2], rows: [['Nejvyšší', 'G3'], ['Další', 'pá']] },
   ],
   cardiowatch: [
     { kind: 'ecg', title: 'EKG záznam', value: '72', unit: 'bpm', rows: [['QTc', '418 ms'], ['PR', '162 ms']] },
@@ -28,7 +28,7 @@ export const screens: Record<string, [Screen, Screen]> = {
   ],
   polykej: [
     { kind: 'list', title: 'Cvičení dne', rows: [['Shakerův cvik', '3×'], ['Masako', '10×'], ['Polknutí s úsilím', '5×']], button: 'Začít' },
-    { kind: 'bars', title: 'Pokrok', values: [2, 3, 3, 4, 4, 5, 5], rows: [['Splněno', '6 z 7 dní']] },
+    { kind: 'bars', title: 'Pokrok', values: [2, 3, 3, 4, 4, 5, 5], rows: [['Splněno', '6/7']] },
   ],
   nutriplan: [
     { kind: 'line', title: 'Hmotnost', values: [75.5, 75, 74.2, 73.5, 72.8, 72, 71.4], rows: [['Dnes', '71,4 kg'], ['Změna', '−4,1 kg']] },
@@ -60,7 +60,7 @@ export const screens: Record<string, [Screen, Screen]> = {
   ],
   sepsisalert: [
     { kind: 'stat', title: 'Riziko sepse', value: '78', unit: '%', rows: [['Laktát', '3,1'], ['Tep', '112/min']] },
-    { kind: 'line', title: 'Vývoj rizika', values: [20, 25, 30, 42, 55, 68, 78], rows: [['Upozornění', 'před 2 h']] },
+    { kind: 'line', title: 'Vývoj rizika', values: [20, 25, 30, 42, 55, 68, 78], rows: [['Alarm', 'před 2 h']] },
   ],
   bedflow: [
     { kind: 'bars', title: 'Obsazenost', values: [80, 85, 92, 88, 95, 90, 86], rows: [['Dnes', '86 %']] },
