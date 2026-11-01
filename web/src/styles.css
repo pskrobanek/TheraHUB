@@ -247,6 +247,40 @@ h1, h2, h3, p { margin: 0; }
 .app-card-open:hover h3 { color: var(--accent); }
 .sub-app { display: flex; align-items: center; gap: 9px; }
 .sub-app > span { min-width: 0; }
+/* Kompaktní dashboard karet */
+.ov-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(232px, 1fr)); gap: 12px; align-items: stretch; }
+.ov-card { padding: 14px 15px 0; }
+.ov-card .app-card-head { gap: 9px; align-items: center; }
+.ov-card .app-card-open { gap: 9px; align-items: center; }
+.ov-card .app-card-head h3 { font-size: 0.95rem; line-height: 1.2; }
+.ov-card .app-card-head .small { font-size: 0.75rem; }
+.ov-card .btn.ghost { padding: 3px; }
+.ov-card .app-card-body { gap: 9px; padding: 11px 0; }
+.ov-card .ov-kpis { padding-bottom: 9px; gap: 4px; }
+.ov-card .ov-kpis .small { font-size: 0.7rem; }
+.ov-card .ov-kpis b { font-size: 1rem; }
+.ov-card .ov-alerts { gap: 3px; }
+.ov-card .ov-alerts svg { width: 12px; height: 12px; }
+.ov-card .widget-label { font-size: 0.74rem; }
+.ov-card .ov-list { gap: 3px; }
+.ov-card .ov-row { gap: 7px; padding: 4px 0; font-size: 0.8rem; }
+.ov-card .ov-row > svg { width: 13px; height: 13px; }
+.ov-card .ov-row-main .muted { font-size: 0.72rem; }
+.ov-card .ov-meta { font-size: 0.7rem; }
+.ov-card .ov-trend { gap: 6px; }
+.ov-card .ov-trend-now b { font-size: 0.85rem; }
+.ov-card .ov-trend-now .small { font-size: 0.68rem; }
+.ov-card .ov-bars { min-height: 48px; gap: 3px; }
+.ov-card .ov-col { gap: 3px; }
+.ov-card .ov-bar { border-radius: 3px 3px 0 0; }
+.ov-card .ov-bar-label { font-size: 0.62rem; }
+.ov-card .ov-last { gap: 3px; padding-top: 8px; }
+.ov-card .ov-last-row { font-size: 0.74rem; gap: 5px; }
+.ov-card .ov-last-row .mono { font-size: 0.7rem; }
+.ov-card .app-card-actions { padding: 10px 0 12px; gap: 6px; }
+.ov-card .app-card-actions .btn { padding: 5px 10px; font-size: 0.78rem; }
+.ov-grid .store-more { min-height: 0; padding: 14px; }
+.ov-grid .store-more b { margin-top: 2px; font-size: 0.9rem; }
 /* Otevřená aplikace */
 .app-detail .patient-header { padding-bottom: 20px; }
 .app-detail .patient-id { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }

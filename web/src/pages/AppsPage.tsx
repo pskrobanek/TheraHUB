@@ -41,11 +41,11 @@ export default function AppsPage({ sub, appId }: { sub?: string; appId?: string 
 
 function Purchased() {
   return (
-    <div className="active-grid">
+    <div className="ov-grid">
       {purchased.map((app) => (overviews[app.id] ? <OverviewCard key={app.id} app={app} o={overviews[app.id]} /> : null))}
       <Link href="#/aplikace/store" className="app-card glass store-more">
-        <span className="app-icon" style={{ width: 48, height: 48, color: 'var(--accent)', background: 'var(--accent-soft)' }}>
-          <StoreIcon size={24} />
+        <span className="app-icon" style={{ width: 36, height: 36, color: 'var(--accent)', background: 'var(--accent-soft)' }}>
+          <StoreIcon size={18} />
         </span>
         <b>App Store</b>
         <span className="muted small">

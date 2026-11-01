@@ -70,17 +70,17 @@ export function Trend({ w, tint }: { w: Extract<OverviewWidget, { kind: 'trend' 
 export default function OverviewCard({ app, o }: { app: CatalogApp; o: AppOverview }) {
   const w = o.widget;
   return (
-    <article className="app-card glass">
+    <article className="app-card glass ov-card">
       <header className="app-card-head">
         <Link href={appHref(app.id)} className="app-card-open">
-          <AppIcon app={app} />
+          <AppIcon app={app} size={32} />
           <div>
             <h3>{app.name}</h3>
             <div className="muted small">{app.tagline}</div>
           </div>
         </Link>
         <button className="btn ghost icon" aria-label="Další volby">
-          <MoreHorizontal size={18} />
+          <MoreHorizontal size={16} />
         </button>
       </header>
 

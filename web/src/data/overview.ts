@@ -145,7 +145,7 @@ export const overviews: Record<string, AppOverview> = {
     stat: { label: 'Ø distres', value: '4,1' },
     widget: {
       kind: 'trend',
-      title: 'Průměrný distres (0–10) po týdnech',
+      title: 'Distres (0–10) po týdnech',
       unit: '{v}',
       values: [5.8, 5.6, 5.1, 4.9, 4.6, 4.4, 4.3, 4.1],
       labels: ['T33', 'T34', 'T35', 'T36', 'T37', 'T38', 'T39', 'T40'],

@@ -1,6 +1,5 @@
 import { FlaskConical, Home, LayoutGrid, Search, SlidersHorizontal, Users, X, type LucideIcon } from 'lucide-react';
 import { currentUser, hospital } from '../data/demo';
-import { storeApps } from '../data/store';
 import { overviews } from '../data/overview';
 import type { Patient, StoreApp } from '../data/types';
 import { appHref, openAppId, patientHref, type Route, type SectionId } from '../lib/route';
@@ -96,9 +95,9 @@ export default function Sidebar({ route, openPatients, onClosePatient, openApps,
         <NavLink
           item={{ id: 'aplikace', label: 'Aplikace', icon: LayoutGrid }}
           href="#/aplikace"
-          active={inApps && !route.sub}
+          active={inApps && !shownApp}
         />
-        {(inApps || openApps.length > 0) && (
+        {openApps.length > 0 && (
           <div className="subnav">
             {openApps.map((a) => {
               const o = overviews[a.id];
@@ -121,14 +120,6 @@ export default function Sidebar({ route, openPatients, onClosePatient, openApps,
                 </div>
               );
             })}
-            {inApps && (
-              <Link href="#/aplikace/store" className={route.sub === 'store' ? 'sub-item active' : 'sub-item'}>
-                <span className="sub-link">
-                  <span className="sub-name">App Store</span>
-                  <span className="sub-meta">{storeApps.length} aplikací v katalogu</span>
-                </span>
-              </Link>
-            )}
           </div>
         )}
 
