@@ -1,9 +1,9 @@
-import { CircleCheck, Clock, ShieldCheck } from 'lucide-react';
+import { AlertTriangle, CircleCheck, Clock, ShieldCheck } from 'lucide-react';
 import AppIcon from '../components/AppIcon';
-import { PatientName, Row, Trend, severityIcon, severityLabel } from '../components/apps/overviewParts';
+import { PatientName, Trend, severityIcon, severityLabel } from '../components/apps/overviewParts';
 import Link from '../components/Link';
 import { hospital } from '../data/demo';
-import { overviews, rosterOf, type RosterEntry } from '../data/overview';
+import { overviews, rosterOf, type AppOverview, type RosterEntry } from '../data/overview';
 import { specialtyOf } from '../data/specialties';
 import type { StoreApp } from '../data/types';
 import { appHref, appTabs, type AppTab } from '../lib/route';
@@ -27,6 +27,33 @@ function Status({ s }: { s: RosterEntry['status'] }) {
     <span className={`roster-status sev-${s}`}>
       <Icon size={15} aria-hidden /> {severityLabel[s]}
     </span>
+  );
+}
+
+/** Rozpad výsledků jako segmentový pruh s legendou (hodnoty i popisky vždy jako text). */
+function Breakdown({ b }: { b: NonNullable<AppOverview['breakdown']> }) {
+  const total = b.parts.reduce((n, p) => n + p.value, 0);
+  return (
+    <div className="breakdown">
+      <div className="ov-trend-head">
+        <span className="widget-label">{b.title}</span>
+        <b className="small">{total} pacientů</b>
+      </div>
+      <div className="seg-bar" role="img" aria-label={b.parts.map((p) => `${p.label} ${p.value}`).join(', ')}>
+        {b.parts.map((p) =>
+          p.value > 0 ? <span key={p.label} className={`seg tone-${p.tone}`} style={{ flexGrow: p.value }} title={`${p.label}: ${p.value}`} /> : null,
+        )}
+      </div>
+      <ul className="seg-legend">
+        {b.parts.map((p) => (
+          <li key={p.label}>
+            <i className={`tone-${p.tone}`} />
+            <span>{p.label}</span>
+            <b>{p.value}</b>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
@@ -110,18 +137,28 @@ export default function AppDetailPage({ app, tab }: { app: StoreApp; tab: AppTab
 
         <div className="app-detail-side">
           <section className="glass app-panel">
-            {w.kind === 'list' ? (
-              <div className="ov-list">
-                <span className="widget-label">{w.title}</span>
-                <ul>
-                  {w.rows.map((r) => (
-                    <Row key={r.patient + r.detail} row={r} />
-                  ))}
-                </ul>
+            <span className="widget-label">Statistiky</span>
+            <div className="app-stats">
+              <div>
+                <span className="muted small">Pacienti</span>
+                <b>{o.patients}</b>
               </div>
-            ) : (
-              <Trend w={w} tint={app.tint} />
-            )}
+              <div>
+                <span className="muted small">Alerty</span>
+                <b className={o.alerts > 0 ? 'stat-alert' : undefined}>
+                  {o.alerts > 0 && <AlertTriangle size={15} aria-hidden />}
+                  {o.alerts}
+                </b>
+              </div>
+              {[o.stat, ...o.extra].map((x) => (
+                <div key={x.label}>
+                  <span className="muted small">{x.label}</span>
+                  <b>{x.value}</b>
+                </div>
+              ))}
+            </div>
+            {o.breakdown && <Breakdown b={o.breakdown} />}
+            {w.kind === 'trend' && <Trend w={w} tint={app.tint} />}
             <div className="ov-last">
               <span className="widget-label">Poslední pacient</span>
               <div className="ov-last-row small">

@@ -1,7 +1,7 @@
-// Části souhrnných widgetů aplikací (seznam k řešení, trend, jméno pacienta).
+// Části souhrnných widgetů aplikací (trend, jméno pacienta, závažnost).
 import { AlertCircle, AlertTriangle, CircleDot } from 'lucide-react';
 import { patients } from '../../data/demo';
-import type { OverviewRow, OverviewWidget } from '../../data/overview';
+import type { OverviewWidget } from '../../data/overview';
 import { patientHref } from '../../lib/route';
 import Link from '../Link';
 
@@ -22,20 +22,6 @@ export function PatientName({ name }: { name: string }) {
 
 export const severityIcon = { critical: AlertTriangle, warning: AlertCircle, info: CircleDot };
 export const severityLabel = { critical: 'Závažné', warning: 'Upozornění', info: 'Informace' };
-
-export function Row({ row }: { row: OverviewRow }) {
-  const Icon = severityIcon[row.severity];
-  return (
-    <li className={`ov-row sev-${row.severity}`}>
-      <Icon size={15} aria-label={severityLabel[row.severity]} />
-      <span className="ov-row-main">
-        <PatientName name={row.patient} />
-        <span className="muted">{row.detail}</span>
-      </span>
-      <span className="mono muted ov-meta">{row.meta}</span>
-    </li>
-  );
-}
 
 export function Trend({ w, tint }: { w: Extract<OverviewWidget, { kind: 'trend' }>; tint: string }) {
   const max = Math.max(...w.values);

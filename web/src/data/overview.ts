@@ -34,6 +34,10 @@ export interface AppOverview {
   widget: OverviewWidget;
   last: { patient: string; text: string; time: string };
   actions: [string, string];
+  /** Další statistiky aplikace pro detail. */
+  extra: { label: string; value: string }[];
+  /** Rozpad výsledků (např. prescreeningu) jako segmentový pruh. */
+  breakdown?: { title: string; parts: { label: string; value: number; tone: 'ok' | 'warning' | 'critical' }[] };
 }
 
 const week = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
@@ -56,6 +60,19 @@ export const overviews: Record<string, AppOverview> = {
     },
     last: { patient: 'Jana Veselá', text: 'vyplnila dotazník', time: '08:12' },
     actions: ['Přehled pacientů', 'Poslat dotazníky'],
+    extra: [
+      { label: 'Ø doba vyplnění', value: '3,4 min' },
+      { label: 'Medián reakce na alert', value: '2,1 h' },
+      { label: 'Dotazníky za 7 dní', value: '118' },
+    ],
+    breakdown: {
+      title: 'Prescreening tento týden',
+      parts: [
+        { label: 'Rovnou na aplikaci', value: 19, tone: 'ok' },
+        { label: 'K lékaři', value: 7, tone: 'warning' },
+        { label: 'Řešit před termínem', value: 2, tone: 'critical' },
+      ],
+    },
   },
   toxitrack: {
     appId: 'toxitrack',
@@ -73,6 +90,10 @@ export const overviews: Record<string, AppOverview> = {
     },
     last: { patient: 'Jana Veselá', text: 'vyplnila dotazník', time: '08:12' },
     actions: ['Otevřít přehled', 'Poslat dotazníky'],
+    extra: [
+      { label: 'Dotazníky za 7 dní', value: '62' },
+      { label: 'Medián reakce na alert', value: '3,0 h' },
+    ],
   },
   cardiowatch: {
     appId: 'cardiowatch',
@@ -90,6 +111,10 @@ export const overviews: Record<string, AppOverview> = {
     },
     last: { patient: 'Karel Dvořák', text: 'odeslal EKG', time: 'včera 21:14' },
     actions: ['Otevřít EKG', 'Pacienti'],
+    extra: [
+      { label: 'Záznamy za 7 dní', value: '58' },
+      { label: 'Arytmie za 30 dní', value: '4' },
+    ],
   },
   visitscribe: {
     appId: 'visitscribe',
@@ -106,6 +131,10 @@ export const overviews: Record<string, AppOverview> = {
     },
     last: { patient: 'Karel Dvořák', text: 'kontrolní konzultace', time: '19. 9.' },
     actions: ['Nahrát návštěvu', 'Zprávy ke kontrole'],
+    extra: [
+      { label: 'Návštěvy tento týden', value: '35' },
+      { label: 'Ø délka návštěvy', value: '11 min' },
+    ],
   },
   polykej: {
     appId: 'polykej',
@@ -121,6 +150,10 @@ export const overviews: Record<string, AppOverview> = {
     },
     last: { patient: 'Hana Kučerová', text: 'dokončila cvičení', time: '09:30' },
     actions: ['Otevřít přehled', 'Pacienti'],
+    extra: [
+      { label: 'Cvičení za 7 dní', value: '312' },
+      { label: 'Bez cvičení 3+ dny', value: '2' },
+    ],
   },
   nutriplan: {
     appId: 'nutriplan',
@@ -138,6 +171,10 @@ export const overviews: Record<string, AppOverview> = {
     },
     last: { patient: 'Josef Marek', text: 'zapsal hmotnost', time: '07:55' },
     actions: ['Otevřít přehled', 'Odeslat k nutričnímu'],
+    extra: [
+      { label: 'Vážení za 7 dní', value: '71' },
+      { label: 'Úbytek nad 5 %', value: '3' },
+    ],
   },
   dermafoto: {
     appId: 'dermafoto',
@@ -155,6 +192,10 @@ export const overviews: Record<string, AppOverview> = {
     },
     last: { patient: 'Jana Veselá', text: 'nahrála fotku', time: '09:05' },
     actions: ['Posoudit fotky', 'Pacienti'],
+    extra: [
+      { label: 'Fotky za 7 dní', value: '18' },
+      { label: 'Medián posouzení', value: '1 den' },
+    ],
   },
   klid: {
     appId: 'klid',
@@ -171,6 +212,10 @@ export const overviews: Record<string, AppOverview> = {
     },
     last: { patient: 'Lenka Pokorná', text: 'vyplnila screening', time: '10:20' },
     actions: ['Otevřít přehled', 'Pacienti'],
+    extra: [
+      { label: 'Screeningy za 7 dní', value: '23' },
+      { label: 'Distres 7+', value: '1' },
+    ],
   },
   bolestdenik: {
     appId: 'bolestdenik',
@@ -187,6 +232,10 @@ export const overviews: Record<string, AppOverview> = {
     },
     last: { patient: 'Martin Beneš', text: 'zapsal bolest', time: '06:10' },
     actions: ['Otevřít deník', 'Pacienti'],
+    extra: [
+      { label: 'Záznamy za 7 dní', value: '104' },
+      { label: 'NRS 7+ za 7 dní', value: '2' },
+    ],
   },
   lekyhlidac: {
     appId: 'lekyhlidac',
@@ -204,6 +253,10 @@ export const overviews: Record<string, AppOverview> = {
     },
     last: { patient: 'Tomáš Král', text: 'potvrdil ranní dávku', time: '08:47' },
     actions: ['Otevřít přehled', 'Pacienti'],
+    extra: [
+      { label: 'Potvrzené dávky', value: '1 284' },
+      { label: 'Vynechané dávky', value: '41' },
+    ],
   },
   krokomer: {
     appId: 'krokomer',
@@ -219,6 +272,10 @@ export const overviews: Record<string, AppOverview> = {
     },
     last: { patient: 'Tomáš Král', text: 'synchronizoval hodinky', time: '07:02' },
     actions: ['Otevřít přehled', 'Pacienti'],
+    extra: [
+      { label: 'Synchronizace dnes', value: '15' },
+      { label: 'Pod 3 000 kroků', value: '4' },
+    ],
   },
 };
 
