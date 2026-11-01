@@ -313,7 +313,7 @@ Pro nemocnici vypadá jako obchod s aplikacemi, pod kapotou je to **registr ově
 - **Filtry katalogu:** specializace, řazení (adoption index, hodnocení), minimální adoption index, jednotlivá kritéria indexu, pro koho, třída MDR, režim AI (bez AI, asistující, vedená, autonomní), minimální hodnocení.
 - Tlačítka: **Vyzkoušet v sandboxu → Požádat o pilot → Uzavřít smlouvu**.
 
-V nemocnici má sekce Aplikace dvě části: **Zakoupené** (licencované aplikace, které lékaři mohou aktivovat u pacientů) a **App Store** (celý katalog s kartami výše).
+V nemocnici má sekce Aplikace dvě části: **Moje aplikace** (licencované aplikace, které lékaři mohou aktivovat u pacientů) a **App Store** (celý katalog s kartami výše). V Mých aplikacích má každá aplikace kartu se **souhrnným widgetem za celou nemocnici** – stejně jako widget u pacienta, jen agregovaně: počet pacientů, alerty, vlastní klíčový ukazatel, seznam pacientů vyžadujících pozornost nebo trend a poslední aktivní pacient. Widget dodává aplikace přes standardní rozhraní; data zůstávají v nemocnici.
 
 ### 6.2 Sandbox → Pilot → Produkce
 
