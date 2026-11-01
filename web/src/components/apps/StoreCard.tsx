@@ -4,6 +4,7 @@ import type { Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
 import { adoptionIndex, levelFor, type ScoreCheck } from '../../lib/score';
 import AppIcon from '../AppIcon';
+import AppScreens from './AppScreens';
 
 export const audienceLabel: Record<Audience, string> = {
   pacient: 'Pacient',
@@ -67,6 +68,8 @@ export default function StoreCard({ app }: { app: StoreApp }) {
       </header>
 
       <p className="pitch">{s.pitch}</p>
+
+      <AppScreens app={app} />
 
       <div className="store-meta">
         <Stars value={s.rating} />
