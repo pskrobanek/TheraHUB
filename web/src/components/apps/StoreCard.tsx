@@ -75,7 +75,7 @@ export default function StoreCard({ app }: { app: StoreApp }) {
       </div>
 
       <div className="store-providers muted">
-        <b className="fact-num">{s.hospitals}</b> poskytovatelů
+        <b className="fact-num">{s.hospitals}</b> {s.hospitals === 1 ? 'poskytovatel' : s.hospitals < 5 ? 'poskytovatelé' : 'poskytovatelů'}
       </div>
 
       <footer className={open ? 'store-foot open' : 'store-foot'}>

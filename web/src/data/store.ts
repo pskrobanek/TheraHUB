@@ -1,7 +1,24 @@
 // Demo data App Store – fiktivní aplikace, ceny, hodnocení i záštity. Neodpovídají žádné reálné firmě ani organizaci.
+// Výjimka: OncoReady – popis dodal autor aplikace; cena, hodnocení a skóre souladu jsou i u ní jen ukázkové.
 import type { StoreApp } from './types';
 
 export const storeApps: StoreApp[] = [
+  {
+    id: 'oncoready', name: 'OncoReady', tagline: 'ePRO a prescreening v onkologii', category: 'Onkologie', icon: 'onco', tint: '#224afb',
+    store: {
+      pitch: 'Pacient hlásí obtíže přes SMS odkaz bez aplikace a hesla, lékař vidí seřazené pacienty, kteří potřebují pozornost, i kdo může rovnou na léčbu.',
+      audience: ['pacient', 'lekar', 'sestra'],
+      regulatory: { kind: 'research', label: 'Není ZP (pilot)' }, ai: 'none',
+      trial: { days: 60, kpis: ['≥ 75 % vyplněných dotazníků', 'Méně odložených aplikací léčby na stacionáři'] },
+      price: { amount: 150, per: 'pacient', period: 'měsíc' },
+      rating: 4.8, reviews: 6, hospitals: 1,
+      compliance: {
+        hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 85,
+        therahub: { widget: true, science: true, workflow: true },
+        intersystems: 'partial', euStandard: 'partial', aiAssociation: null, society: null,
+      },
+    },
+  },
   {
     id: 'toxitrack', name: 'ToxiTrack', tagline: 'Telemonitoring toxicity', category: 'Onkologie', icon: 'onco', tint: '#3b4cf5',
     store: {
@@ -246,5 +263,5 @@ export const storeApps: StoreApp[] = [
 
 /** Aplikace, které má nemocnice zakoupené (licencované). */
 export const purchasedIds = new Set([
-  'toxitrack', 'cardiowatch', 'visitscribe', 'polykej', 'nutriplan', 'dermafoto', 'klid', 'bolestdenik', 'lekyhlidac', 'krokomer',
+  'oncoready', 'toxitrack', 'cardiowatch', 'visitscribe', 'polykej', 'nutriplan', 'dermafoto', 'klid', 'bolestdenik', 'lekyhlidac', 'krokomer',
 ]);

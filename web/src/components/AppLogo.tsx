@@ -1,6 +1,7 @@
 // Loga fiktivních demo aplikací: barevný přechod + vlastní symbol podle toho, co aplikace dělá.
-// Nejde o loga reálných produktů ani firem.
+// Nejde o loga reálných produktů ani firem (kromě OncoReady, viz OncoReadyLogo).
 import type { ReactNode } from 'react';
+import OncoReadyLogo from './OncoReadyLogo';
 
 const W = { stroke: '#fff', strokeWidth: 2.6, strokeLinecap: 'round', strokeLinejoin: 'round', fill: 'none' } as const;
 
@@ -192,6 +193,7 @@ const logos: Record<string, { from: string; to: string; mark: ReactNode }> = {
 };
 
 export default function AppLogo({ appId, size }: { appId: string; size: number }) {
+  if (appId === 'oncoready') return <OncoReadyLogo size={size} />;
   const logo = logos[appId];
   if (!logo) return null;
   const gid = `lg-${appId}`;
@@ -209,4 +211,4 @@ export default function AppLogo({ appId, size }: { appId: string; size: number }
   );
 }
 
-export const hasLogo = (appId: string): boolean => appId in logos;
+export const hasLogo = (appId: string): boolean => appId in logos || appId === 'oncoready';

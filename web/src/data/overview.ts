@@ -39,6 +39,24 @@ export interface AppOverview {
 const week = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
 
 export const overviews: Record<string, AppOverview> = {
+  oncoready: {
+    appId: 'oncoready',
+    patients: 46,
+    alerts: 3,
+    stat: { label: 'Vyplněnost', value: '81 %' },
+    widget: {
+      kind: 'list',
+      title: 'Vyžaduje pozornost',
+      rows: [
+        { patient: 'Karel Dvořák', detail: 'Orální mukozitida G3, zhoršení od pondělí', meta: '07:40', severity: 'critical' },
+        { patient: 'Marie Novotná', detail: 'Prescreening: k lékaři (neutrofily 0,9)', meta: 'zítra', severity: 'critical' },
+        { patient: 'Petr Svoboda', detail: 'Průjem G2, 3 dny', meta: 'včera', severity: 'warning' },
+        { patient: 'Jana Veselá', detail: 'Prescreening: po kontrole sestrou na aplikaci', meta: 'zítra', severity: 'info' },
+      ],
+    },
+    last: { patient: 'Jana Veselá', text: 'vyplnila dotazník', time: '08:12' },
+    actions: ['Přehled pacientů', 'Poslat dotazníky'],
+  },
   toxitrack: {
     appId: 'toxitrack',
     patients: 24,
