@@ -316,7 +316,7 @@ h1, h2, h3, p { margin: 0; }
 .pitch { line-height: 1.5; color: #2a2e45; padding-block: 4px 2px; }
 .store-meta { display: flex; gap: 5px; align-items: center; flex-wrap: wrap; font-size: 0.85rem; margin-top: 6px; }
 .store-providers { display: flex; align-items: center; gap: 6px; font-size: 0.8rem; margin-top: -4px; margin-bottom: 8px; }
-.fact-num { display: inline-block; padding: 1px 5px; border-radius: 3px; background: var(--dark); color: #fff; font-weight: 600; line-height: 1.35; font-variant-numeric: tabular-nums; }
+.fact-num { display: inline-flex; align-items: center; justify-content: center; width: 1.9em; height: 1.9em; border-radius: 3px; background: var(--dark); color: #fff; font-weight: 600; line-height: 1; font-variant-numeric: tabular-nums; }
 .store-spec { align-self: flex-start; margin-top: 5px; padding: 3px 8px; border-radius: 5px; font-size: 0.72rem; font-weight: 600; line-height: 1.4; }
 .rating { color: var(--text); font-weight: 600; }
 .stars { position: relative; display: inline-flex; color: var(--text); line-height: 0; }
