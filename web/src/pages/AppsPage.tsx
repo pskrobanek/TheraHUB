@@ -69,8 +69,8 @@ function Purchased() {
             {apps.map((app) => {
               const spec = specialtyOf(app.category);
               return (
-                <Link key={app.id} href={appHref(app.id)} className="store-card glass my-card">
-                  <div className="store-head">
+                <article key={app.id} className="store-card glass my-card">
+                  <Link href={appHref(app.id)} className="store-head">
                     <AppIcon app={app} size={63} />
                     <div className="store-title">
                       <h3>{app.name}</h3>
@@ -79,8 +79,13 @@ function Purchased() {
                         {app.category}
                       </span>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                  <footer className="my-foot">
+                    <Link href={appHref(app.id)} className="btn primary">
+                      Otevřít
+                    </Link>
+                  </footer>
+                </article>
               );
             })}
           </div>
