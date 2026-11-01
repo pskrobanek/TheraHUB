@@ -17,7 +17,7 @@ export default function AppsPage({ sub }: { sub?: string }) {
         <div>
           <h1>{view === 'store' ? 'App Store' : 'Zakoupené aplikace'}</h1>
           <p className="muted small">
-            {view === 'store' ? `${storeApps.length} aplikací v katalogu` : `${purchased.length} aplikací licencovaných pro ${hospital.name}`}
+            {view === 'store' ? `${storeApps.length} aplikací v katalogu` : `${purchased.length} aplikací licencovaných pro ${hospital.short}`}
           </p>
         </div>
         <nav className="switch" aria-label="Zakoupené nebo App Store">

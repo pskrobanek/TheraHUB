@@ -1,8 +1,9 @@
 // Demo data – fiktivní pacienti, lékaři a aplikace. Nejde o reálné osoby ani produkty.
+// Poskytovatel je jen ukázkový scénář přihlášení; značka v menu je obecná, ne logo nemocnice.
 import { purchasedIds, storeApps } from './store';
 import type { ActivePatientApp, CatalogApp, Patient, Recommendation } from './types';
 
-export const hospital = { short: 'FN Demo', name: 'Fakultní nemocnice Demo', nis: 'Demo NIS 4.2' };
+export const hospital = { short: 'FTN', name: 'Fakultní Thomayerova nemocnice', nis: 'Demo NIS 4.2' };
 
 export const currentUser = {
   name: 'MUDr. Eva Malá',

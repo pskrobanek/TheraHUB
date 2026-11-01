@@ -1,8 +1,9 @@
-import { FlaskConical, Home, Hospital, LayoutGrid, Search, SlidersHorizontal, Users, X, type LucideIcon } from 'lucide-react';
+import { FlaskConical, Home, LayoutGrid, Search, SlidersHorizontal, Users, X, type LucideIcon } from 'lucide-react';
 import { currentUser, hospital } from '../data/demo';
 import { purchasedIds, storeApps } from '../data/store';
 import type { Patient } from '../data/types';
 import { patientHref, type Route, type SectionId } from '../lib/route';
+import HospitalMark from './HospitalMark';
 import { FlowBranch } from './icons';
 import Link from './Link';
 
@@ -110,10 +111,13 @@ export default function Sidebar({ route, openPatients, onClosePatient }: Props) 
 
       <div className="account">
         <div className="user org" title="Poskytovatel, pod kterým jste přihlášeni">
-          <span className="org-icon">
-            <Hospital size={19} />
+          <span className="avatar dark">
+            <HospitalMark size={25} />
           </span>
-          <span className="user-name">{hospital.name}</span>
+          <span>
+            <span className="user-name">{hospital.short}</span>
+            <span className="user-meta">{hospital.name}</span>
+          </span>
         </div>
         <div className="user">
           <span className="avatar dark">{currentUser.initials}</span>

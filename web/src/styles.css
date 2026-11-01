@@ -105,8 +105,8 @@ h1, h2, h3, p { margin: 0; }
 
 .account { margin-top: auto; padding: 14px 7px 4px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--glass-line); }
 .user { display: flex; gap: 11px; align-items: center; }
-.org .user-name { line-height: 1.3; }
-.org-icon { flex-shrink: 0; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 8px; background: #fff; border: 1px solid var(--glass-line); color: var(--text); }
+.org .user-name { font-weight: 600; }
+.org .user-meta { font-size: 0.74rem; line-height: 1.3; }
 
 /* ---------- Avatary ---------- */
 .avatar {
