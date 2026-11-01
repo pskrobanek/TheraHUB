@@ -245,16 +245,17 @@ h1, h2, h3, p { margin: 0; }
 .sub-app { display: flex; align-items: center; gap: 9px; }
 .sub-app > span { min-width: 0; }
 /* Moje aplikace: dlaždice podle specializace */
-.myapps { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 24px 30px; }
-.myapps-group { display: flex; flex-direction: column; gap: 10px; }
-.myapps-head { display: flex; align-items: center; gap: 9px; font-size: 1.02rem; font-weight: 600; }
-.myapps-spec { display: grid; place-items: center; width: 26px; height: 26px; border-radius: 6px; }
-.myapps-grid { display: flex; flex-wrap: wrap; gap: 12px; }
-.myapp-tile { width: 128px; }
-.myapp-tile { display: flex; flex-direction: column; align-items: center; gap: 9px; padding: 18px 10px 14px; text-align: center; transition: background 0.15s, transform 0.15s; }
-.myapp-tile:hover { background: var(--glass-strong); transform: translateY(-1px); }
-.myapp-tile b { font-size: 0.9rem; font-weight: 600; line-height: 1.25; }
-.myapps-store { flex-basis: 100%; display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; color: var(--accent); }
+.myapps { display: flex; flex-direction: column; gap: 26px; }
+.myapps-group { display: flex; flex-direction: column; gap: 12px; }
+.myapps-head { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.myapps-head h2 { font-size: 1.05rem; font-weight: 600; }
+.myapps-icon { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 7px; background: var(--dark); color: #fff; }
+.myapps-hint { flex-basis: 100%; margin-left: 37px; margin-top: -6px; }
+.my-card { padding-bottom: 16px; transition: box-shadow 0.15s, transform 0.15s; }
+.my-card .store-head { border-bottom: 0; padding-bottom: 0; }
+.my-card:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(40, 48, 110, 0.1); }
+.my-card:hover h3 { color: var(--accent); }
+.myapps-store { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; color: var(--accent); }
 .myapps-store:hover { text-decoration: underline; }
 /* Otevřená aplikace */
 .app-detail .patient-id { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
@@ -459,3 +460,4 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 .link { border: 0; background: none; padding: 0; font: inherit; font-size: 0.85rem; color: var(--accent); cursor: pointer; }
 .link:hover { text-decoration: underline; }
 .app-overview .ov-last { border-top: 0; padding-top: 0; }
+.myapps .store-grid { align-items: stretch; }

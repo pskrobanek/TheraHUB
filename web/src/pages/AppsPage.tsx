@@ -6,20 +6,17 @@ import StoreCard from '../components/apps/StoreCard';
 import StoreFilters, { applyFilters, emptyFilters, sortApps, type Filters } from '../components/apps/StoreFilters';
 import Link from '../components/Link';
 import { hospital } from '../data/demo';
+import { appGroups } from '../data/appGroups';
 import { specialtyOf } from '../data/specialties';
-import type { StoreApp } from '../data/types';
 import { appHref, type AppTab } from '../lib/route';
 import { purchasedIds, storeApps } from '../data/store';
 
 const purchased = storeApps.filter((a) => purchasedIds.has(a.id));
 
-/** Zakoupené aplikace seskupené podle specializace (v pořadí katalogu). */
-const groups = purchased.reduce<{ category: string; apps: StoreApp[] }[]>((acc, app) => {
-  const g = acc.find((x) => x.category === app.category);
-  if (g) g.apps.push(app);
-  else acc.push({ category: app.category, apps: [app] });
-  return acc;
-}, []);
+/** Zakoupené aplikace seskupené podle funkční kategorie. */
+const groups = appGroups
+  .map((g) => ({ ...g, apps: purchased.filter((a) => g.appIds.includes(a.id)) }))
+  .filter((g) => g.apps.length > 0);
 
 interface Props {
   sub?: string;
@@ -58,29 +55,37 @@ export default function AppsPage({ sub, appId, appTab }: Props) {
 function Purchased() {
   return (
     <div className="myapps">
-      {groups.map(({ category, apps }) => {
-        const spec = specialtyOf(category);
-        const Icon = spec.icon;
-        return (
-          <section key={category} className="myapps-group">
-            <h2 className="myapps-head">
-              <span className="myapps-spec" style={{ color: spec.color, background: `${spec.color}1a` }}>
-                <Icon size={15} />
-              </span>
-              {category}
-              <span className="muted small">{apps.length}</span>
-            </h2>
-            <div className="myapps-grid">
-              {apps.map((app) => (
-                <Link key={app.id} href={appHref(app.id)} className="myapp-tile glass">
-                  <AppIcon app={app} size={44} />
-                  <b>{app.name}</b>
+      {groups.map(({ id, label, hint, icon: Icon, apps }) => (
+        <section key={id} className="myapps-group">
+          <header className="myapps-head">
+            <span className="myapps-icon">
+              <Icon size={16} />
+            </span>
+            <h2>{label}</h2>
+            <span className="muted small">{apps.length}</span>
+            <span className="muted small myapps-hint">{hint}</span>
+          </header>
+          <div className="store-grid">
+            {apps.map((app) => {
+              const spec = specialtyOf(app.category);
+              return (
+                <Link key={app.id} href={appHref(app.id)} className="store-card glass my-card">
+                  <div className="store-head">
+                    <AppIcon app={app} size={63} />
+                    <div className="store-title">
+                      <h3>{app.name}</h3>
+                      <span className="store-tagline">{app.tagline}</span>
+                      <span className="store-spec" style={{ color: spec.color, background: `${spec.color}1a` }}>
+                        {app.category}
+                      </span>
+                    </div>
+                  </div>
                 </Link>
-              ))}
-            </div>
-          </section>
-        );
-      })}
+              );
+            })}
+          </div>
+        </section>
+      ))}
       <Link href="#/aplikace/store" className="myapps-store muted small">
         <StoreIcon size={15} /> Objevit další aplikace v App Storu <ArrowRight size={13} />
       </Link>
