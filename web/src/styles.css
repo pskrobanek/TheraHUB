@@ -103,7 +103,10 @@ h1, h2, h3, p { margin: 0; }
 .user-name { display: block; font-weight: 500; }
 .user-meta { display: block; font-size: 0.82rem; color: var(--muted); }
 
-.user { margin-top: auto; padding: 16px 7px 4px; display: flex; gap: 11px; align-items: center; border-top: 1px solid var(--glass-line); }
+.account { margin-top: auto; padding: 14px 7px 4px; display: flex; flex-direction: column; gap: 12px; border-top: 1px solid var(--glass-line); }
+.user { display: flex; gap: 11px; align-items: center; }
+.org .user-name { line-height: 1.3; }
+.org-icon { flex-shrink: 0; display: grid; place-items: center; width: 40px; height: 40px; border-radius: 8px; background: #fff; border: 1px solid var(--glass-line); color: var(--text); }
 
 /* ---------- Avatary ---------- */
 .avatar {
@@ -372,7 +375,7 @@ h1, h2, h3, p { margin: 0; }
 @media (max-width: 980px) {
   .shell { grid-template-columns: 1fr; padding: 11px; }
   .sidebar { position: static; height: auto; }
-  .nav-heading, .user, .sidebar .search { display: none; }
+  .nav-heading, .account, .sidebar .search { display: none; }
   .sidebar .nav { flex-direction: row; overflow-x: auto; }
   .subnav { flex-direction: row; margin: 0; padding-left: 0; border-left: 0; }
   .sub-meta { display: none; }
