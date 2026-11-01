@@ -8,9 +8,9 @@ import { specialtyOf } from '../data/specialties';
 import type { StoreApp } from '../data/types';
 import { appHref, appTabs, type AppTab } from '../lib/route';
 
-const tabLabels: Record<AppTab, string> = { pacienti: 'Pacienti', workflow: 'Workflow', science: 'Science' };
+const tabLabels: Record<AppTab, string> = { prehled: 'Přehled', pacienti: 'Pacienti', workflow: 'Workflow', science: 'Science' };
 
-const tabPlans: Record<Exclude<AppTab, 'pacienti'>, string> = {
+const tabPlans: Record<Exclude<AppTab, 'prehled' | 'pacienti'>, string> = {
   workflow: 'Léčebné cesty a postupy nemocnice, do kterých je aplikace zapojená, a kroky, které v nich obstarává.',
   science: 'Výzkumné projekty, které využívají data z této aplikace, a jejich stav.',
 };
@@ -96,12 +96,62 @@ export default function AppDetailPage({ app, tab }: { app: StoreApp; tab: AppTab
         </nav>
       </header>
 
-      {tab !== 'pacienti' ? (
-        <div className="empty glass">
-          <b>Připravujeme.</b> {tabPlans[tab]}
+      {tab === 'prehled' ? (
+        <div className="app-overview">
+          <section className="glass app-panel">
+            <span className="widget-label">Statistiky</span>
+            <div className="app-stats">
+              <div>
+                <span className="muted small">Pacienti</span>
+                <b>{o.patients}</b>
+              </div>
+              <div>
+                <span className="muted small">Alerty</span>
+                <b className={o.alerts > 0 ? 'stat-alert' : undefined}>
+                  {o.alerts > 0 && <AlertTriangle size={15} aria-hidden />}
+                  {o.alerts}
+                </b>
+              </div>
+              {[o.stat, ...o.extra].map((x) => (
+                <div key={x.label}>
+                  <span className="muted small">{x.label}</span>
+                  <b>{x.value}</b>
+                </div>
+              ))}
+            </div>
+          </section>
+          <div className="app-overview-row">
+            {o.breakdown && (
+              <section className="glass app-panel">
+                <Breakdown b={o.breakdown} />
+              </section>
+            )}
+            {w.kind === 'trend' && (
+              <section className="glass app-panel">
+                <Trend w={w} tint={app.tint} />
+              </section>
+            )}
+            <section className="glass app-panel">
+              <div className="ov-last">
+                <span className="widget-label">Poslední pacient</span>
+                <div className="ov-last-row small">
+                  <Clock size={13} aria-hidden />
+                  <span className="ov-last-text">
+                    <PatientName name={o.last.patient} /> <span className="muted">· {o.last.text}</span>
+                  </span>
+                  <span className="mono muted">{o.last.time}</span>
+                </div>
+              </div>
+            </section>
+          </div>
+          <div className="app-detail-note muted small">
+            <ShieldCheck size={15} aria-hidden />
+            <span>
+              Aplikace běží v prostředí {hospital.short} přes SMART on FHIR. Data pacientů zůstávají v nemocnici.
+            </span>
+          </div>
         </div>
-      ) : (
-      <div className="app-detail-grid">
+      ) : tab === 'pacienti' ? (
         <section className="glass app-panel">
           <h2 className="section-title">
             Pacienti v aplikaci <span className="count">{o.patients}</span>
@@ -134,50 +184,10 @@ export default function AppDetailPage({ app, tab }: { app: StoreApp; tab: AppTab
             Zobrazeno {roster.length} z {o.patients}
           </div>
         </section>
-
-        <div className="app-detail-side">
-          <section className="glass app-panel">
-            <span className="widget-label">Statistiky</span>
-            <div className="app-stats">
-              <div>
-                <span className="muted small">Pacienti</span>
-                <b>{o.patients}</b>
-              </div>
-              <div>
-                <span className="muted small">Alerty</span>
-                <b className={o.alerts > 0 ? 'stat-alert' : undefined}>
-                  {o.alerts > 0 && <AlertTriangle size={15} aria-hidden />}
-                  {o.alerts}
-                </b>
-              </div>
-              {[o.stat, ...o.extra].map((x) => (
-                <div key={x.label}>
-                  <span className="muted small">{x.label}</span>
-                  <b>{x.value}</b>
-                </div>
-              ))}
-            </div>
-            {o.breakdown && <Breakdown b={o.breakdown} />}
-            {w.kind === 'trend' && <Trend w={w} tint={app.tint} />}
-            <div className="ov-last">
-              <span className="widget-label">Poslední pacient</span>
-              <div className="ov-last-row small">
-                <Clock size={13} aria-hidden />
-                <span className="ov-last-text">
-                  <PatientName name={o.last.patient} /> <span className="muted">· {o.last.text}</span>
-                </span>
-                <span className="mono muted">{o.last.time}</span>
-              </div>
-            </div>
-          </section>
-          <div className="app-detail-note muted small">
-            <ShieldCheck size={15} aria-hidden />
-            <span>
-              Aplikace běží v prostředí {hospital.short} přes SMART on FHIR. Data pacientů zůstávají v nemocnici.
-            </span>
-          </div>
+      ) : (
+        <div className="empty glass">
+          <b>Připravujeme.</b> {tabPlans[tab]}
         </div>
-      </div>
       )}
     </div>
   );

@@ -6,7 +6,7 @@ export type SectionId = (typeof sectionIds)[number];
 export const patientTabs = ['prehled', 'aplikace', 'workflow', 'science'] as const;
 export type PatientTab = (typeof patientTabs)[number];
 
-export const appTabs = ['pacienti', 'workflow', 'science'] as const;
+export const appTabs = ['prehled', 'pacienti', 'workflow', 'science'] as const;
 export type AppTab = (typeof appTabs)[number];
 
 export interface Route {
@@ -25,7 +25,7 @@ export function parseHash(hash: string): Route {
   const [section, patientId, tab, view] = hash.replace(/^#\/?/, '').split('/');
   const s = (sectionIds as readonly string[]).includes(section) ? (section as SectionId) : 'pacienti';
   const t = (patientTabs as readonly string[]).includes(tab) ? (tab as PatientTab) : 'aplikace';
-  const a = (appTabs as readonly string[]).includes(view) ? (view as AppTab) : 'pacienti';
+  const a = (appTabs as readonly string[]).includes(view) ? (view as AppTab) : 'prehled';
   if (s === 'pacienti') return { section: s, patientId: patientId || undefined, tab: t, appTab: a };
   return { section: s, tab: t, sub: patientId || undefined, item: tab || undefined, appTab: a };
 }
@@ -35,7 +35,7 @@ export function patientHref(patientId: string, tab: PatientTab = 'aplikace'): st
 }
 
 /** Otevřená aplikace jako podzáložka sekce Aplikace. */
-export function appHref(appId: string, tab: AppTab = 'pacienti'): string {
+export function appHref(appId: string, tab: AppTab = 'prehled'): string {
   return `#/aplikace/app/${appId}/${tab}`;
 }
 
