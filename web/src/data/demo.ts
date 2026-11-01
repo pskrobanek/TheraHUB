@@ -1,5 +1,5 @@
 // Demo data – fiktivní pacienti, lékaři a aplikace. Nejde o reálné osoby ani produkty.
-// Poskytovatel je jen ukázkový scénář přihlášení; značka v menu je obecná, ne logo nemocnice.
+// Poskytovatel je jen ukázkový scénář přihlášení (logo v menu dodal uživatel).
 import { purchasedIds, storeApps } from './store';
 import type { ActivePatientApp, CatalogApp, Patient, Recommendation } from './types';
 

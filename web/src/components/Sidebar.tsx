@@ -89,14 +89,16 @@ export default function Sidebar({ route, openPatients, onClosePatient }: Props) 
           href="#/aplikace"
           active={route.section === 'aplikace' && route.sub !== 'store'}
         />
-        <div className="subnav">
-          <Link href="#/aplikace/store" className={route.section === 'aplikace' && route.sub === 'store' ? 'sub-item active' : 'sub-item'}>
-            <span className="sub-link">
-              <span className="sub-name">App Store</span>
-              <span className="sub-meta">{storeApps.length} aplikací v katalogu</span>
-            </span>
-          </Link>
-        </div>
+        {route.section === 'aplikace' && (
+          <div className="subnav">
+            <Link href="#/aplikace/store" className={route.section === 'aplikace' && route.sub === 'store' ? 'sub-item active' : 'sub-item'}>
+              <span className="sub-link">
+                <span className="sub-name">App Store</span>
+                <span className="sub-meta">{storeApps.length} aplikací v katalogu</span>
+              </span>
+            </Link>
+          </div>
+        )}
 
         {after.map((item) => (
           <NavLink key={item.id} item={item} href={`#/${item.id}`} active={route.section === item.id} />
@@ -106,7 +108,7 @@ export default function Sidebar({ route, openPatients, onClosePatient }: Props) 
       <div className="account">
         <div className="user org" title="Poskytovatel, pod kterým jste přihlášeni">
           <span className="avatar dark">
-            <HospitalMark size={25} />
+            <HospitalMark width={30} />
           </span>
           <span>
             <span className="user-name">{hospital.short}</span>

@@ -1,27 +1,34 @@
 import { useId } from 'react';
 
-/** Obecná značka moderní nemocnice (budova s křížem). Nejde o logo žádné konkrétní nemocnice. */
-export default function HospitalMark({ size = 22 }: { size?: number }) {
+/**
+ * Logo přihlášeného poskytovatele jako bílý otisk (silueta budovy s věží),
+ * překreslené podle podkladu, který dodal uživatel. Určeno do tmavého kruhu.
+ */
+export default function HospitalMark({ width = 30 }: { width?: number }) {
   const mask = useId();
+  const vb = { x: 75, y: 17, w: 355, h: 210 };
   return (
-    <svg width={size} height={size} viewBox="0 0 24 24" aria-hidden>
+    <svg width={width} height={(width * vb.h) / vb.w} viewBox={`${vb.x} ${vb.y} ${vb.w} ${vb.h}`} aria-hidden>
       <defs>
         <mask id={mask}>
-          <rect width="24" height="24" fill="#fff" />
-          {/* kříž, vchod a okna jako výřezy */}
-          <rect x="11.2" y="6" width="1.6" height="5.6" rx="0.4" fill="#000" />
-          <rect x="9.2" y="8" width="5.6" height="1.6" rx="0.4" fill="#000" />
-          <rect x="10.7" y="16.2" width="2.6" height="4.5" rx="0.6" fill="#000" />
-          <rect x="4.6" y="13" width="1.8" height="1.3" rx="0.4" fill="#000" />
-          <rect x="4.6" y="16.2" width="1.8" height="1.3" rx="0.4" fill="#000" />
-          <rect x="17.6" y="13" width="1.8" height="1.3" rx="0.4" fill="#000" />
-          <rect x="17.6" y="16.2" width="1.8" height="1.3" rx="0.4" fill="#000" />
+          <rect x={vb.x} y={vb.y} width={vb.w} height={vb.h} fill="#fff" />
+          <circle cx="285" cy="37" r="7" fill="#000" />
         </mask>
       </defs>
       <g fill="currentColor" mask={`url(#${mask})`}>
-        <rect x="8.4" y="3" width="7.2" height="17.5" rx="1.6" />
-        <rect x="3.2" y="10.4" width="4.4" height="10.1" rx="1.2" />
-        <rect x="16.4" y="10.4" width="4.4" height="10.1" rx="1.2" />
+        {/* spodní pás */}
+        <rect x="80" y="168" width="345" height="54" />
+        {/* levé křídlo se šikmou střechou */}
+        <polygon points="80,170 80,104 88,100 118,100 120,111 245,128 258,131 258,170" />
+        {/* tenká linka vlevo od věže */}
+        <polygon points="249,84 262,84 262,90 255,90 255,130 249,130" />
+        {/* věž */}
+        <polygon points="266,170 266,32 275,22 296,22 302,30 302,170" />
+        <rect x="302" y="84" width="14" height="16" />
+        <rect x="310" y="100" width="6" height="40" />
+        {/* pravé křídlo a malá věžička */}
+        <polygon points="316,170 316,137 346,137 398,143 398,170" />
+        <rect x="406" y="143" width="19" height="27" />
       </g>
     </svg>
   );
