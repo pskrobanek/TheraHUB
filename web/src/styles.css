@@ -6,6 +6,7 @@
   --dark: #0d0f17;
   --danger: #c0262d;
   --danger-soft: rgba(239, 68, 68, 0.1);
+  --warn: #b45309;
   --ok: #15803d;
   --ok-soft: rgba(34, 197, 94, 0.14);
 
@@ -240,12 +241,48 @@ h1, h2, h3, p { margin: 0; }
 .switch-item .tab-count { background: rgba(17, 20, 42, 0.07); color: var(--text); }
 .switch-item.active .tab-count { background: rgba(255, 255, 255, 0.18); color: #fff; }
 
-.owned-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 14px; }
-.owned-tile { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; padding: 22px 14px 18px; }
-.owned-tile b { margin-top: 6px; font-weight: 600; }
-.owned-tile.more { border-style: dashed; border-color: rgba(47, 55, 232, 0.35); background: rgba(255, 255, 255, 0.35); }
-.owned-tile.more:hover { background: var(--glass-strong); }
-.owned-tile.more .small { display: inline-flex; align-items: center; gap: 4px; color: var(--accent); }
+/* Moje aplikace: souhrnné widgety za nemocnici */
+.store-more { align-items: center; justify-content: center; text-align: center; gap: 6px; padding: 23px; min-height: 220px; border-style: dashed; border-color: rgba(47, 55, 232, 0.35); background: rgba(255, 255, 255, 0.35); }
+.store-more:hover { background: var(--glass-strong); }
+.store-more b { margin-top: 6px; font-weight: 600; }
+.store-more .small { display: inline-flex; align-items: center; gap: 4px; color: var(--accent); }
+.ov-kpis { padding-bottom: 14px; border-bottom: 1px solid var(--glass-line); }
+.ov-kpis .small { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ov-kpis b { font-size: 1.35rem; font-weight: 600; font-variant-numeric: tabular-nums; }
+.ov-alerts { display: inline-flex; align-items: center; gap: 5px; }
+.ov-alerts.on { color: var(--danger); }
+.ov-list { display: flex; flex-direction: column; gap: 8px; }
+.ov-list ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 2px; }
+.ov-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; }
+.ov-row + .ov-row { border-top: 1px solid var(--glass-line); }
+.ov-row > svg { flex-shrink: 0; }
+.ov-row.sev-critical > svg { color: var(--danger); }
+.ov-row.sev-warning > svg { color: var(--warn); }
+.ov-row.sev-info > svg { color: var(--muted); }
+.ov-row-main { flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 1.3; }
+.ov-row-main .muted { font-size: 0.86rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ov-patient { font-weight: 500; }
+a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
+.ov-meta { font-size: 0.8rem; white-space: nowrap; }
+.ov-trend { flex: 1; display: flex; flex-direction: column; gap: 10px; }
+.ov-trend-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+.ov-trend-now { display: flex; flex-direction: column; align-items: flex-end; text-align: right; }
+.ov-trend-now b { font-size: 1.05rem; font-weight: 600; white-space: nowrap; }
+.ov-bars { flex: 1; display: flex; gap: 4px; min-height: 92px; }
+.ov-col { position: relative; flex: 1; display: flex; flex-direction: column; gap: 5px; }
+.ov-bar-track { flex: 1; display: flex; align-items: flex-end; }
+.ov-bar { width: 100%; border-radius: 4px 4px 0 0; background: rgba(17, 20, 42, 0.13); transition: filter 0.15s; }
+.ov-col:hover .ov-bar { filter: brightness(0.82); }
+.ov-bar-label { font-size: 0.72rem; color: var(--muted); text-align: center; }
+.ov-col:hover::after {
+  content: attr(data-tip); position: absolute; bottom: calc(100% + 4px); left: 50%; transform: translateX(-50%); z-index: 2;
+  padding: 4px 8px; border-radius: 5px; background: var(--dark); color: #fff; font-size: 0.75rem; white-space: nowrap; pointer-events: none;
+}
+.ov-last { display: flex; flex-direction: column; gap: 6px; margin-top: auto; padding-top: 12px; border-top: 1px solid var(--glass-line); }
+.ov-last-row { display: flex; align-items: center; gap: 7px; }
+.ov-last-row > svg { flex-shrink: 0; color: var(--muted); }
+.ov-last-text { flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.ov-last .mono { font-size: 0.8rem; white-space: nowrap; }
 
 /* Rozvržení App Store: filtry vlevo, obsah vpravo */
 .store-layout { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 18px; align-items: start; }

@@ -108,7 +108,7 @@ export default function Sidebar({ route, openPatients, onClosePatient }: Props) 
       <div className="account">
         <div className="user org" title="Poskytovatel, pod kterým jste přihlášeni">
           <span className="avatar dark">
-            <HospitalMark width={30} />
+            <HospitalMark width={25} />
           </span>
           <span>
             <span className="user-name">{hospital.short}</span>

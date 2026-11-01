@@ -4,7 +4,7 @@ import { useId } from 'react';
  * Logo přihlášeného poskytovatele jako bílý otisk (silueta budovy s věží),
  * překreslené podle podkladu, který dodal uživatel. Určeno do tmavého kruhu.
  */
-export default function HospitalMark({ width = 30 }: { width?: number }) {
+export default function HospitalMark({ width = 25 }: { width?: number }) {
   const mask = useId();
   const vb = { x: 75, y: 17, w: 355, h: 210 };
   return (

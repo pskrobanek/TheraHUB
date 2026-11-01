@@ -1,10 +1,11 @@
 import { ArrowRight, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react';
 import { useState } from 'react';
-import AppIcon from '../components/AppIcon';
+import OverviewCard from '../components/apps/OverviewCard';
 import StoreCard from '../components/apps/StoreCard';
 import StoreFilters, { applyFilters, emptyFilters, sortApps, type Filters } from '../components/apps/StoreFilters';
 import Link from '../components/Link';
 import { hospital } from '../data/demo';
+import { overviews } from '../data/overview';
 import { purchasedIds, storeApps } from '../data/store';
 
 const purchased = storeApps.filter((a) => purchasedIds.has(a.id));
@@ -37,15 +38,9 @@ export default function AppsPage({ sub }: { sub?: string }) {
 
 function Purchased() {
   return (
-    <div className="owned-grid">
-      {purchased.map((app) => (
-        <div key={app.id} className="owned-tile glass">
-          <AppIcon app={app} size={48} />
-          <b>{app.name}</b>
-          <span className="muted small">{app.category}</span>
-        </div>
-      ))}
-      <Link href="#/aplikace/store" className="owned-tile glass more">
+    <div className="active-grid">
+      {purchased.map((app) => (overviews[app.id] ? <OverviewCard key={app.id} app={app} o={overviews[app.id]} /> : null))}
+      <Link href="#/aplikace/store" className="app-card glass store-more">
         <span className="app-icon" style={{ width: 48, height: 48, color: 'var(--accent)', background: 'var(--accent-soft)' }}>
           <StoreIcon size={24} />
         </span>
