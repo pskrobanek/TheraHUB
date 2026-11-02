@@ -16,6 +16,16 @@ import { purchasedIds, storeApps } from '../data/store';
 
 const purchased = storeApps.filter((a) => purchasedIds.has(a.id));
 
+/** Počty na dlaždici; pruh ukazuje hodnotu vůči aplikaci s nejvyšším počtem. */
+const tileStats = [
+  { key: 'patients', label: 'Pacienti' },
+  { key: 'workflows', label: 'Workflows' },
+  { key: 'studies', label: 'Studie' },
+] as const;
+const maxOf = Object.fromEntries(
+  tileStats.map(({ key }) => [key, Math.max(1, ...purchased.map((a) => overviews[a.id]?.[key] ?? 0))]),
+) as Record<(typeof tileStats)[number]['key'], number>;
+
 /** Zakoupené aplikace seskupené podle funkční kategorie. */
 const groups = appGroups
   .map((g) => ({ ...g, apps: purchased.filter((a) => g.appIds.includes(a.id)) }))
@@ -71,22 +81,22 @@ function Purchased() {
                 <article key={app.id} className="my-tile">
                   <Link href={appHref(app.id)} className="my-tile-main">
                     <AppIcon app={app} size={44} />
-                    <h3>{app.name}</h3>
+                    <span className="my-tile-title">
+                      <h3>{app.name}</h3>
+                      <span className="my-tile-tagline">{app.tagline}</span>
+                    </span>
                   </Link>
                   {o && (
                     <dl className="my-tile-stats">
-                      <div>
-                        <dt>Pacienti</dt>
-                        <dd>{o.patients}</dd>
-                      </div>
-                      <div>
-                        <dt>Workflows</dt>
-                        <dd>{o.workflows}</dd>
-                      </div>
-                      <div>
-                        <dt>Studie</dt>
-                        <dd>{o.studies}</dd>
-                      </div>
+                      {tileStats.map(({ key, label }) => (
+                        <div key={key} title={`${label}: ${o[key]} (pruh vůči aplikaci s nejvyšším počtem)`}>
+                          <dt>{label}</dt>
+                          <span className="tile-bar" aria-hidden>
+                            <span style={{ width: `${o[key] === 0 ? 0 : Math.max(4, (o[key] / maxOf[key]) * 100)}%` }} />
+                          </span>
+                          <dd>{o[key]}</dd>
+                        </div>
+                      ))}
                     </dl>
                   )}
                   <div className="my-tile-actions">
