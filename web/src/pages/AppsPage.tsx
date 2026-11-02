@@ -1,4 +1,4 @@
-import { ArrowRight, ArrowUpRight, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react';
+import { ArrowRight, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react';
 import { useState } from 'react';
 import AppDetailPage from './AppDetailPage';
 import AppIcon from '../components/AppIcon';
@@ -8,6 +8,7 @@ import StoreFilters, { applyFilters, emptyFilters, sortApps, type Filters } from
 import Link from '../components/Link';
 import { hospital } from '../data/demo';
 import { appGroups } from '../data/appGroups';
+import { OpenBridge } from '../components/icons';
 import { openExternalApp } from '../lib/launch';
 import { appHref, type AppTab } from '../lib/route';
 import { purchasedIds, storeApps } from '../data/store';
@@ -81,7 +82,7 @@ function Purchased() {
                       <BrandDots /> Přehled
                     </Link>
                     <button className="btn open-ext" onClick={() => openExternalApp(app)}>
-                      Otevřít <ArrowUpRight size={15} aria-hidden />
+                      Otevřít <OpenBridge size={17} strokeWidth={1.75} aria-hidden />
                     </button>
                   </footer>
                 </article>

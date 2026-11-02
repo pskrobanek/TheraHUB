@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowUpRight, CircleCheck, Clock, ShieldCheck } from 'lucide-react';
+import { AlertTriangle, CircleCheck, Clock, ShieldCheck } from 'lucide-react';
 import AppIcon from '../components/AppIcon';
 import { PatientName, Trend, severityIcon, severityLabel } from '../components/apps/overviewParts';
 import Link from '../components/Link';
@@ -6,6 +6,7 @@ import { hospital } from '../data/demo';
 import { overviews, rosterOf, type AppOverview, type RosterEntry } from '../data/overview';
 import { specialtyOf } from '../data/specialties';
 import type { StoreApp } from '../data/types';
+import { OpenBridge } from '../components/icons';
 import { openExternalApp } from '../lib/launch';
 import { appHref, appTabs, type AppTab } from '../lib/route';
 
@@ -82,7 +83,7 @@ export default function AppDetailPage({ app, tab }: { app: StoreApp; tab: AppTab
           <div className="app-detail-actions">
             <button className="btn">{o.actions[1]}</button>
             <button className="btn open-ext" onClick={() => openExternalApp(app)}>
-              Otevřít aplikaci <ArrowUpRight size={16} aria-hidden />
+              Otevřít aplikaci <OpenBridge size={18} strokeWidth={1.75} aria-hidden />
             </button>
           </div>
         </div>
