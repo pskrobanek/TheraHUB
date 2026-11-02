@@ -245,10 +245,9 @@ h1, h2, h3, p { margin: 0; }
 .sub-app { display: flex; align-items: center; gap: 9px; }
 .sub-app > span { min-width: 0; }
 /* Moje aplikace: dlaždice podle specializace */
-.myapps { display: flex; flex-direction: column; gap: 22px; }
-.myapps-group { display: flex; flex-direction: column; gap: 12px; padding-top: 18px; border-top: 1px solid rgba(17, 20, 42, 0.1); }
-.myapps-group:first-child { padding-top: 4px; border-top: 0; }
-.myapps-head { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; }
+.myapps { display: flex; flex-direction: column; gap: 30px; }
+.myapps-group { display: flex; flex-direction: column; gap: 14px; }
+.myapps-head { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; padding-bottom: 9px; border-bottom: 1px solid rgba(17, 20, 42, 0.1); }
 .myapps-head h2 { font-size: 1.05rem; font-weight: 600; }
 .brand-dots { color: var(--accent); flex-shrink: 0; }
 /* Čtvercové skleněné dlaždice Mých aplikací */
