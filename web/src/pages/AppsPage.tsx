@@ -1,13 +1,13 @@
-import { ArrowRight, ExternalLink, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react';
+import { ArrowRight, ArrowUpRight, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react';
 import { useState } from 'react';
 import AppDetailPage from './AppDetailPage';
 import AppIcon from '../components/AppIcon';
+import BrandDots from '../components/BrandDots';
 import StoreCard from '../components/apps/StoreCard';
 import StoreFilters, { applyFilters, emptyFilters, sortApps, type Filters } from '../components/apps/StoreFilters';
 import Link from '../components/Link';
 import { hospital } from '../data/demo';
 import { appGroups } from '../data/appGroups';
-import { specialtyOf } from '../data/specialties';
 import { openExternalApp } from '../lib/launch';
 import { appHref, type AppTab } from '../lib/route';
 import { purchasedIds, storeApps } from '../data/store';
@@ -56,7 +56,7 @@ export default function AppsPage({ sub, appId, appTab }: Props) {
 function Purchased() {
   return (
     <div className="myapps">
-      {groups.map(({ id, label, hint, icon: Icon, apps }) => (
+      {groups.map(({ id, label, icon: Icon, apps }) => (
         <section key={id} className="myapps-group">
           <header className="myapps-head">
             <span className="myapps-icon">
@@ -64,11 +64,9 @@ function Purchased() {
             </span>
             <h2>{label}</h2>
             <span className="muted small">{apps.length}</span>
-            <span className="muted small myapps-hint">{hint}</span>
           </header>
           <div className="store-grid">
             {apps.map((app) => {
-              const spec = specialtyOf(app.category);
               return (
                 <article key={app.id} className="store-card glass my-card">
                   <Link href={appHref(app.id)} className="store-head">
@@ -76,17 +74,14 @@ function Purchased() {
                     <div className="store-title">
                       <h3>{app.name}</h3>
                       <span className="store-tagline">{app.tagline}</span>
-                      <span className="store-spec" style={{ color: spec.color, background: `${spec.color}1a` }}>
-                        {app.category}
-                      </span>
                     </div>
                   </Link>
                   <footer className="my-foot">
                     <Link href={appHref(app.id)} className="btn">
-                      Přehled
+                      <BrandDots /> Přehled
                     </Link>
-                    <button className="btn primary" onClick={() => openExternalApp(app)}>
-                      Otevřít <ExternalLink size={14} aria-hidden />
+                    <button className="btn open-ext" onClick={() => openExternalApp(app)}>
+                      Otevřít <ArrowUpRight size={15} aria-hidden />
                     </button>
                   </footer>
                 </article>

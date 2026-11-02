@@ -1,4 +1,4 @@
-import { AlertTriangle, CircleCheck, Clock, ExternalLink, ShieldCheck } from 'lucide-react';
+import { AlertTriangle, ArrowUpRight, CircleCheck, Clock, ShieldCheck } from 'lucide-react';
 import AppIcon from '../components/AppIcon';
 import { PatientName, Trend, severityIcon, severityLabel } from '../components/apps/overviewParts';
 import Link from '../components/Link';
@@ -81,8 +81,8 @@ export default function AppDetailPage({ app, tab }: { app: StoreApp; tab: AppTab
           </div>
           <div className="app-detail-actions">
             <button className="btn">{o.actions[1]}</button>
-            <button className="btn primary" onClick={() => openExternalApp(app)}>
-              Otevřít aplikaci <ExternalLink size={15} aria-hidden />
+            <button className="btn open-ext" onClick={() => openExternalApp(app)}>
+              Otevřít aplikaci <ArrowUpRight size={16} aria-hidden />
             </button>
           </div>
         </div>
