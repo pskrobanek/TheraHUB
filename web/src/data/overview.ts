@@ -29,6 +29,10 @@ export type OverviewWidget =
 export interface AppOverview {
   appId: string;
   patients: number;
+  /** Počet workflows nemocnice, do kterých je aplikace zapojená. */
+  workflows: number;
+  /** Počet výzkumných projektů (Science), které využívají data aplikace. */
+  studies: number;
   alerts: number;
   stat: { label: string; value: string };
   widget: OverviewWidget;
@@ -46,6 +50,8 @@ export const overviews: Record<string, AppOverview> = {
   oncoready: {
     appId: 'oncoready',
     patients: 46,
+    workflows: 3,
+    studies: 2,
     alerts: 3,
     stat: { label: 'Vyplněnost', value: '81 %' },
     widget: {
@@ -77,6 +83,8 @@ export const overviews: Record<string, AppOverview> = {
   toxitrack: {
     appId: 'toxitrack',
     patients: 24,
+    workflows: 2,
+    studies: 1,
     alerts: 3,
     stat: { label: 'Vyplněnost', value: '87 %' },
     widget: {
@@ -98,6 +106,8 @@ export const overviews: Record<string, AppOverview> = {
   cardiowatch: {
     appId: 'cardiowatch',
     patients: 11,
+    workflows: 1,
+    studies: 1,
     alerts: 1,
     stat: { label: 'Záznamy dnes', value: '9' },
     widget: {
@@ -119,6 +129,8 @@ export const overviews: Record<string, AppOverview> = {
   visitscribe: {
     appId: 'visitscribe',
     patients: 38,
+    workflows: 4,
+    studies: 0,
     alerts: 0,
     stat: { label: 'Ušetřený čas', value: '4,2 h' },
     widget: {
@@ -139,6 +151,8 @@ export const overviews: Record<string, AppOverview> = {
   polykej: {
     appId: 'polykej',
     patients: 9,
+    workflows: 1,
+    studies: 0,
     alerts: 2,
     stat: { label: 'Adherence', value: '76 %' },
     widget: {
@@ -158,6 +172,8 @@ export const overviews: Record<string, AppOverview> = {
   nutriplan: {
     appId: 'nutriplan',
     patients: 14,
+    workflows: 2,
+    studies: 1,
     alerts: 3,
     stat: { label: 'Ø úbytek', value: '−3,1 %' },
     widget: {
@@ -179,6 +195,8 @@ export const overviews: Record<string, AppOverview> = {
   dermafoto: {
     appId: 'dermafoto',
     patients: 7,
+    workflows: 1,
+    studies: 0,
     alerts: 1,
     stat: { label: 'K posouzení', value: '3' },
     widget: {
@@ -200,6 +218,8 @@ export const overviews: Record<string, AppOverview> = {
   klid: {
     appId: 'klid',
     patients: 12,
+    workflows: 1,
+    studies: 1,
     alerts: 1,
     stat: { label: 'Ø distres', value: '4,1' },
     widget: {
@@ -220,6 +240,8 @@ export const overviews: Record<string, AppOverview> = {
   bolestdenik: {
     appId: 'bolestdenik',
     patients: 16,
+    workflows: 1,
+    studies: 0,
     alerts: 2,
     stat: { label: 'Ø bolest', value: 'NRS 3,8' },
     widget: {
@@ -240,6 +262,8 @@ export const overviews: Record<string, AppOverview> = {
   lekyhlidac: {
     appId: 'lekyhlidac',
     patients: 31,
+    workflows: 2,
+    studies: 0,
     alerts: 2,
     stat: { label: 'Adherence', value: '91 %' },
     widget: {
@@ -261,6 +285,8 @@ export const overviews: Record<string, AppOverview> = {
   krokomer: {
     appId: 'krokomer',
     patients: 19,
+    workflows: 1,
+    studies: 1,
     alerts: 0,
     stat: { label: 'Medián kroků', value: '4 820' },
     widget: {

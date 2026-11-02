@@ -8,6 +8,7 @@ import StoreFilters, { applyFilters, emptyFilters, sortApps, type Filters } from
 import Link from '../components/Link';
 import { hospital } from '../data/demo';
 import { appGroups } from '../data/appGroups';
+import { overviews } from '../data/overview';
 import { OpenBridge } from '../components/icons';
 import { openExternalApp } from '../lib/launch';
 import { appHref, type AppTab } from '../lib/route';
@@ -57,33 +58,48 @@ export default function AppsPage({ sub, appId, appTab }: Props) {
 function Purchased() {
   return (
     <div className="myapps">
-      {groups.map(({ id, label, icon: Icon, apps }) => (
+      {groups.map(({ id, label, apps }) => (
         <section key={id} className="myapps-group">
           <header className="myapps-head">
-            <span className="myapps-icon">
-              <Icon size={16} />
-            </span>
             <h2>{label}</h2>
             <span className="muted small">{apps.length}</span>
           </header>
           <div className="my-tiles">
-            {apps.map((app) => (
-              <article key={app.id} className="my-tile">
-                <Link href={appHref(app.id)} className="my-tile-main">
-                  <AppIcon app={app} size={60} />
-                  <h3>{app.name}</h3>
-                  <span className="my-tile-tagline">{app.tagline}</span>
-                </Link>
-                <div className="my-tile-actions">
-                  <Link href={appHref(app.id)} className="tile-btn">
-                    <BrandDots size={12} /> Přehled
+            {apps.map((app) => {
+              const o = overviews[app.id];
+              return (
+                <article key={app.id} className="my-tile">
+                  <Link href={appHref(app.id)} className="my-tile-main">
+                    <AppIcon app={app} size={44} />
+                    <h3>{app.name}</h3>
                   </Link>
-                  <button className="tile-btn open" onClick={() => openExternalApp(app)}>
-                    Otevřít <OpenBridge size={16} strokeWidth={1.75} aria-hidden />
-                  </button>
-                </div>
-              </article>
-            ))}
+                  {o && (
+                    <dl className="my-tile-stats">
+                      <div>
+                        <dt>Pacienti</dt>
+                        <dd>{o.patients}</dd>
+                      </div>
+                      <div>
+                        <dt>Workflows</dt>
+                        <dd>{o.workflows}</dd>
+                      </div>
+                      <div>
+                        <dt>Studie</dt>
+                        <dd>{o.studies}</dd>
+                      </div>
+                    </dl>
+                  )}
+                  <div className="my-tile-actions">
+                    <Link href={appHref(app.id)} className="tile-btn">
+                      <BrandDots size={12} /> Přehled
+                    </Link>
+                    <button className="tile-btn open" onClick={() => openExternalApp(app)}>
+                      Otevřít <OpenBridge size={16} strokeWidth={1.75} aria-hidden />
+                    </button>
+                  </div>
+                </article>
+              );
+            })}
           </div>
         </section>
       ))}
