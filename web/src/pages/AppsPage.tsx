@@ -66,28 +66,24 @@ function Purchased() {
             <h2>{label}</h2>
             <span className="muted small">{apps.length}</span>
           </header>
-          <div className="store-grid">
-            {apps.map((app) => {
-              return (
-                <article key={app.id} className="store-card glass my-card">
-                  <Link href={appHref(app.id)} className="store-head">
-                    <AppIcon app={app} size={63} />
-                    <div className="store-title">
-                      <h3>{app.name}</h3>
-                      <span className="store-tagline">{app.tagline}</span>
-                    </div>
+          <div className="my-tiles">
+            {apps.map((app) => (
+              <article key={app.id} className="my-tile">
+                <Link href={appHref(app.id)} className="my-tile-main">
+                  <AppIcon app={app} size={60} />
+                  <h3>{app.name}</h3>
+                  <span className="my-tile-tagline">{app.tagline}</span>
+                </Link>
+                <div className="my-tile-actions">
+                  <Link href={appHref(app.id)} className="tile-btn">
+                    <BrandDots size={12} /> Přehled
                   </Link>
-                  <footer className="my-foot">
-                    <Link href={appHref(app.id)} className="btn">
-                      <BrandDots /> Přehled
-                    </Link>
-                    <button className="btn open-ext" onClick={() => openExternalApp(app)}>
-                      Otevřít <OpenBridge size={17} strokeWidth={1.75} aria-hidden />
-                    </button>
-                  </footer>
-                </article>
-              );
-            })}
+                  <button className="tile-btn open" onClick={() => openExternalApp(app)}>
+                    Otevřít <OpenBridge size={16} strokeWidth={1.75} aria-hidden />
+                  </button>
+                </div>
+              </article>
+            ))}
           </div>
         </section>
       ))}
