@@ -1,4 +1,4 @@
-import { ArrowRight, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react';
+import { ArrowRight, ExternalLink, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react';
 import { useState } from 'react';
 import AppDetailPage from './AppDetailPage';
 import AppIcon from '../components/AppIcon';
@@ -8,6 +8,7 @@ import Link from '../components/Link';
 import { hospital } from '../data/demo';
 import { appGroups } from '../data/appGroups';
 import { specialtyOf } from '../data/specialties';
+import { openExternalApp } from '../lib/launch';
 import { appHref, type AppTab } from '../lib/route';
 import { purchasedIds, storeApps } from '../data/store';
 
@@ -81,9 +82,12 @@ function Purchased() {
                     </div>
                   </Link>
                   <footer className="my-foot">
-                    <Link href={appHref(app.id)} className="btn primary">
-                      Otevřít
+                    <Link href={appHref(app.id)} className="btn">
+                      Přehled
                     </Link>
+                    <button className="btn primary" onClick={() => openExternalApp(app)}>
+                      Otevřít <ExternalLink size={14} aria-hidden />
+                    </button>
                   </footer>
                 </article>
               );

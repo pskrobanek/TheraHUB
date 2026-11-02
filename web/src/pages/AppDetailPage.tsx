@@ -1,4 +1,4 @@
-import { AlertTriangle, CircleCheck, Clock, ShieldCheck } from 'lucide-react';
+import { AlertTriangle, CircleCheck, Clock, ExternalLink, ShieldCheck } from 'lucide-react';
 import AppIcon from '../components/AppIcon';
 import { PatientName, Trend, severityIcon, severityLabel } from '../components/apps/overviewParts';
 import Link from '../components/Link';
@@ -6,6 +6,7 @@ import { hospital } from '../data/demo';
 import { overviews, rosterOf, type AppOverview, type RosterEntry } from '../data/overview';
 import { specialtyOf } from '../data/specialties';
 import type { StoreApp } from '../data/types';
+import { openExternalApp } from '../lib/launch';
 import { appHref, appTabs, type AppTab } from '../lib/route';
 
 const tabLabels: Record<AppTab, string> = { prehled: 'Přehled', pacienti: 'Pacienti', workflow: 'Workflow', science: 'Science' };
@@ -79,10 +80,10 @@ export default function AppDetailPage({ app, tab }: { app: StoreApp; tab: AppTab
             </span>
           </div>
           <div className="app-detail-actions">
-            <button className="btn primary" style={{ background: app.tint }}>
-              {o.actions[0]}
-            </button>
             <button className="btn">{o.actions[1]}</button>
+            <button className="btn primary" onClick={() => openExternalApp(app)}>
+              Otevřít aplikaci <ExternalLink size={15} aria-hidden />
+            </button>
           </div>
         </div>
 
