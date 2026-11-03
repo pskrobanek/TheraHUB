@@ -8,6 +8,7 @@ import StoreFilters, { applyFilters, emptyFilters, sortApps, type Filters } from
 import Link from '../components/Link';
 import { hospital } from '../data/demo';
 import { appGroups } from '../data/appGroups';
+import type { StoreApp } from '../data/types';
 import { overviews } from '../data/overview';
 import { OpenBridge } from '../components/icons';
 import { openExternalApp } from '../lib/launch';
@@ -161,6 +162,58 @@ function Purchased() {
   );
 }
 
+/** Doporučené: nelicencované aplikace s nejvyšším adoption indexem pro tuto nemocnici. */
+const recommended = sortApps(
+  storeApps.filter((a) => !purchasedIds.has(a.id)),
+  'score',
+).slice(0, 3);
+/** Novinky v katalogu (demo). */
+const newest = ['oncoready', 'onkokohorta', 'smenaplan'].map((id) => storeApps.find((a) => a.id === id)!);
+
+function HighlightRow({ app, meta, onPick }: { app: StoreApp; meta: string; onPick: (q: string) => void }) {
+  return (
+    <li>
+      <button className="hl-item" onClick={() => onPick(app.name)}>
+        <AppIcon app={app} size={46} />
+        <span className="hl-text">
+          <b>{app.name}</b>
+          <span className="muted">{app.tagline}</span>
+          <span className="hl-meta">{meta}</span>
+        </span>
+      </button>
+    </li>
+  );
+}
+
+/** Doporučené a novinky přímo na pozadí, bez boxu. Kliknutí aplikaci vyhledá v katalogu. */
+function StoreHighlights({ onPick }: { onPick: (q: string) => void }) {
+  return (
+    <div className="store-highlights">
+      <section>
+        <h2>Doporučené pro {hospital.short}</h2>
+        <ul>
+          {recommended.map((a) => (
+            <HighlightRow key={a.id} app={a} meta={`Adoption index ${adoptionIndex(a).total} · ${a.category}`} onPick={onPick} />
+          ))}
+        </ul>
+      </section>
+      <section>
+        <h2>Novinky</h2>
+        <ul>
+          {newest.map((a) => (
+            <HighlightRow
+              key={a.id}
+              app={a}
+              meta={purchasedIds.has(a.id) ? 'Nově v katalogu · už licencováno' : `Nově v katalogu · ${a.category}`}
+              onPick={onPick}
+            />
+          ))}
+        </ul>
+      </section>
+    </div>
+  );
+}
+
 function Store() {
   const [query, setQuery] = useState('');
   const [filters, setFilters] = useState<Filters>(emptyFilters);
@@ -189,6 +242,8 @@ function Store() {
             Zobrazeno {visible.length} z {storeApps.length}
           </span>
         </div>
+
+        {!q && <StoreHighlights onPick={setQuery} />}
 
         <div className="store-grid">
           {visible.map((app) => (
