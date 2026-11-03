@@ -264,11 +264,8 @@ h1, h2, h3, p { margin: 0; }
 @media (max-width: 1100px) { .apps-hero-top { flex-wrap: wrap; } }
 .apps-hero h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; }
 .apps-hero-top p { margin-top: 2px; }
-.apps-hero-stats { margin: 18px 0 0; padding-top: 16px; border-top: 1px solid var(--glass-line); display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px 20px; }
-.apps-hero-stats div { display: flex; flex-direction: column; gap: 3px; }
-.apps-hero-stats dt { font-size: 0.8rem; color: var(--muted); }
-.apps-hero-stats dd { margin: 0; font-size: 1.5rem; font-weight: 600; font-variant-numeric: tabular-nums; display: inline-flex; align-items: center; gap: 6px; }
-.apps-hero-stats .stat-alert { color: var(--danger); }
+.apps-hero-title p { margin-top: 2px; }
+.apps-hero > .switch { display: flex; flex-wrap: wrap; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--glass-line); }
 /* Moje aplikace: dlaždice podle specializace */
 .myapps { display: flex; flex-direction: column; gap: 30px; }
 .myapps-group { display: flex; flex-direction: column; gap: 14px; }

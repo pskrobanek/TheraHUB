@@ -1,4 +1,4 @@
-import { AlertTriangle, ArrowRight, ClipboardCheck, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react';
 import { useState } from 'react';
 import AppDetailPage from './AppDetailPage';
 import StoreAppDetail from './StoreAppDetail';
@@ -14,54 +14,11 @@ import { appGroups } from '../data/appGroups';
 import { overviews } from '../data/overview';
 import { OpenBridge } from '../components/icons';
 import { openExternalApp } from '../lib/launch';
-import { indexTotal } from '../lib/score';
 import { appHref, type AppTab } from '../lib/route';
 import { purchasedIds, storeApps } from '../data/store';
-import { dossiers } from '../data/trial/dossiers';
-import { hospitalDemo, isActive, progressOf, trialRequests } from '../data/trial/requests';
+import { hospitalDemo, isActive, trialRequests } from '../data/trial/requests';
 
 const purchased = storeApps.filter((a) => purchasedIds.has(a.id));
-
-const sum = (f: (o: NonNullable<(typeof overviews)[string]>) => number) =>
-  purchased.reduce((n, a) => n + (overviews[a.id] ? f(overviews[a.id]) : 0), 0);
-
-interface HeroStat {
-  label: string;
-  value: string | number;
-  alert?: boolean;
-}
-
-/** Souhrn Mých aplikací za nemocnici (demo data). */
-const myStats: HeroStat[] = [
-  { label: 'Aplikace', value: purchased.length },
-  { label: 'Pacienti v aplikacích', value: sum((o) => o.patients) },
-  { label: 'Otevřené alerty', value: sum((o) => o.alerts), alert: sum((o) => o.alerts) > 0 },
-  { label: 'Workflows', value: sum((o) => o.workflows) },
-  { label: 'Studie', value: sum((o) => o.studies) },
-];
-
-/** Souhrn katalogu App Storu. */
-const storeStats: HeroStat[] = [
-  { label: 'V katalogu', value: storeApps.length },
-  { label: 'Vysoký adoption index (85+)', value: storeApps.filter((a) => indexTotal(a) >= 85).length },
-  { label: 'Specializace', value: new Set(storeApps.map((a) => a.category)).size },
-  { label: 'S bezplatným pilotním provozem', value: storeApps.filter((a) => a.store.trial).length },
-  { label: 'Už licencováno', value: purchased.length },
-];
-
-/** Souhrn žádostí o pilotní provoz v FN Demo (ukázková data). */
-const vendorOf = (appId: string) => dossiers[appId]?.vendor ?? 'Firma';
-const requestStats: HeroStat[] = [
-  { label: 'Aktivní žádosti', value: trialRequests.filter((r) => isActive(r) && r.state !== 'trial_active').length },
-  {
-    label: 'Po termínu SLA',
-    value: trialRequests.filter((r) => progressOf(r, vendorOf(r.appId)).overdue).length,
-    alert: trialRequests.some((r) => progressOf(r, vendorOf(r.appId)).overdue),
-  },
-  { label: 'Čeká na firmu', value: trialRequests.filter((r) => ['waiting_vendor', 'submitted', 'on_hold'].includes(r.state)).length },
-  { label: 'Pilot probíhá', value: trialRequests.filter((r) => r.state === 'trial_active').length },
-  { label: 'V předplatném', value: trialRequests.filter((r) => r.state === 'purchased').length },
-];
 
 /** Počty na dlaždici; pruh ukazuje hodnotu vůči aplikaci s nejvyšším počtem. */
 const tileStats = [
@@ -102,34 +59,21 @@ export default function AppsPage({ sub, item, appId, appTab }: Props) {
   return (
     <div className="page apps">
       <header className="apps-hero glass">
-        <div className="apps-hero-top">
-          <div>
-            <h1>{title}</h1>
-            <p className="muted small">{subtitle}</p>
-          </div>
-          <nav className="switch" aria-label="Moje aplikace, App Store nebo žádosti">
-            <Link href="#/aplikace" className={view === 'zakoupene' ? 'switch-item active' : 'switch-item'}>
-              <LayoutGrid size={16} /> Moje aplikace <span className="tab-count">{purchased.length}</span>
-            </Link>
-            <Link href="#/aplikace/store" className={view === 'store' ? 'switch-item active' : 'switch-item'}>
-              <StoreIcon size={16} /> App Store <span className="tab-count">{storeApps.length}</span>
-            </Link>
-            <Link href="#/aplikace/zadosti" className={view === 'zadosti' ? 'switch-item active' : 'switch-item'}>
-              <ClipboardCheck size={16} /> Žádosti o pilotní provoz <span className="tab-count">{trialRequests.filter(isActive).length}</span>
-            </Link>
-          </nav>
+        <div className="apps-hero-title">
+          <h1>{title}</h1>
+          <p className="muted small">{subtitle}</p>
         </div>
-        <dl className="apps-hero-stats">
-          {(view === 'store' ? storeStats : view === 'zadosti' ? requestStats : myStats).map((st) => (
-            <div key={st.label}>
-              <dt>{st.label}</dt>
-              <dd className={st.alert ? 'stat-alert' : undefined}>
-                {st.alert && <AlertTriangle size={16} aria-hidden />}
-                {st.value}
-              </dd>
-            </div>
-          ))}
-        </dl>
+        <nav className="switch" aria-label="Moje aplikace, App Store nebo žádosti">
+          <Link href="#/aplikace" className={view === 'zakoupene' ? 'switch-item active' : 'switch-item'}>
+            <LayoutGrid size={16} /> Moje aplikace <span className="tab-count">{purchased.length}</span>
+          </Link>
+          <Link href="#/aplikace/store" className={view === 'store' ? 'switch-item active' : 'switch-item'}>
+            <StoreIcon size={16} /> App Store <span className="tab-count">{storeApps.length}</span>
+          </Link>
+          <Link href="#/aplikace/zadosti" className={view === 'zadosti' ? 'switch-item active' : 'switch-item'}>
+            <ClipboardCheck size={16} /> Žádosti o pilotní provoz <span className="tab-count">{trialRequests.filter(isActive).length}</span>
+          </Link>
+        </nav>
       </header>
 
       {view === 'zakoupene' ? <Purchased /> : view === 'zadosti' ? <TrialRequestsPage /> : <Store />}
