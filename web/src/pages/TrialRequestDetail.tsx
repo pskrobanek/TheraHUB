@@ -40,7 +40,7 @@ export default function TrialRequestDetail({ req }: { req: TrialRequest }) {
 
       <header className="patient-header glass trq-head">
         <div className="trq-head-top">
-          <AppIcon app={app} size={56} />
+          <AppIcon app={app} size={48} />
           <div className="trq-head-title">
             <h1>
               {app.name} <span className="birth-number mono">{req.id}</span>

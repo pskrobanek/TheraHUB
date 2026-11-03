@@ -69,7 +69,7 @@ h1, h2, h3, p { margin: 0; }
 /* ---------- Rozvržení ---------- */
 .shell { display: grid; grid-template-columns: 270px minmax(0, 1fr); gap: 18px; padding: 18px; min-height: 100vh; }
 .content { min-width: 0; }
-.page { display: flex; flex-direction: column; gap: 29px; max-width: 1404px; }
+.page { display: flex; flex-direction: column; gap: 18px; max-width: 1404px; }
 
 /* ---------- Sidebar ---------- */
 .sidebar {
@@ -129,19 +129,26 @@ h1, h2, h3, p { margin: 0; }
 }
 .avatar.dark { width: 40px; height: 40px; background: var(--dark); color: #fff; border: 0; }
 .avatar.xl {
-  width: 56px; height: 56px; font-size: 1.2rem; color: var(--accent);
+  width: 48px; height: 48px; font-size: 1.1rem; color: var(--accent);
   background: linear-gradient(145deg, rgba(255, 255, 255, 0.9), rgba(214, 219, 255, 0.8)); border: 1px solid var(--glass-border);
 }
 
 /* ---------- Hlavička pacienta ---------- */
-.patient-header { padding: 22px 32px 0; }
-.patient-top { display: flex; gap: 18px; align-items: center; }
+.page-header, .patient-header { padding: 22px 26px 18px; }
+.ph-top { display: flex; align-items: center; gap: 14px; }
+.ph-icon { flex-shrink: 0; width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--dark); color: #fff; }
+.ph-title { flex: 1; min-width: 0; }
+.ph-title h1, .patient-id h1, .trq-head-title h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+.ph-title p, .trq-head-title p { margin-top: 2px; }
+.ph-nav { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--glass-line); }
+.ph-nav .switch { display: flex; flex-wrap: wrap; }
+.patient-top { display: flex; gap: 14px; align-items: center; }
 .patient-id { flex: 1; min-width: 252px; }
-.patient-id h1 { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.02em; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
+.patient-id h1 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 14px; }
 .birth-number { font-size: 1.05rem; font-weight: 400; letter-spacing: 0; color: var(--muted); }
 
 
-.tabs { display: flex; gap: 5px; margin-top: 20px; padding: 13px 0; border-top: 1px solid var(--glass-line); flex-wrap: wrap; }
+.tabs { display: flex; gap: 5px; margin-top: 16px; padding: 14px 0 0; border-top: 1px solid var(--glass-line); flex-wrap: wrap; }
 .tab { padding: 8px 16px; border-radius: var(--radius-sm); font-size: 1.02rem; color: var(--muted); display: inline-flex; gap: 7px; align-items: center; transition: background 0.15s; }
 .tab:hover { background: rgba(255, 255, 255, 0.6); color: var(--text); }
 .tab.active { background: var(--dark); color: #fff; font-weight: 500; }
@@ -257,15 +264,6 @@ h1, h2, h3, p { margin: 0; }
 /* Moje aplikace: souhrnné widgety za nemocnici */
 .sub-app { display: flex; align-items: center; gap: 9px; }
 .sub-app > span { min-width: 0; }
-.apps-hero { padding: 22px 26px 18px; }
-.apps-hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
-.apps-hero-top > div:first-child { flex: 1; min-width: 0; }
-.apps-hero-top > .switch { flex-shrink: 0; }
-@media (max-width: 1100px) { .apps-hero-top { flex-wrap: wrap; } }
-.apps-hero h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; }
-.apps-hero-top p { margin-top: 2px; }
-.apps-hero-title p { margin-top: 2px; }
-.apps-hero > .switch { display: flex; flex-wrap: wrap; margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--glass-line); }
 /* Moje aplikace: dlaždice podle specializace */
 .myapps { display: flex; flex-direction: column; gap: 30px; }
 .myapps-group { display: flex; flex-direction: column; gap: 14px; }
@@ -499,7 +497,7 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
   .subnav { flex-direction: row; margin: 0; padding-left: 0; border-left: 0; }
   .sub-meta { display: none; }
   .nav-item { white-space: nowrap; }
-  .patient-header { padding: 22px 18px 0; }
+  .page-header, .patient-header { padding: 18px 18px 14px; }
   .active-grid, .available-grid, .store-grid { grid-template-columns: 1fr; }
   .store-layout { grid-template-columns: 1fr; }
   .filters { position: static; max-height: none; display: none; }
@@ -546,7 +544,7 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 /* Detail aplikace v App Storu */
 .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--accent); font-size: 0.9rem; font-weight: 500; }
 .back-link:hover { text-decoration: underline; }
-.store-detail, .trq-detail { gap: 16px; }
+.store-detail, .trq-detail { gap: 18px; }
 .sd-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(330px, 1fr); gap: 16px; align-items: start; }
 .sd-main { padding: 22px 24px; display: flex; flex-direction: column; gap: 16px; }
 .sd-main-head { display: flex; gap: 16px; align-items: flex-start; }
@@ -752,10 +750,9 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 .kb-card-top { display: inline-flex; align-items: center; gap: 7px; }
 
 /* Detail žádosti */
-.trq-head { padding-bottom: 0; }
-.trq-head-top { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+.trq-head-top { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
 .trq-head-title { flex: 1; min-width: 240px; }
-.trq-head-title h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
+.trq-head-title h1 { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; }
 .trq-head .tabs button { border: 0; background: none; cursor: pointer; font: inherit; }
 .trq-head .tabs button:disabled { cursor: not-allowed; opacity: 0.55; }
 .tab-phase { font-size: 0.68rem; padding: 1px 5px; border-radius: 4px; background: rgba(17, 20, 42, 0.06); }

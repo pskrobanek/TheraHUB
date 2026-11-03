@@ -1,6 +1,7 @@
 // Nastavení nemocnice FN Demo: požadavky a schvalovací proces (Fáze 0b).
-import { ClipboardList, GitBranch, Users } from 'lucide-react';
+import { ClipboardList, GitBranch, SlidersHorizontal, Users } from 'lucide-react';
 import Link from '../components/Link';
+import PageHeader from '../components/PageHeader';
 import RequirementsEditor from '../components/settings/RequirementsEditor';
 import WorkflowBuilder from '../components/settings/WorkflowBuilder';
 import { hospitalDemo } from '../data/trial/requests';
@@ -9,12 +10,11 @@ export default function SettingsPage({ sub }: { sub?: string }) {
   const view = sub === 'proces' ? 'proces' : 'pozadavky';
   return (
     <div className="page apps settings">
-      <header className="apps-hero glass">
-        <div className="apps-hero-top">
-          <div>
-            <h1>Nastavení</h1>
-            <p className="muted small">{hospitalDemo.name} – smyšlená ukázková nemocnice; obsah požadavků je zástupný</p>
-          </div>
+      <PageHeader
+        icon={SlidersHorizontal}
+        title="Nastavení"
+        subtitle={`${hospitalDemo.name} – smyšlená ukázková nemocnice; obsah požadavků je zástupný`}
+        nav={
           <nav className="switch" aria-label="Části nastavení">
             <Link href="#/nastaveni/pozadavky" className={view === 'pozadavky' ? 'switch-item active' : 'switch-item'}>
               <ClipboardList size={16} /> Požadavky nemocnice
@@ -26,8 +26,8 @@ export default function SettingsPage({ sub }: { sub?: string }) {
               <Users size={16} /> Organizace
             </span>
           </nav>
-        </div>
-      </header>
+        }
+      />
       {view === 'pozadavky' ? <RequirementsEditor /> : <WorkflowBuilder />}
     </div>
   );

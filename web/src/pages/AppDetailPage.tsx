@@ -71,7 +71,7 @@ export default function AppDetailPage({ app, tab }: { app: StoreApp; tab: AppTab
     <div className="page app-detail">
       <header className="patient-header glass">
         <div className="patient-top">
-          <AppIcon app={app} size={56} />
+          <AppIcon app={app} size={48} />
           <div className="patient-id">
             <h1>
               {app.name} <span className="birth-number">{app.tagline}</span>

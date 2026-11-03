@@ -9,6 +9,7 @@ import BrandDots from '../components/BrandDots';
 import StoreCard from '../components/apps/StoreCard';
 import StoreFilters, { applyFilters, emptyFilters, sortApps, type Filters } from '../components/apps/StoreFilters';
 import Link from '../components/Link';
+import PageHeader from '../components/PageHeader';
 import { hospital } from '../data/demo';
 import { appGroups } from '../data/appGroups';
 import { overviews } from '../data/overview';
@@ -58,23 +59,24 @@ export default function AppsPage({ sub, item, appId, appTab }: Props) {
   }[view];
   return (
     <div className="page apps">
-      <header className="apps-hero glass">
-        <div className="apps-hero-title">
-          <h1>{title}</h1>
-          <p className="muted small">{subtitle}</p>
-        </div>
-        <nav className="switch" aria-label="Moje aplikace, App Store nebo žádosti">
-          <Link href="#/aplikace" className={view === 'zakoupene' ? 'switch-item active' : 'switch-item'}>
-            <LayoutGrid size={16} /> Moje aplikace <span className="tab-count">{purchased.length}</span>
-          </Link>
-          <Link href="#/aplikace/store" className={view === 'store' ? 'switch-item active' : 'switch-item'}>
-            <StoreIcon size={16} /> App Store <span className="tab-count">{storeApps.length}</span>
-          </Link>
-          <Link href="#/aplikace/zadosti" className={view === 'zadosti' ? 'switch-item active' : 'switch-item'}>
-            <ClipboardCheck size={16} /> Žádosti o pilotní provoz <span className="tab-count">{trialRequests.filter(isActive).length}</span>
-          </Link>
-        </nav>
-      </header>
+      <PageHeader
+        icon={view === 'store' ? StoreIcon : view === 'zadosti' ? ClipboardCheck : LayoutGrid}
+        title={title}
+        subtitle={subtitle}
+        nav={
+          <nav className="switch" aria-label="Moje aplikace, App Store nebo žádosti">
+            <Link href="#/aplikace" className={view === 'zakoupene' ? 'switch-item active' : 'switch-item'}>
+              <LayoutGrid size={16} /> Moje aplikace <span className="tab-count">{purchased.length}</span>
+            </Link>
+            <Link href="#/aplikace/store" className={view === 'store' ? 'switch-item active' : 'switch-item'}>
+              <StoreIcon size={16} /> App Store <span className="tab-count">{storeApps.length}</span>
+            </Link>
+            <Link href="#/aplikace/zadosti" className={view === 'zadosti' ? 'switch-item active' : 'switch-item'}>
+              <ClipboardCheck size={16} /> Žádosti o pilotní provoz <span className="tab-count">{trialRequests.filter(isActive).length}</span>
+            </Link>
+          </nav>
+        }
+      />
 
       {view === 'zakoupene' ? <Purchased /> : view === 'zadosti' ? <TrialRequestsPage /> : <Store />}
     </div>

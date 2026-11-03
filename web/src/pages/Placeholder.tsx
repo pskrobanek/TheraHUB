@@ -1,4 +1,16 @@
+import { FlaskConical, Home, LayoutGrid, SlidersHorizontal, Users, type LucideIcon } from 'lucide-react';
+import { FlowBranch } from '../components/icons';
+import PageHeader from '../components/PageHeader';
 import type { SectionId } from '../lib/route';
+
+const icons: Record<SectionId, LucideIcon> = {
+  domu: Home,
+  pacienti: Users,
+  aplikace: LayoutGrid,
+  workflow: FlowBranch,
+  science: FlaskConical,
+  nastaveni: SlidersHorizontal,
+};
 
 const plans: Partial<Record<SectionId, [string, string]>> = {
   domu: ['Domů', 'Přehled dne: upozornění z aplikací, úkoly a dnešní pacienti.'],
@@ -13,9 +25,8 @@ export default function Placeholder({ section }: { section: SectionId }) {
   const [title, text] = plans[section] ?? [section, ''];
   return (
     <div className="page">
+      <PageHeader icon={icons[section]} title={title} subtitle="Připravujeme v dalších krocích." />
       <div className="empty glass">
-        <h1>{title}</h1>
-        <p className="muted">Připravujeme v dalších krocích.</p>
         <p>{text}</p>
       </div>
     </div>
