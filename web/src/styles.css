@@ -258,7 +258,10 @@ h1, h2, h3, p { margin: 0; }
 .sub-app { display: flex; align-items: center; gap: 9px; }
 .sub-app > span { min-width: 0; }
 .apps-hero { padding: 22px 26px 18px; }
-.apps-hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+.apps-hero-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.apps-hero-top > div:first-child { flex: 1; min-width: 0; }
+.apps-hero-top > .switch { flex-shrink: 0; }
+@media (max-width: 1100px) { .apps-hero-top { flex-wrap: wrap; } }
 .apps-hero h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; }
 .apps-hero-top p { margin-top: 2px; }
 .apps-hero-stats { margin: 18px 0 0; padding-top: 16px; border-top: 1px solid var(--glass-line); display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px 20px; }
