@@ -25,7 +25,7 @@ const base: Record<string, Answer> = {
   'SEC-002': { value: true, evidence: ok('Zpráva z penetračního testu', '2026-04-15') },
   'SEC-003': { value: true, evidence: ok('Bezpečnostní architektura', '2026-04-15') },
   'SEC-004': { value: 24, evidence: ok('Bezpečnostní příloha', '2026-04-15', false) },
-  'OST-001': { value: true, evidence: ok('Integrační specifikace FHIR R4', '2026-05-20') },
+  'OST-001': { value: true, evidence: ok('Plán školení personálu', '2026-05-20', false) },
   'OST-002': { value: true, evidence: ok('Prohlášení o přístupnosti', '2026-05-20', false) },
   'OST-003': { value: 4, evidence: ok('SLA podpory', '2026-03-02', false) },
   'OST-004': { value: true, evidence: ok('Reference (2 smyšlené nemocnice)', '2026-07-01', false) },
@@ -55,7 +55,7 @@ export const dossiers: Record<string, Dossier> = {
     {
       'LEG-001': { value: 'MDR IIa', evidence: ok('Certifikát MDR IIa', '2025-12-01', true, '2030-11-30') },
       'SEC-002': { value: true, evidence: ok('Zpráva z penetračního testu', '2025-05-04') },
-      'OST-001': { value: false, fixBy: '2027-03-31', evidence: ok('Roadmapa integrace', '2026-08-01', false) },
+      'OST-001': { value: false, fixBy: '2027-01-31', evidence: ok('Plán školení personálu', '2026-08-01', false) },
       'GDP-003': { value: 'DPIA se zpracovává, přiložen návrh', freeText: true, evidence: ok('Návrh DPIA', '2026-09-10', false) },
     },
   ),
@@ -79,9 +79,12 @@ export const dossiers: Record<string, Dossier> = {
   cardiowatch: make('Ukázka Medical a.s.', 3, {
     'LEG-001': { value: 'MDR IIb', evidence: ok('Certifikát MDR IIb', '2025-04-01', true, '2030-03-31') },
   }),
-  visitscribe: make('Startup Demo s.r.o.', 2),
+  visitscribe: make('Startup Demo s.r.o.', 2, { 'LEG-001': { value: 'Není ZP', evidence: ok('Prohlášení dodavatele', '2026-01-20', false) } }),
   polykej: make('Demo Rehab s.r.o.', 2),
-  nutriplan: make('Demo Rehab s.r.o.', 1, { 'SEC-002': { value: true, evidence: ok('Zpráva z penetračního testu', '2025-07-01') } }),
+  nutriplan: make('Demo Rehab s.r.o.', 1, {
+    'LEG-001': { value: 'Wellness', evidence: ok('Prohlášení dodavatele', '2026-01-10', false) },
+    'SEC-002': { value: true, evidence: ok('Zpráva z penetračního testu', '2025-07-01') },
+  }),
   dermafoto: make('Startup Demo s.r.o.', 2),
   klid: make('Demo Research s.r.o.', 2, { 'OST-004': { value: false, evidence: ok('Prohlášení dodavatele', '2026-03-01', false) } }),
   bolestdenik: make('Demo Rehab s.r.o.', 1),

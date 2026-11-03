@@ -1,4 +1,6 @@
-// Ukázkový katalog požadavků (brief §3.1). Položky jsou jen ilustrace tvaru z briefu.
+// Ukázkový katalog požadavků (brief §3.1). Oblast Ostatní = další požadavky nemocnice (provoz, podpora, reference);
+// integrace, datový prostor, záštity a TheraHUB integrace patří do Adoption indexu, ne do posouzení (DEC-014).
+// Položky jsou jen ilustrace tvaru z briefu.
 // Skutečný obsah dodají odborníci: TODO(legal), TODO(dpo), TODO(security) – viz docs/OPEN_QUESTIONS.md OQ-014.
 
 export type Domain = 'legal' | 'gdpr' | 'security' | 'ostatni';
@@ -57,8 +59,8 @@ export const catalog: CatalogItem[] = [
   { code: 'SEC-003', domain: 'security', pillar: 'security', title: 'MFA pro personál, šifrování při přenosu i uložení', expectation: 'Ano', criticality: 'blokujici', rule: { kind: 'yes' }, todo: 'security' },
   { code: 'SEC-004', domain: 'security', pillar: 'security', title: 'Hlášení bezpečnostních incidentů', expectation: 'Do 24 hodin (ukázka)', criticality: 'dulezite', rule: { kind: 'max', limit: 24, unit: 'h' }, todo: 'security' },
   // Ostatní
-  { code: 'OST-001', domain: 'ostatni', pillar: 'data', subcategory: 'Integrace', title: 'Integrace s NIS (FHIR / HL7)', expectation: 'FHIR R4 (ukázka)', criticality: 'dulezite', rule: { kind: 'yes' }, todo: 'clinical' },
-  { code: 'OST-002', domain: 'ostatni', pillar: 'data', subcategory: 'Provoz', title: 'SSO, čeština, přístupnost', expectation: 'Ano', criticality: 'dulezite', rule: { kind: 'yes' }, todo: 'clinical' },
+  { code: 'OST-001', domain: 'ostatni', pillar: 'legal', subcategory: 'Provoz', title: 'Zaškolení personálu v ceně pilotního provozu', expectation: 'Ano (ukázka)', criticality: 'dulezite', rule: { kind: 'yes' }, todo: 'clinical' },
+  { code: 'OST-002', domain: 'ostatni', pillar: 'legal', subcategory: 'Provoz', title: 'Čeština v rozhraní a přístupnost (WCAG)', expectation: 'Ano (ukázka)', criticality: 'dulezite', rule: { kind: 'yes' }, todo: 'clinical' },
   { code: 'OST-003', domain: 'ostatni', pillar: 'legal', subcategory: 'Podpora', title: 'Podpora a SLA odezvy', expectation: 'Pracovní dny, odezva do 4 h (ukázka)', criticality: 'dulezite', rule: { kind: 'max', limit: 4, unit: 'h' }, todo: 'clinical' },
   { code: 'OST-004', domain: 'ostatni', pillar: 'safety', subcategory: 'Klinická bezpečnost', title: 'Klinické důkazy a reference z jiných nemocnic', expectation: 'Informativní', criticality: 'informativni', rule: { kind: 'yes' }, todo: 'clinical' },
 ];

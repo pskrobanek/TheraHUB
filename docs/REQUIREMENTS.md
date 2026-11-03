@@ -49,3 +49,5 @@ ID se odkazují z kódu a testů. Prefixy: **MAT** matching, **WFL** workflow, *
 | REQ-UI-004 | U Adoption indexu je vysvětlení, co měří a že není verdiktem nemocnice. | DEC-004 | 0a | hotovo |
 | REQ-UI-005 | Použitelné na notebooku i tabletu; české formáty data a čísel. | §9 | 0a | hotovo |
 | REQ-UI-006 | Panel položek: filtry Jen rozpory a Jen blokující, problémy nahoře, export PDF. | §9.1 | 0a (export naznačen) | hotovo |
+| REQ-UI-007 | Detail aplikace: vlevo popis a náhledy, vpravo Adoption index v kruhu, 4 oblasti s plnou ikonou, podílem splněných a výpisem nesplněných položek, pod tím Další soulad. | DEC-015 | 0a | hotovo |
+| REQ-MAT-010 | Oblast Ostatní obsahuje jen ostatní požadavky nemocnice; integrace, datový prostor, záštity a TheraHUB integrace jsou v Adoption indexu. | DEC-014 | 0a | hotovo |

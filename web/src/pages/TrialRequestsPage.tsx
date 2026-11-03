@@ -28,7 +28,7 @@ export const personas: Persona[] = [
   { id: 'pravnik', name: staff.pravnik.name, label: 'právní oddělení (Legal)', all: null },
   { id: 'dpo', name: staff.dpo.name, label: 'pověřenec (GDPR)', all: null },
   { id: 'kb', name: staff.kb.name, label: 'kybernetická bezpečnost (Security)', all: null },
-  { id: 'it', name: staff.it.name, label: 'IT a integrace (Ostatní)', all: null },
+  { id: 'it', name: staff.it.name, label: 'provoz a kvalita (Ostatní)', all: null },
 ];
 
 type Tab = 'moje' | 'kontrola' | 'vse';

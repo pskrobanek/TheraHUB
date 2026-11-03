@@ -36,7 +36,7 @@ export const staff = {
   pravnik: { name: 'Mgr. Lucie Dvorská', role: 'právní oddělení' },
   dpo: { name: 'Mgr. Ondřej Malík', role: 'pověřenec pro ochranu osobních údajů' },
   kb: { name: 'Ing. Martin Šebek', role: 'manažer kybernetické bezpečnosti' },
-  it: { name: 'Ing. Petra Králová', role: 'IT a integrace (Ostatní)' },
+  it: { name: 'Ing. Petra Králová', role: 'provoz a kvalita (Ostatní)' },
   nakup: { name: 'Bc. Jitka Nováková', role: 'veřejné zakázky' },
 } satisfies Record<string, Person>;
 
@@ -298,10 +298,10 @@ export const trialRequests: TrialRequest[] = [
       legal: done(s.pravnik.name, '2026-10-23'),
       gdpr: active('2026-10-20'),
       security: { status: 'waiting_vendor', since: '2026-11-02', note: 'Dotaz na firmu: novější penetrační test (SEC-002)' },
-      ostatni: done(s.it.name, '2026-10-27', 's_podminkou', 'Integrace FHIR do 31. 3. 2027 (výjimka jen pro pilotní provoz).'),
+      ostatni: done(s.it.name, '2026-10-27', 's_podminkou', 'Zaškolení personálu do 31. 1. 2027 (výjimka jen pro pilotní provoz).'),
     },
-    waivers: { 'OST-001': 'Jen pro pilotní provoz; FHIR do 31. 3. 2027.' },
-    conditions: [{ text: 'Integrace FHIR do 31. 3. 2027 (výjimka jen pro pilotní provoz).', owner: s.it.name, status: 'otevřená' }],
+    waivers: { 'OST-001': 'Jen pro pilotní provoz; zaškolení do 31. 1. 2027.' },
+    conditions: [{ text: 'Zaškolení personálu do 31. 1. 2027 (výjimka jen pro pilotní provoz).', owner: s.it.name, status: 'otevřená' }],
     purpose: 'Včasné varování sepse u pacientů na koronární jednotce.',
     patients: 150,
     users: 22,

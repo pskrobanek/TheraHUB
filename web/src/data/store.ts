@@ -184,7 +184,7 @@ export const storeApps: StoreApp[] = [
     store: {
       pitch: 'AI seřadí snímky hrudníku podle naléhavosti, akutní nálezy má radiolog na prvním místě.',
       audience: ['lekar'],
-      regulatory: { kind: 'mdr', label: 'MDR IIb · AI' }, ai: 'guided',
+      regulatory: { kind: 'mdr', label: 'MDR IIa · AI' }, ai: 'guided',
       trial: { days: 90, kpis: ['Doba do popisu akutního nálezu −40 %', 'Senzitivita ≥ 95 % na místních datech'] },
       price: { amount: 18, per: 'událost', period: 'jednorázově' },
       rating: 4.6, reviews: 17, hospitals: 10,

@@ -20,7 +20,7 @@ export const audienceLabel: Record<Audience, string> = {
   vyzkumnik: 'Výzkumník',
 };
 
-function Bar({ pct, thin = false }: { pct: number; thin?: boolean }) {
+export function Bar({ pct, thin = false }: { pct: number; thin?: boolean }) {
   return (
     <span className={thin ? 'bar thin' : 'bar'} aria-hidden>
       <span className={`bar-fill fill-${levelFor(pct)}`} style={{ width: `${pct}%` }} />
@@ -41,7 +41,7 @@ function Stars({ value }: { value: number }) {
   );
 }
 
-function CheckRow({ check }: { check: ScoreCheck }) {
+export function CheckRow({ check }: { check: ScoreCheck }) {
   const Icon = check.value >= 1 ? CircleCheck : check.value > 0 ? CircleDashed : CircleX;
   const state = check.value >= 1 ? 'ok' : check.value > 0 ? 'partial' : 'no';
   return (

@@ -74,7 +74,7 @@ export default function ComplianceBox({ result, dossierVersion, pending, snapsho
   );
 }
 
-function Drawer({ result, initial, onClose }: { result: MatchResult; initial: Domain; onClose: () => void }) {
+export function Drawer({ result, initial, onClose }: { result: MatchResult; initial: Domain; onClose: () => void }) {
   const [dom, setDom] = useState<Domain>(initial);
   const [onlyProblems, setOnlyProblems] = useState(false);
   const [onlyBlocking, setOnlyBlocking] = useState(false);
