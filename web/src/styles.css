@@ -136,7 +136,7 @@ h1, h2, h3, p { margin: 0; }
 /* ---------- Hlavička pacienta ---------- */
 .page-header, .patient-header { padding: 22px 26px 18px; }
 .ph-top { display: flex; align-items: center; gap: 14px; }
-.ph-icon { flex-shrink: 0; width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--dark); color: #fff; }
+.ph-icon { flex-shrink: 0; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: none; border: 1.5px solid var(--dark); color: var(--dark); }
 .ph-title { flex: 1; min-width: 0; }
 .ph-title h1, .patient-id h1, .trq-head-title h1 { font-size: 1.6rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
 .ph-title p, .trq-head-title p { margin-top: 2px; }
