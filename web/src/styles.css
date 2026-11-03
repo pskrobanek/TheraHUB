@@ -378,8 +378,8 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 .filters-head b { font-size: 1rem; }
 .filters-head { gap: 10px; }
 .fh-tab { display: inline-flex; align-items: center; gap: 6px; padding: 4px 8px; border: 0; border-radius: 6px; background: none; font: inherit; font-size: 0.92rem; color: var(--muted); cursor: pointer; }
-.fh-tab:hover { color: var(--text); background: rgba(17, 20, 42, 0.05); }
-.fh-tab.on { color: var(--text); font-weight: 600; }
+.fh-tab { font-weight: 600; }
+.fh-tab.on { color: var(--text); }
 .filters-head .link { margin-left: auto; }
 .sort-list { display: flex; flex-direction: column; gap: 2px; }
 .filters section { padding: 10px 0 12px; border-top: 1px solid rgba(17, 20, 42, 0.1); }
