@@ -18,7 +18,7 @@ export default function PageHeader({ icon: Icon, title, subtitle, aside, nav }: 
     <header className="page-header glass">
       <div className="ph-top">
         <span className="ph-icon" aria-hidden>
-          <Icon size={22} strokeWidth={1.9} />
+          <Icon size={30} strokeWidth={1.7} />
         </span>
         <div className="ph-title">
           <h1>{title}</h1>
