@@ -15,7 +15,8 @@ import { specialtyOf } from '../data/specialties';
 import { domainLabel, profileVersion, type Domain } from '../data/trial/catalog';
 import { dossiers, realAppIds, realStatusNote } from '../data/trial/dossiers';
 import { match, statusOrder, type DomainResult, type ItemStatus } from '../data/trial/match';
-import { departments, hospitalDemo, isActive, requestsForApp, type DeptId } from '../data/trial/requests';
+import { fmtDay } from '../data/trial/dates';
+import { departments, hospitalDemo, isActive, requestsForApp, staff, type DeptId } from '../data/trial/requests';
 import type { StoreApp } from '../data/types';
 import { adoptionIndex, levelLabel } from '../lib/score';
 
@@ -67,6 +68,12 @@ export default function StoreAppDetail({ app }: { app: StoreApp }) {
   const otherParts = score.parts.filter((p) => p.id !== 'hospital');
   const nis = score.parts.find((p) => p.id === 'hospital')!.checks.find((c) => c.label === 'Integrace s NIS')!;
   const s = app.store;
+  /** Další tři kroky šablony A po podání žádosti z mého oddělení (DEC-016). */
+  const nextSteps = [
+    { label: 'Primář', who: departments[myDept].head.name },
+    { label: 'Náměstkyně pro léčebnou péči', who: staff.namestek.name },
+    { label: 'Firma', who: `${dossier?.vendor ?? 'Dodavatel'} – potvrdí podmínky` },
+  ];
 
   return (
     <div className="page store-detail">
@@ -238,6 +245,23 @@ export default function StoreAppDetail({ app }: { app: StoreApp }) {
                 </p>
               ) : (
                 <>
+                  <div className="next-steps">
+                    <span className="c-label">Co bude následovat</span>
+                    <ol>
+                      {nextSteps.map((st, i) => (
+                        <li key={st.label}>
+                          <span className="ns-dot">{i + 1}</span>
+                          <b>{st.label}</b>
+                          <span className="muted">{st.who}</span>
+                        </li>
+                      ))}
+                      <li className="ns-more">
+                        <span className="ns-dot">…</span>
+                        <b>Další kroky</b>
+                        <span className="muted">Posouzení Legal, GDPR, Security a Ostatní · smlouva · pilotní provoz · vyhodnocení</span>
+                      </li>
+                    </ol>
+                  </div>
                   {blocking && (
                     <span className="cbox-warn small">
                       <TriangleAlert size={14} aria-hidden /> Blokující rozpory – žádost lze podat, řeší se výjimkou nebo doplněním.
@@ -252,6 +276,26 @@ export default function StoreAppDetail({ app }: { app: StoreApp }) {
                 <button className="btn" disabled title="Ve Fázi 2">
                   Připojit se k žádosti
                 </button>
+              )}
+              {reqs.length > 0 && (
+                <div className="past-reqs">
+                  <span className="c-label">Žádosti o tuto aplikaci v {hospitalDemo.short}</span>
+                  <ul>
+                    {reqs.map((r) => (
+                      <li key={r.id}>
+                        <Link href={`#/aplikace/zadosti/${r.id}`} className="past-req">
+                          <span>
+                            <b>{departments[r.dept].name}</b>
+                            <span className="muted small">
+                              {r.id} · {r.submitted ? `podáno ${fmtDay(r.submitted, true)}` : 'nepodáno'}
+                            </span>
+                          </span>
+                          <StateBadge state={r.state} />
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
               )}
             </footer>
           )}
