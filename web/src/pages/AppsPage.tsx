@@ -1,4 +1,4 @@
-import { ArrowRight, ClipboardCheck, LayoutGrid, Search, SlidersHorizontal, ShoppingBag as StoreIcon } from 'lucide-react';
+import { ArrowRight, LayoutGrid, Search, SlidersHorizontal, ShoppingBag as StoreIcon } from 'lucide-react';
 import { useState } from 'react';
 import AppDetailPage from './AppDetailPage';
 import StoreAppDetail from './StoreAppDetail';
@@ -13,7 +13,7 @@ import PageHeader from '../components/PageHeader';
 import { hospital } from '../data/demo';
 import { appGroups } from '../data/appGroups';
 import { overviews } from '../data/overview';
-import { OpenBridge } from '../components/icons';
+import { OpenBridge, RequestSeal } from '../components/icons';
 import { openExternalApp } from '../lib/launch';
 import { appHref, type AppTab } from '../lib/route';
 import { purchasedIds, storeApps } from '../data/store';
@@ -60,7 +60,7 @@ export default function AppsPage({ sub, item, appId, appTab }: Props) {
   return (
     <div className="page apps">
       <PageHeader
-        icon={view === 'store' ? StoreIcon : view === 'zadosti' ? ClipboardCheck : LayoutGrid}
+        icon={view === 'store' ? StoreIcon : view === 'zadosti' ? RequestSeal : LayoutGrid}
         title={title}
         subtitle={subtitle}
         nav={
@@ -72,7 +72,7 @@ export default function AppsPage({ sub, item, appId, appTab }: Props) {
               <StoreIcon size={16} /> App Store <span className="tab-count">{storeApps.length}</span>
             </Link>
             <Link href="#/aplikace/zadosti" className={view === 'zadosti' ? 'switch-item active' : 'switch-item'}>
-              <ClipboardCheck size={16} /> Žádosti o pilotní provoz <span className="tab-count">{trialRequests.filter(isActive).length}</span>
+              <RequestSeal size={16} /> Žádosti o pilotní provoz <span className="tab-count">{trialRequests.filter(isActive).length}</span>
             </Link>
           </nav>
         }
