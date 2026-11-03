@@ -1,4 +1,4 @@
-import { ArrowRight, ClipboardCheck, LayoutGrid, Search, SlidersHorizontal, Store as StoreIcon } from 'lucide-react';
+import { ArrowRight, ClipboardCheck, LayoutGrid, Search, SlidersHorizontal, ShoppingBag as StoreIcon } from 'lucide-react';
 import { useState } from 'react';
 import AppDetailPage from './AppDetailPage';
 import StoreAppDetail from './StoreAppDetail';
