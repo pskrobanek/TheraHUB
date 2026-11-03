@@ -1,14 +1,15 @@
-import { Star } from 'lucide-react';
+import { ArrowDownWideNarrow, Check, ListFilter, Star } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import type { AiMode, Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
 import { indexTotal, usesAi } from '../../lib/score';
 import { audienceLabel } from './StoreCard';
 
 export type MinScore = 0 | 70 | 85 | 95;
-export type Sort = 'score' | 'rating';
+export type Sort = 'score' | 'rating' | 'providers' | 'name';
 export type MinRating = 0 | 3 | 3.5 | 4 | 4.5;
 
-export const sortLabel: Record<Sort, string> = { score: 'Adoption index', rating: 'Hodnocení' };
+export const sortLabel: Record<Sort, string> = { score: 'Adoption index', rating: 'Hodnocení', providers: 'Počet poskytovatelů', name: 'Název A–Z' };
 
 export const aiModeLabel: Record<AiMode, { label: string; hint: string }> = {
   none: { label: 'Bez AI', hint: 'Aplikace AI nepoužívá.' },
@@ -20,6 +21,8 @@ export const aiModeLabel: Record<AiMode, { label: string; hint: string }> = {
 export function sortApps(apps: StoreApp[], sort: Sort): StoreApp[] {
   return [...apps].sort((a, b) => {
     if (sort === 'score') return indexTotal(b) - indexTotal(a);
+    if (sort === 'providers') return b.store.hospitals - a.store.hospitals;
+    if (sort === 'name') return a.name.localeCompare(b.name, 'cs');
     return b.store.rating - a.store.rating;
   });
 }
@@ -107,24 +110,16 @@ export default function StoreFilters({ apps, filters, onChange }: Props) {
   return (
     <aside className="filters">
       <div className="filters-head">
-        <b>Filtry</b>
+        <b className="filters-title">
+          <ListFilter size={16} aria-hidden /> Filtry
+        </b>
+        <SortMenu sort={filters.sort} onChange={(sort) => set({ sort })} />
         {!isEmpty && (
           <button className="link" onClick={() => onChange({ ...emptyFilters, sort: filters.sort })}>
             Zrušit vše
           </button>
         )}
       </div>
-
-      <section>
-        <h4>Seřadit</h4>
-        <div className="segmented small">
-          {(Object.keys(sortLabel) as Sort[]).map((k) => (
-            <button key={k} className={filters.sort === k ? 'on' : ''} onClick={() => set({ sort: k })}>
-              {sortLabel[k]}
-            </button>
-          ))}
-        </div>
-      </section>
 
       <section>
         <h4>Specializace</h4>
@@ -239,5 +234,60 @@ export default function StoreFilters({ apps, filters, onChange }: Props) {
         </div>
       </section>
     </aside>
+  );
+}
+
+/** Řazení vedle nadpisu Filtry: méně výrazné tlačítko, po kliknutí nabídka možností. */
+function SortMenu({ sort, onChange }: { sort: Sort; onChange: (s: Sort) => void }) {
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState({ top: 0, left: 0 });
+  const ref = useRef<HTMLDivElement>(null);
+  const btn = useRef<HTMLButtonElement>(null);
+  // Nabídka je „fixed“, aby ji neořízl rolovací panel filtrů.
+  const toggle = () => {
+    const r = btn.current?.getBoundingClientRect();
+    if (r) setPos({ top: r.bottom + 4, left: r.left });
+    setOpen((o) => !o);
+  };
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent | KeyboardEvent) => {
+      if (e instanceof KeyboardEvent ? e.key === 'Escape' : !ref.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const hide = () => setOpen(false);
+    document.addEventListener('mousedown', close);
+    document.addEventListener('keydown', close);
+    window.addEventListener('scroll', hide, true);
+    return () => {
+      document.removeEventListener('mousedown', close);
+      document.removeEventListener('keydown', close);
+      window.removeEventListener('scroll', hide, true);
+    };
+  }, [open]);
+  return (
+    <div className="sort-menu" ref={ref}>
+      <button ref={btn} className="sort-btn" onClick={toggle} aria-haspopup="menu" aria-expanded={open} title={`Řazení: ${sortLabel[sort]}`}>
+        <ArrowDownWideNarrow size={15} aria-hidden /> Řazení
+      </button>
+      {open && (
+        <div className="sort-pop glass" role="menu" style={{ top: pos.top, left: pos.left }}>
+          {(Object.keys(sortLabel) as Sort[]).map((k) => (
+            <button
+              key={k}
+              role="menuitemradio"
+              aria-checked={sort === k}
+              className={sort === k ? 'on' : ''}
+              onClick={() => {
+                onChange(k);
+                setOpen(false);
+              }}
+            >
+              <span>{sortLabel[k]}</span>
+              {sort === k && <Check size={14} aria-hidden />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
   );
 }
