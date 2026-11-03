@@ -1,4 +1,4 @@
-import { ArrowDownWideNarrow, Check, ListFilter, Star } from 'lucide-react';
+import { ArrowUpDown, Check, ListFilter, Star } from 'lucide-react';
 import { useState } from 'react';
 import type { AiMode, Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
@@ -112,10 +112,10 @@ export default function StoreFilters({ apps, filters, onChange }: Props) {
     <aside className="filters">
       <div className="filters-head" role="tablist" aria-label="Filtry nebo řazení">
         <button role="tab" aria-selected={mode === 'filtry'} className={mode === 'filtry' ? 'fh-tab on' : 'fh-tab'} onClick={() => setMode('filtry')}>
-          <ListFilter size={16} aria-hidden /> Filtry
+          <ListFilter size={16} strokeWidth={2} aria-hidden /> Filtry
         </button>
         <button role="tab" aria-selected={mode === 'razeni'} className={mode === 'razeni' ? 'fh-tab on' : 'fh-tab'} onClick={() => setMode('razeni')}>
-          <ArrowDownWideNarrow size={16} aria-hidden /> Řazení
+          <ArrowUpDown size={16} strokeWidth={2} aria-hidden /> Řazení
         </button>
         {mode === 'filtry' && !isEmpty && (
           <button className="link" onClick={() => onChange({ ...emptyFilters, sort: filters.sort })}>
