@@ -64,3 +64,12 @@ export const catalog: CatalogItem[] = [
   { code: 'OST-003', domain: 'ostatni', pillar: 'legal', subcategory: 'Podpora', title: 'Podpora a SLA odezvy', expectation: 'Pracovní dny, odezva do 4 h (ukázka)', criticality: 'dulezite', rule: { kind: 'max', limit: 4, unit: 'h' }, todo: 'clinical' },
   { code: 'OST-004', domain: 'ostatni', pillar: 'safety', subcategory: 'Klinická bezpečnost', title: 'Klinické důkazy a reference z jiných nemocnic', expectation: 'Informativní', criticality: 'informativni', rule: { kind: 'yes' }, todo: 'clinical' },
 ];
+
+/** Další položky katalogu, které profil FN Demo zatím nepoužívá (nabídka „Přidat z katalogu“). Zástupné. */
+export const catalogExtra: CatalogItem[] = [
+  { code: 'LEG-005', domain: 'legal', pillar: 'legal', title: 'Escrow zdrojového kódu u kritických aplikací', expectation: 'Ano (ukázka)', criticality: 'informativni', rule: { kind: 'yes' }, todo: 'legal' },
+  { code: 'GDP-004', domain: 'gdpr', pillar: 'privacy', title: 'Žádný trénink AI na datech nemocnice bez dohody', expectation: 'Ano (ukázka)', criticality: 'blokujici', rule: { kind: 'yes' }, todo: 'dpo' },
+  { code: 'SEC-005', domain: 'security', pillar: 'security', title: 'Seznam softwarových komponent (SBOM)', expectation: 'Ano (ukázka)', criticality: 'dulezite', rule: { kind: 'yes' }, todo: 'security' },
+  { code: 'SEC-006', domain: 'security', pillar: 'security', title: 'Přístup dodavatele do sítě jen přes VPN s MFA', expectation: 'Ano (ukázka)', criticality: 'dulezite', rule: { kind: 'yes' }, todo: 'security' },
+  { code: 'OST-005', domain: 'ostatni', pillar: 'legal', subcategory: 'Provoz', title: 'Hotline podpory v češtině', expectation: 'Ano (ukázka)', criticality: 'informativni', rule: { kind: 'yes' }, todo: 'clinical' },
+];

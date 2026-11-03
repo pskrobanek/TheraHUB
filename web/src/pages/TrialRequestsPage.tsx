@@ -3,6 +3,7 @@ import { Kanban, List } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import AppIcon from '../components/AppIcon';
 import Link from '../components/Link';
+import ReviewerInbox from '../components/trial/ReviewerInbox';
 import StateBadge from '../components/trial/StateBadge';
 import { VerdictBadge } from '../components/trial/Status';
 import { domainLabel, domains, type Domain } from '../data/trial/catalog';
@@ -109,7 +110,7 @@ export default function TrialRequestsPage() {
             </button>
           ))}
         </nav>
-        <div className="trq-filters">
+        {activeTab !== 'kontrola' && <div className="trq-filters">
           <select value={fState} onChange={(e) => setFState(e.target.value as TrialState | '')} aria-label="Stav">
             <option value="">Všechny stavy</option>
             {(Object.keys(stateLabel) as TrialState[]).map((s) => (
@@ -145,12 +146,14 @@ export default function TrialRequestsPage() {
               <Kanban size={16} />
             </button>
           </span>
-        </div>
+        </div>}
       </div>
 
-      {rows.length === 0 ? (
+      {activeTab === 'kontrola' ? (
+        <ReviewerInbox person={persona.name} requests={trialRequests} />
+      ) : rows.length === 0 ? (
         <div className="empty glass">
-          {activeTab === 'kontrola' ? `${persona.name} teď nemá nic ke kontrole.` : 'Žádná žádost neodpovídá filtru.'}
+          Žádná žádost neodpovídá filtru.
         </div>
       ) : view === 'list' ? (
         <div className="trq-table-wrap glass">

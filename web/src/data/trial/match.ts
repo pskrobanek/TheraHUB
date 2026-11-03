@@ -111,9 +111,15 @@ export function domainVerdict(items: { status: ItemStatus; criticality: Critical
 const rank: Record<Verdict, number> = { splnuje: 0, vyhrady: 1, nesplnuje: 2, nelze: 3 };
 
 /** Porovná profil FN Demo s dossier. Bez dossier → „Nelze posoudit“ (u skutečných aplikací „Dossier se připravuje“). */
-export function match(answers: Record<string, Answer> | undefined, waivers: Record<string, string> = {}, asOf = DEMO_TODAY): MatchResult {
+export function match(
+  answers: Record<string, Answer> | undefined,
+  waivers: Record<string, string> = {},
+  asOf = DEMO_TODAY,
+  /** Profil nemocnice; výchozí je publikovaná verze. Koncept profilu se dosazuje pro náhled dopadu. */
+  profile: CatalogItem[] = catalog,
+): MatchResult {
   if (!answers) return { verdict: 'nelze', domains: [], asOf };
-  const results = catalog.map((item) => {
+  const results = profile.map((item) => {
     const r = evaluate(item, answers[item.code], asOf);
     const waiver = waivers[item.code];
     return waiver && (r.status === 'gap' || r.status === 'partial') ? { ...r, item, status: 'waived' as const, waiver } : { ...r, item };

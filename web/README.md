@@ -29,7 +29,8 @@ npm run check:contrast  # jen kontrola kontrastu barev stavů (WCAG 2.2 AA)
 - `src/components/trial/` – stavy shody s ikonou a textem (`Status.tsx`), box Shoda s požadavky a panel položek (`ComplianceBox.tsx`), stepper průběhu (`Stepper.tsx`)
 - `src/pages/StoreAppDetail.tsx`, `TrialRequestsPage.tsx`, `TrialRequestDetail.tsx` – detail aplikace v App Storu, přehled žádostí (seznam a kanban) a detail žádosti
 - Barvy stavů jsou tokeny `--st-*` na začátku `src/styles.css`; kontrast hlídá `scripts/check-contrast.mjs`
-- Rozhodnutí, otázky, rizika a požadavky: `docs/DECISIONS.md`, `docs/OPEN_QUESTIONS.md`, `docs/RISKS.md`, `docs/REQUIREMENTS.md`
+- Fáze 0b: fronta posuzovatele (`src/components/trial/ReviewerInbox.tsx`, záložka Ke kontrole), Nastavení → Požadavky nemocnice (`src/components/settings/RequirementsEditor.tsx`) a Schvalovací proces (`src/components/settings/WorkflowBuilder.tsx`, data `src/data/trial/workflow.ts`, přetahování dnd-kit)
+- Rozhodnutí, otázky, rizika a požadavky: `docs/DECISIONS.md`, `docs/OPEN_QUESTIONS.md`, `docs/RISKS.md`, `docs/REQUIREMENTS.md`, nápady `docs/IDEAS.md`
 
 ## Design
 

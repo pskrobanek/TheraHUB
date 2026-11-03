@@ -7,6 +7,7 @@ import { navigate, onNavigate, openAppId, parseHash, patientHref, type Route } f
 import AppsPage from './pages/AppsPage';
 import PatientPage from './pages/PatientPage';
 import Placeholder from './pages/Placeholder';
+import SettingsPage from './pages/SettingsPage';
 
 // Bez adresy otevři prvního pacienta, ať prototyp hned ukazuje obsah.
 const routeOf = (hash: string): Route => (hash ? parseHash(hash) : { ...parseHash(hash), patientId: patients[0].id });
@@ -85,6 +86,8 @@ export default function App() {
             />
           ) : route.section === 'aplikace' ? (
             <AppsPage sub={route.sub} item={route.item} appId={shownAppId} appTab={route.appTab} />
+          ) : route.section === 'nastaveni' ? (
+            <SettingsPage sub={route.sub} />
           ) : (
             <Placeholder section={route.section} />
           )}

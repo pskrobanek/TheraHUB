@@ -51,3 +51,16 @@ ID se odkazují z kódu a testů. Prefixy: **MAT** matching, **WFL** workflow, *
 | REQ-UI-006 | Panel položek: filtry Jen rozpory a Jen blokující, problémy nahoře, export PDF. | §9.1 | 0a (export naznačen) | hotovo |
 | REQ-UI-007 | Detail aplikace: vlevo popis a náhledy, vpravo Adoption index v kruhu, 4 oblasti s plnou ikonou, podílem splněných a výpisem nesplněných položek, pod tím Další soulad. | DEC-015 | 0a | hotovo |
 | REQ-MAT-010 | Oblast Ostatní obsahuje jen ostatní požadavky nemocnice; integrace, datový prostor, záštity a TheraHUB integrace jsou v Adoption indexu. | DEC-014 | 0a | hotovo |
+
+## Fáze 0b
+
+| ID | Požadavek | Zdroj | Fáze | Stav |
+|---|---|---|---|---|
+| REQ-WFL-009 | Fronta posuzovatele: po termínu nahoře, pak podle termínu; seznam vlevo, úkol (balíček a rozhodnutí) vpravo. | §9.4 | 0b | hotovo |
+| REQ-WFL-010 | Klávesy j/k pohyb, Enter otevřít, A schválit, R vrátit. | §9.4 | 0b | hotovo |
+| REQ-WFL-011 | Balíček oblasti: souhrn žádosti, shoda jen dané oblasti s problémy nahoře, doklady s „Ověřeno TheraHUB / Čestné prohlášení“, dokumenty oblasti, dřívější rozhodnutí a podmínky. | §7.1 | 0b | hotovo (dokumenty jen názvy) |
+| REQ-WFL-012 | Akce: schválit a předat dál, s podmínkou, výjimka, dotaz na firmu (návrh z rozporů), vrátit, konzultace, delegovat, zamítnout s důvodem. Schválení s otevřeným rozporem vyžaduje výjimku. Finální rozhodnutí a výjimka u blokující položky žádají MFA. | §7.2 | 0b (bez ukládání) | hotovo |
+| REQ-WFL-013 | Editor procesu: paleta, plátno, inspektor; přesun myší i klávesnicí; paralelní skupina; validace pravidel §5.3 blokuje publikování; simulace s řešiteli z organizační struktury a délkou podle SLA; rozdíl proti publikované verzi. | §5.3, §9.5 | 0b | hotovo (bez ukládání) |
+| REQ-WFL-014 | Automatické splnění kroku ve výchozím stavu vypnuté a u Rozhodnutí, Smlouvy a dalších nedovolené. | §8.2 | 0b (nastavení) | hotovo |
+| REQ-MAT-011 | Editor požadavků: 4 oblasti s vlastníkem a zástupcem; zařazení, kritičnost, parametr podle typu odpovědi, doklad a max. stáří; přidat z katalogu, vlastní požadavek; koncept → publikace s rozdílem verzí; náhled dopadu na verdikty aplikací; viditelnost pro dodavatele. | §3.2, §9.6 | 0b (bez ukládání, import naznačen) | hotovo |
+
