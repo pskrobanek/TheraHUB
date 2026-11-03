@@ -145,8 +145,9 @@ Pilíře Frameworku popisují, **co** se u aplikace hodnotí. V nemocnici ale po
 | SECURITY | Security |
 | SAFETY – regulatorní status (MDR, AI Act) | Legal |
 | SAFETY – klinická bezpečnost | Ostatní › Klinická bezpečnost |
-| DATA | Ostatní |
-| RESEARCH | Ostatní |
+
+- **Ostatní** jsou ostatní požadavky nemocnice (provoz, podpora a SLA, zaškolení, čeština a přístupnost, klinické reference).
+- **Integrace s NIS, datový prostor, evropský standard, záštity odborných společností a TheraHUB integrace** (pilíře DATA a RESEARCH) nejsou oblastí posouzení: měří obecnou připravenost aplikace a patří do **Adoption indexu** (kap. 6.1).
 
 - Dodavatel odpovídá na katalog **jednou** ve svém **compliance dossier** (odpovědi + doklady s platností a hashem). Stejné dossier čte matching (kap. 6.4) i Adoption index (kap. 6.1).
 
@@ -321,7 +322,7 @@ Pro nemocnici vypadá jako obchod s aplikacemi, pod kapotou je to **registr ově
 - **Pro koho je aplikace:** pacient, lékař, sestra, administrativa, výzkumník.
 - **Regulatorní zařazení** jako štítek: zdravotnický prostředek (třída MDR), administrativní aplikace, wellness, pouze pro výzkum; u AI navíc značka AI.
 - **Bezplatný pilotní provoz:** délka zdarma a **2–3 měřitelná KPI**, podle kterých nemocnice po pilotním provozu jednoduše vyhodnotí, zda aplikaci koupí (např. „neplánované hospitalizace −15 %“, „čas na dokumentaci −30 %“). Po pilotním provozu je vidět cena. Pilotní provoz nezakládá nárok na smlouvu.
-- **Shoda s požadavky mé nemocnice** (box v detailu aplikace, kap. 6.4): celkový verdikt **Splňuje / Splňuje s výhradami / Nesplňuje / Nelze posoudit** a čtyři dlaždice oblastí s **počty** stavů (např. „✓ 12 · ~ 1 · ✗ 1 · ? 2“), **bez procenta**. Každá položka ukazuje očekávání nemocnice, odpověď dodavatele, doklad a zda je **ověřený TheraHUB**, nebo jen čestné prohlášení. Na kartě v katalogu je jen malý **odznak verdiktu** (ikona + text), detail je v boxu. U aplikací, jejichž dossier ještě není hotové, box ukazuje neutrální stav **„Dossier se připravuje“**.
+- **Shoda s požadavky mé nemocnice** (box v detailu aplikace, kap. 6.4): celkový verdikt **Splňuje / Splňuje s výhradami / Nesplňuje / Nelze posoudit** a čtyři dlaždice oblastí s **počty** stavů (např. „✓ 12 · ~ 1 · ✗ 1 · ? 2“), **bez procenta**. Každá položka ukazuje očekávání nemocnice, odpověď dodavatele, doklad a zda je **ověřený TheraHUB**, nebo jen čestné prohlášení. Na kartě v katalogu je jen malý **odznak verdiktu** (ikona + text). V detailu aplikace je vlevo popis a náhledy obrazovek, vpravo Adoption index v kruhovém ukazateli, pod ním **4 oblasti** s podílem splněných požadavků a **výpisem konkrétních nesplněných položek** a pod tím **další soulad** (integrace s NIS, datový prostor, záštity, TheraHUB integrace). U aplikací, jejichž dossier ještě není hotové, box ukazuje neutrální stav **„Dossier se připravuje“**.
 - **Soulad v jednom přehledu:**
   - s **profilem mé nemocnice** – legal, GDPR, security,
   - s **mým NIS** – míra integrace v % (readiness, kap. 4.2),
