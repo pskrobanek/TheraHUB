@@ -1,7 +1,7 @@
 import { Star } from 'lucide-react';
 import type { AiMode, Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
-import { adoptionIndex, usesAi } from '../../lib/score';
+import { indexTotal, usesAi } from '../../lib/score';
 import { audienceLabel } from './StoreCard';
 
 export type MinScore = 0 | 70 | 85 | 95;
@@ -19,7 +19,7 @@ export const aiModeLabel: Record<AiMode, { label: string; hint: string }> = {
 
 export function sortApps(apps: StoreApp[], sort: Sort): StoreApp[] {
   return [...apps].sort((a, b) => {
-    if (sort === 'score') return adoptionIndex(b).total - adoptionIndex(a).total;
+    if (sort === 'score') return indexTotal(b) - indexTotal(a);
     return b.store.rating - a.store.rating;
   });
 }
@@ -74,7 +74,7 @@ export function applyFilters(apps: StoreApp[], f: Filters): StoreApp[] {
   return apps.filter(
     (a) =>
       (!f.category || a.category === f.category) &&
-      adoptionIndex(a).total >= f.minScore &&
+      (f.minScore === 0 || indexTotal(a) >= f.minScore) &&
       [...f.criteria].every((id) => criteria[id].test(a)) &&
       (f.audience.size === 0 || a.store.audience.some((x) => f.audience.has(x))) &&
       (f.regClass.size === 0 || f.regClass.has(regClassOf(a))) &&

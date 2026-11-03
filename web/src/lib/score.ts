@@ -1,3 +1,4 @@
+import { realAppIds } from '../data/trial/dossiers';
 import type { Check, StoreApp } from '../data/types';
 
 const checkValue = (c: Check): number => (c === 'ok' ? 1 : c === 'partial' ? 0.5 : 0);
@@ -81,4 +82,10 @@ export function adoptionIndex(app: StoreApp): Score {
   const total = Math.round(parts.reduce((sum, p) => sum + p.pct * p.weight, 0));
   const level = levelFor(total);
   return { total, level, levelLabel: levelLabel[level], parts };
+}
+
+/** Adoption index pro řazení a filtry. Aplikace bez hotového dossier (skutečné aplikace v demu) mají −1:
+ *  chybějící údaj index nikdy nezvyšuje (DEC-004, DEC-008). */
+export function indexTotal(app: StoreApp): number {
+  return realAppIds.has(app.id) ? -1 : adoptionIndex(app).total;
 }

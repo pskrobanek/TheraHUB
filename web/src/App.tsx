@@ -84,7 +84,7 @@ export default function App() {
               onToggleTask={toggleTask}
             />
           ) : route.section === 'aplikace' ? (
-            <AppsPage sub={route.sub} appId={shownAppId} appTab={route.appTab} />
+            <AppsPage sub={route.sub} item={route.item} appId={shownAppId} appTab={route.appTab} />
           ) : (
             <Placeholder section={route.section} />
           )}

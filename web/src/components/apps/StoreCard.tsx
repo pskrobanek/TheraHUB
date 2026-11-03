@@ -4,6 +4,13 @@ import type { Audience, StoreApp } from '../../data/types';
 import { specialtyOf } from '../../data/specialties';
 import { adoptionIndex, levelFor, type ScoreCheck } from '../../lib/score';
 import AppIcon from '../AppIcon';
+import Link from '../Link';
+import { VerdictBadge } from '../trial/Status';
+import { dossiers, realAppIds } from '../../data/trial/dossiers';
+import { match } from '../../data/trial/match';
+import { hospitalDemo, storeBadge } from '../../data/trial/requests';
+
+const badgeLabel = { podano: 'Žádost podána', pilot: 'Pilot probíhá', predplatne: 'V předplatném' } as const;
 
 export const audienceLabel: Record<Audience, string> = {
   pacient: 'Pacient',
@@ -52,10 +59,12 @@ export default function StoreCard({ app }: { app: StoreApp }) {
   const spec = specialtyOf(app.category);
   const [open, setOpen] = useState(false);
   const detailId = `idx-${app.id}`;
+  const real = realAppIds.has(app.id);
+  const badge = storeBadge(app.id);
 
   return (
     <article className="store-card glass">
-      <header className="store-head">
+      <Link href={`#/aplikace/store/${app.id}`} className="store-head store-head-link">
         <AppIcon app={app} size={63} />
         <div className="store-title">
           <h3>{app.name}</h3>
@@ -64,7 +73,7 @@ export default function StoreCard({ app }: { app: StoreApp }) {
             {app.category}
           </span>
         </div>
-      </header>
+      </Link>
 
       <p className="pitch">{s.pitch}</p>
 
@@ -78,6 +87,23 @@ export default function StoreCard({ app }: { app: StoreApp }) {
         <b className="fact-num">{s.hospitals}</b> {s.hospitals === 1 ? 'poskytovatel' : s.hospitals < 5 ? 'poskytovatelé' : 'poskytovatelů'}
       </div>
 
+      <div className="store-badges">
+        <VerdictBadge
+          verdict={real ? 'pripravuje' : match(dossiers[app.id]?.answers).verdict}
+          size="sm"
+          title={`Shoda s požadavky ${hospitalDemo.short} – detail v aplikaci`}
+        />
+        {badge && <span className={`req-badge ${badge}`}>{badgeLabel[badge]}</span>}
+      </div>
+
+      {real ? (
+        <footer className="store-foot">
+          <div className="idx-toggle idx-pending">
+            <span className="c-label">Adoption index</span>
+            <span className="muted small">spočítá se z dossier</span>
+          </div>
+        </footer>
+      ) : (
       <footer className={open ? 'store-foot open' : 'store-foot'}>
         <button className="idx-toggle" onClick={() => setOpen((o) => !o)} aria-expanded={open} aria-controls={detailId}>
           <span className="c-label">Adoption index</span>
@@ -88,6 +114,9 @@ export default function StoreCard({ app }: { app: StoreApp }) {
 
         {open && (
           <div className="idx-detail" id={detailId}>
+            <p className="idx-help muted small">
+              Obecná připravenost aplikace v katalogu z veřejných vah. Není to verdikt vaší nemocnice – ten je v detailu aplikace (Shoda s požadavky).
+            </p>
             {score.parts.map((p) => (
               <section key={p.id} className="idx-part">
                 <div className="idx-part-head">
@@ -106,6 +135,7 @@ export default function StoreCard({ app }: { app: StoreApp }) {
           </div>
         )}
       </footer>
+      )}
     </article>
   );
 }
