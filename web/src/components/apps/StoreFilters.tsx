@@ -111,11 +111,11 @@ export default function StoreFilters({ apps, filters, onChange }: Props) {
   return (
     <aside className="filters">
       <div className="filters-head" role="tablist" aria-label="Filtry nebo řazení">
-        <button role="tab" aria-selected={mode === 'filtry'} className={mode === 'filtry' ? 'fh-tab on' : 'fh-tab'} onClick={() => setMode('filtry')}>
-          <ListFilter size={16} strokeWidth={2} aria-hidden /> Filtry
+        <button role="tab" aria-selected={mode === 'filtry'} className={mode === 'filtry' ? 'fh-tab on' : 'fh-tab'} onClick={() => setMode('filtry')} aria-label="Filtry" title="Filtry">
+          <ListFilter size={18} strokeWidth={2} aria-hidden />
         </button>
-        <button role="tab" aria-selected={mode === 'razeni'} className={mode === 'razeni' ? 'fh-tab on' : 'fh-tab'} onClick={() => setMode('razeni')}>
-          <ArrowUpDown size={16} strokeWidth={2} aria-hidden /> Řazení
+        <button role="tab" aria-selected={mode === 'razeni'} className={mode === 'razeni' ? 'fh-tab on' : 'fh-tab'} onClick={() => setMode('razeni')} aria-label="Řazení" title="Řazení">
+          <ArrowUpDown size={18} strokeWidth={2} aria-hidden />
         </button>
         {mode === 'filtry' && !isEmpty && (
           <button className="link" onClick={() => onChange({ ...emptyFilters, sort: filters.sort })}>
