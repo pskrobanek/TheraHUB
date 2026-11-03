@@ -18,9 +18,9 @@ export const OpenBridge = createLucideIcon('open-bridge', [
 
 /** Ikona „pečeť“: žádosti o pilotní provoz (podle podkladu od autora projektu). */
 export const RequestSeal = createLucideIcon('request-seal', [
-  ['path', { d: 'M4.31 9.79A8 8 0 0 1 9.79 4.31', key: 'a' }],
-  ['path', { d: 'M14.21 4.31A8 8 0 0 1 19.69 9.79', key: 'b' }],
-  ['path', { d: 'M19.69 14.21A8 8 0 0 1 14.21 19.69', key: 'c' }],
-  ['path', { d: 'M9.79 19.69A8 8 0 0 1 4.31 14.21', opacity: '0.5', key: 'd' }],
-  ['path', { d: 'M8.75 12.25l2.25 2.25 4.25-4.5', key: 'e' }],
+  ['path', { d: 'M3 9.41A9.36 9.36 0 0 1 9.41 3', key: 'a' }],
+  ['path', { d: 'M14.59 3A9.36 9.36 0 0 1 21 9.41', key: 'b' }],
+  ['path', { d: 'M21 14.59A9.36 9.36 0 0 1 14.59 21', key: 'c' }],
+  ['path', { d: 'M9.41 21A9.36 9.36 0 0 1 3 14.59', opacity: '0.5', key: 'd' }],
+  ['path', { d: 'M8.2 12.29l2.63 2.63 4.97-5.26', key: 'e' }],
 ]);
