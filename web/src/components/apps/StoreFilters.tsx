@@ -105,7 +105,7 @@ export default function StoreFilters({ apps, filters, onChange }: Props) {
   const groups = [...new Set(Object.values(criteria).map((c) => c.group))];
 
   return (
-    <aside className="filters glass">
+    <aside className="filters">
       <div className="filters-head">
         <b>Filtry</b>
         {!isEmpty && (
