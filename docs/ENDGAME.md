@@ -132,6 +132,24 @@ contract_offers:               # varianty, které dodavatel nabízí (kap. 5)
 certified_until: 2027-10-01
 ```
 
+### 3.8 Katalog požadavků a oblasti posouzení
+Pilíře Frameworku popisují, **co** se u aplikace hodnotí. V nemocnici ale požadavky kontrolují konkrétní lidé, proto se pro posuzování používají **čtyři oblasti posouzení: Legal, GDPR, Security, Ostatní**.
+
+- TheraHUB spravuje **katalog požadavků** se stálými ID (např. `SEC-014`). Každá položka má otázku pro dodavatele, typ odpovědi, nastavitelné parametry, typy dokladů a verzi; publikovaná položka se už nemění.
+- Každá položka nese **dva štítky**: **pilíř Frameworku** (pro úrovně, odznaky a Adoption index) a **oblast posouzení** (kdo ji v nemocnici kontroluje). Pilíř se na oblast **nemapuje natvrdo**; níže je jen výchozí přiřazení, které lze u položky změnit.
+
+| Pilíř Frameworku | Výchozí oblast posouzení |
+|---|---|
+| LEGAL & BUSINESS | Legal |
+| PRIVACY | GDPR |
+| SECURITY | Security |
+| SAFETY – regulatorní status (MDR, AI Act) | Legal |
+| SAFETY – klinická bezpečnost | Ostatní › Klinická bezpečnost |
+| DATA | Ostatní |
+| RESEARCH | Ostatní |
+
+- Dodavatel odpovídá na katalog **jednou** ve svém **compliance dossier** (odpovědi + doklady s platností a hashem). Stejné dossier čte matching (kap. 6.4) i Adoption index (kap. 6.1).
+
 ---
 
 ## 4. Profil nemocnice
@@ -151,6 +169,8 @@ Nemocnice si **jednou** nastaví, kdo je, co má a co dovolí. Profil je strojov
 | **NIS a data** | jaký NIS a moduly, jaká rozhraní, **matice dostupnosti dat** (4.2) | IT |
 | **Provoz a hosting** | kde mohou aplikace běžet (4.3), SSO, síť | IT |
 | **Nákup** | režim zakázek, limity, schvalovací workflow | nákup / ekonomika |
+
+**Požadavky nemocnice na aplikace** se z katalogu (kap. 3.8) skládají do **profilu požadavků** ve čtyřech oblastech posouzení (Legal, GDPR, Security, Ostatní). U každé položky nemocnice nastaví **kritičnost** (Blokující / Důležité / Informativní), očekávanou hodnotu nebo práh, požadovaný doklad a jeho maximální stáří a kdo položku posuzuje. Profil je verzovaný (koncept → publikováno) a nemocnice volí jeho viditelnost (soukromý / viditelný pro dodavatele / veřejný). Šablony požadavků jsou zástupné, dokud je neschválí právníci, DPO a bezpečnost. Nemocnice si také sestavuje **schvalovací proces** (kap. 6.4).
 
 ### 4.2 NIS a datová dostupnost
 
@@ -300,7 +320,8 @@ Pro nemocnici vypadá jako obchod s aplikacemi, pod kapotou je to **registr ově
 - **Ceník** ve standardní struktuře: částka, za co se platí (pacient, uživatel, událost/vyšetření, lůžko, celá nemocnice) a frekvence (měsíčně, ročně, jednorázově).
 - **Pro koho je aplikace:** pacient, lékař, sestra, administrativa, výzkumník.
 - **Regulatorní zařazení** jako štítek: zdravotnický prostředek (třída MDR), administrativní aplikace, wellness, pouze pro výzkum; u AI navíc značka AI.
-- **Free trial:** délka zdarma a **2–3 měřitelná KPI**, podle kterých nemocnice po trialu jednoduše vyhodnotí, zda aplikaci koupí (např. „neplánované hospitalizace −15 %“, „čas na dokumentaci −30 %“). Po trialu je vidět cena.
+- **Bezplatný pilotní provoz:** délka zdarma a **2–3 měřitelná KPI**, podle kterých nemocnice po pilotním provozu jednoduše vyhodnotí, zda aplikaci koupí (např. „neplánované hospitalizace −15 %“, „čas na dokumentaci −30 %“). Po pilotním provozu je vidět cena. Pilotní provoz nezakládá nárok na smlouvu.
+- **Shoda s požadavky mé nemocnice** (box v detailu aplikace, kap. 6.4): celkový verdikt **Splňuje / Splňuje s výhradami / Nesplňuje / Nelze posoudit** a čtyři dlaždice oblastí s **počty** stavů (např. „✓ 12 · ~ 1 · ✗ 1 · ? 2“), **bez procenta**. Každá položka ukazuje očekávání nemocnice, odpověď dodavatele, doklad a zda je **ověřený TheraHUB**, nebo jen čestné prohlášení. Na kartě v katalogu je jen malý **odznak verdiktu** (ikona + text), detail je v boxu. U aplikací, jejichž dossier ještě není hotové, box ukazuje neutrální stav **„Dossier se připravuje“**.
 - **Soulad v jednom přehledu:**
   - s **profilem mé nemocnice** – legal, GDPR, security,
   - s **mým NIS** – míra integrace v % (readiness, kap. 4.2),
@@ -309,9 +330,10 @@ Pro nemocnici vypadá jako obchod s aplikacemi, pod kapotou je to **registr ově
   - s **evropským datovým standardem** (EHDS / EEHRxF, HL7 Europe, kap. 12),
   - u AI s **kodexem asociace pro AI v ČR**,
   - **záštita odborné společnosti**, pokud ji aplikace má.
-- **Adoption index (0–100)** shrnuje připravenost aplikace k nasazení v mé nemocnici do jednoho čísla ve čtyřech pásmech: Vysoká (85+, zelená) / Střední (70+, žlutá) / Nízká (55+, oranžová) / Velmi nízká (červená). Váhy: soulad s nemocnicí 35 %, datový prostor 25 %, odborné společnosti 20 %, TheraHUB integrace 20 %. Na kartě v katalogu je index jako progress bar s číslem a úrovní; šipkou se rozbalí rozpad na čtyři části (váha, procento) a všechny dílčí kontroly. Váhy jsou veřejné a verzované spolu s Frameworkem.
+- **Adoption index (0–100)** shrnuje připravenost aplikace k nasazení v mé nemocnici do jednoho čísla ve čtyřech pásmech: Vysoká (85+, zelená) / Střední (70+, žlutá) / Nízká (55+, oranžová) / Velmi nízká (červená). Váhy: soulad s nemocnicí 35 %, datový prostor 25 %, odborné společnosti 20 %, TheraHUB integrace 20 %. Na kartě v katalogu je index jako progress bar s číslem a úrovní; šipkou se rozbalí rozpad na čtyři části (váha, procento) a všechny dílčí kontroly. Váhy jsou veřejné a verzované spolu s Frameworkem. Index je **obecná připravenost aplikace v katalogu**, ne verdikt nemocnice; u indexu je vysvětlení, co měří a z čeho se skládá. Index i matching čtou **stejné dossier** a **chybějící údaj index nikdy nezvyšuje**.
 - **Filtry katalogu:** specializace, řazení (adoption index, hodnocení), minimální adoption index, jednotlivá kritéria indexu, pro koho, třída MDR, režim AI (bez AI, asistující, vedená, autonomní), minimální hodnocení.
-- Tlačítka: **Vyzkoušet v sandboxu → Požádat o pilot → Uzavřít smlouvu**.
+- Tlačítka: **Vyzkoušet v sandboxu → Požádat o pilotní provoz → Uzavřít smlouvu**. Pokud aplikace má blokující rozpory, žádost jde podat s upozorněním (rozpory lze řešit výjimkou); zda tlačítko zakázat, je nastavení nemocnice.
+- U aplikace, o kterou už nemocnice žádá, je pod boxem **průběh žádosti** (kap. 6.4) a na kartě v katalogu odznak **Žádost podána / Pilot probíhá / V předplatném**.
 
 V nemocnici má sekce Aplikace dvě části: **Moje aplikace** (licencované aplikace, které lékaři mohou aktivovat u pacientů) a **App Store** (celý katalog s kartami výše). Moje aplikace jsou karty (logo, název, podnázev; tlačítka **Přehled** v TheraHUB a **Otevřít** – externí aplikace v novém okně přes SMART on FHIR) rozdělené podle **funkční kategorie**: monitorace pacienta, podpora léčby, screening a diagnostika, dokumentace a administrativa, provoz, výzkum a data. Otevřená aplikace se zobrazí jako podzáložka v menu (podobně jako otevřený pacient) a má záložky **Přehled / Pacienti / Workflow / Science**. Přehled je **souhrnný widget za celou nemocnici** – stejně jako widget u pacienta, jen agregovaně: statistiky aplikace, rozpad výsledků nebo trend a poslední aktivní pacient. Na záložce Pacienti je seznam pacientů v aplikaci se stavem. Widget dodává aplikace přes standardní rozhraní; data zůstávají v nemocnici.
 
@@ -320,10 +342,10 @@ V nemocnici má sekce Aplikace dvě části: **Moje aplikace** (licencované apl
 | Stupeň | Data | Smlouva | Délka |
 |---|---|---|---|
 | **Sandbox** | syntetická data v českých FHIR profilech | klikací podmínky | ihned |
-| **Pilot** | reálná data, omezený rozsah (oddělení, počet pacientů) | pilotní smlouva z variant | 1–3 měsíce |
+| **Pilotní provoz** | reálná data, omezený rozsah (oddělení, počet pacientů) | pilotní smlouva a DPA ze šablon nemocnice a variant | podle nastavení nemocnice (výchozí max. 6 měsíců, jedno prodloužení) |
 | **Produkce** | plný rozsah | provozní smlouva z variant | dlouhodobě |
 
-Kritéria úspěchu pilotu se nastaví na začátku. Přechod do produkce je předem definovaný.
+Kritéria úspěchu (KPI) se nastaví už v žádosti. Pilotní provoz je bezplatný a **nezakládá nárok na smlouvu**. Po jeho konci rozhodne vedení: **nákup** (u veřejných nemocnic vždy zákonnou cestou, kap. 13), **prodloužení**, nebo **ukončení** s exit checklistem (vrácení a výmaz dat, potvrzení DPO). Cestu k pilotnímu provozu popisuje kap. 6.4.
 
 ### 6.3 Klinický pracovní prostor – aplikace u pacienta
 
@@ -336,6 +358,18 @@ Lékař nepracuje s aplikacemi jako se seznamem licencí, ale **u konkrétního 
 - Stejná karta pacienta má záložky **Workflow** (léčebná cesta pacienta) a **Science** (zařazení do výzkumu, souhlasy).
 
 **Kde to běží:** pohled pracuje se zdravotními daty, proto běží **v kontextu nemocnice** – v TheraHUB Node nebo jako aplikace spouštěná z NIS (SMART on FHIR launch). Centrální část zná jen katalog a licence, ne pacienty.
+
+### 6.4 Žádost o pilotní provoz a schvalování
+Lékař najde aplikaci, hned vidí, jak splňuje požadavky **jeho** nemocnice, a **jedním kliknutím požádá o pilotní provoz**. Platforma pak vede žádost schvalovacím procesem, který si nemocnice nastavila; lidé jen posuzují a rozhodují. Podrobné zadání: `reference/TheraHUB_Trial_Approval_brief.md`.
+
+- **Vyplň jednou, platí všude:** dodavatel vyplní compliance dossier jednou (kap. 3.8), nemocnice nastaví profil požadavků jednou (kap. 4). Doklad ověřený TheraHUB platí pro všechny nemocnice.
+- **Matching** porovná verzi profilu s verzí dossier a u každé položky uvede stav s konkrétním důvodem: **Splněno, Částečně, Rozpor, Chybí, Prošlé, K posouzení, Výjimka, Nevztahuje se** – vždy ikona i text, nikdy jen barva. Chybějící, prošlý nebo nečitelný doklad **nikdy není shoda**. Verdikt oblasti a celkový verdikt (nejhorší z oblastí) se ukazují jako počty, ne procento. Při podání se výsledek **zmrazí**; při změně dossier se přepočítá a ukáže rozdíl, a když se oblast zhorší, její rozhodnutí se znovu otevře.
+- **Schvalovací proces** si nemocnice skládá přetažením kroků (žádost, schválení primářem / náměstkem / ředitelem, firma, **paralelní posouzení 4 oblastí**, smlouva, etická komise, pilotní provoz, vyhodnocení KPI, rozhodnutí, nákup, ukončení). Validace hlídá, že pilotní provoz nikdy nezačne bez smlouvy a posouzení Legal, GDPR a Security. Výchozí šablony: **A – souhlas vedení napřed**, **B – odborné posouzení napřed**. Šablony i profily se verzují; žádost běží na verzi, se kterou začala.
+- **Posuzovatel** dostane hotový **balíček své oblasti** (problémy nahoře, u každé položky doklad a jeho platnost, předchozí rozhodnutí) a rozhodne: schválit a předat dál, schválit s podmínkou, udělit výjimku, dotaz na firmu, vrátit žadateli, konzultovat, delegovat, zamítnout. Interní komentáře dodavatel nevidí. Finální rozhodnutí a podpisy vyžadují znovu MFA.
+- **Transparentnost:** stepper v detailu aplikace i žádosti ukazuje u každého stavu aktuální krok, **kdo ho má**, jak dlouho čeká, termín SLA a **kdo je další**. SLA se počítá v pracovních dnech a stojí, když se čeká na firmu nebo žadatele; po termínu eskaluje na zástupce a správce.
+- **Automatizuje se vše kromě úsudku:** předkontrola dossier před prvním posuzovatelem, sestavení balíčků, připomínky, návrh smlouvy a DPA ze šablon, plán pilotního provozu, KPI report, exit checklist, hlídání platnosti dokladů. **Systém připravuje, lidé rozhodují** – automatické splnění kroku je volitelné, ve výchozím stavu vypnuté a nikdy u rozhodnutí, podpisů, výjimek ani u kroků s rozporem. Volitelné AI předposouzení je vždy jen „Návrh — ověřte“.
+- **Data:** modul neobsahuje zdravotní data pacientů; drží důvěrné dokumenty dodavatelů a rozhodnutí personálu s neměnným auditním záznamem a exportem celého spisu žádosti. Právní, GDPR a bezpečnostní obsah požadavků a šablon smluv dodávají odborníci – do té doby jsou v systému jen zjevně označené zástupné texty.
+- **Terminologie:** v rozhraní se používá **„pilotní provoz“** (tlačítko „Požádat o pilotní provoz“, stav „Pilot probíhá“), ne „trial“.
 
 ---
 
@@ -550,12 +584,17 @@ Online smlouva **nenahrazuje** zákon o zadávání veřejných zakázek. Platfo
 | Role | Co dělá |
 |---|---|
 | Nemocnice – admin | profil, uživatelé, schvalovací workflow |
-| Nemocnice – klinik / manažer | App Store, sandbox, žádosti o pilot, Workflow |
-| Nemocnice – DPO, KB manažer, právník | schvalují varianty a smlouvy, vidí audit a compliance |
+| Nemocnice – klinik / manažer | App Store, sandbox, **žadatel o pilotní provoz** (odborný garant), Workflow |
+| Nemocnice – primář | schvaluje klinickou potřebu a kapacitu oddělení (určen automaticky podle oddělení žadatele) |
+| Nemocnice – náměstek / ředitel | strategické a finanční schválení, finální rozhodnutí po pilotním provozu, podpis |
+| Nemocnice – DPO, KB manažer, právník | posuzují své **oblasti** (GDPR / Security / Legal), schvalují varianty a smlouvy, vidí audit a compliance |
+| Nemocnice – posuzovatelé oblasti Ostatní | IT a integrace, biomedicínské inženýrství, kvalita, klinická bezpečnost (podle nastavení) |
+| Nemocnice – nákup | nákup po pozitivním rozhodnutí, cesta podle zákona o zadávání veřejných zakázek |
+| Nemocnice – pozorovatel | jen čtení (spolužadatelé, oddělení kvality) |
 | Nemocnice – IT | Node, NIS profil, readiness, hosting |
 | Nemocnice – věda a výzkum, etická komise | Science, schvalování projektů |
 | Výzkumník | návrh projektu, feasibility, analýza v SPE / federovaně |
-| Dodavatel / startup | profil, certifikace, nabízené varianty, poptávky, hodnocení |
+| Dodavatel / startup | profil, compliance dossier, certifikace, nabízené varianty, odpovědi na dotazy nemocnic (vidí role, ne jména, a nikdy interní komentáře), poptávky, hodnocení |
 | TheraHUB – certifikace a dohled | hodnocení dodavatelů, odznaky |
 | TheraHUB – správce Frameworku | standard, moduly, profily, sledování legislativy |
 | Důvěryhodná třetí strana | pseudonymizační klíče pro propojení mezi nemocnicemi |
@@ -567,8 +606,8 @@ Online smlouva **nenahrazuje** zákon o zadávání veřejných zakázek. Platfo
 ### 16.1 Nasazení aplikace
 1. Primář kardiologie hledá telemonitoring. Ze 3 aplikací má jedna 🟢 pravidla, 🟢 smlouvu i 🟢 readiness s jejich NIS a už ji provozují 2 nemocnice se stejným NIS (hodnocení 4,6/5).
 2. Vyzkouší ji v sandboxu.
-3. **Požádá o pilot** → pilotní smlouva vznikne z průniku variant; jediné kritérium „po schválení“ (anonymizovaná data pro zlepšení produktu) jde k DPO.
-4. DPO schválí, ředitel podepíše elektronicky.
+3. **Požádá o pilotní provoz** → primář a náměstek schválí, dodavatel doplní chybějící doklad, Legal, GDPR, Security a Ostatní posoudí paralelně; jediné kritérium „po schválení“ (anonymizovaná data pro zlepšení produktu) řeší DPO. Primář po celou dobu vidí ve stepperu, kde žádost je a kdo je další.
+4. DPO schválí s podmínkou, pilotní smlouva vznikne ze šablon a průniku variant, ředitel podepíše.
 5. Node automaticky zapne přístup k datům pro jedno oddělení na 3 měsíce.
 6. Pilot splní kritéria → podklady pro DNS → produkční smlouva → aplikace se objeví v Dashboardu jako „produkce“.
 
@@ -615,6 +654,7 @@ Výzkumnice z fakultní nemocnice navrhne studii o rehospitalizacích po infarkt
 5. **Pacientské aplikace** – budou v App Store i aplikace pro pacienty, nebo jen pro personál?
 6. **Geografie** – nejprve ČR, později SK a EU?
 7. **Role TheraHUB v zakázkách** – jen nástroj, nebo i administrátor?
+8. **Adoption index vs. verdikt shody** – po prvních pilotních provozech vyhodnotit, zda Adoption index ponechat vedle verdiktu shody s nemocnicí, nebo ho nahradit.
 
 ---
 
@@ -639,6 +679,14 @@ Každý krok má jasný výstup, dá se dokončit samostatně a před dalším k
 - **2.7** Matching engine: readiness vůči NIS (deklarovaná data).
 - **2.8** Compatibility report (PDF).
 - **2.9** Generování smlouvy z variant + schvalovací workflow.
+- **2.10** Modul **Žádost o pilotní provoz a schvalování** (kap. 6.4) – pokrývá a zpřesňuje 2.3–2.5 a 2.9 v tomto pořadí:
+  - **0a** klikací demo: box shody v detailu aplikace, stepper průběhu žádosti, přehled žádostí;
+  - **0b** klikací demo: fronta posuzovatele, editor požadavků nemocnice, editor schvalovacího procesu;
+  - **1** katalog, profily požadavků, dossier, matching engine (nejdřív jako čistá knihovna s testy);
+  - **2** workflow engine, posuzování, SLA, notifikace;
+  - **3** smlouva, pilotní provoz, KPI, rozhodnutí, nákup, ukončení;
+  - **4** automatizace, sdílení v konsorciu, analytika (navazuje na 4.1);
+  - **5** AI předposouzení, SSO, zabezpečení.
 
 ### Fáze 3 – Sandbox
 - **3.1** IRIS for Health FHIR server se syntetickými daty v českých profilech.
@@ -696,3 +744,8 @@ Každý krok má jasný výstup, dá se dokončit samostatně a před dalším k
 - **DNS** – dynamický nákupní systém.
 - **VZMR** – veřejná zakázka malého rozsahu.
 - **Readiness** – připravenost aplikace k provozu s daty, která nemocnice reálně poskytuje.
+- **Pilotní provoz** – bezplatné vyzkoušení aplikace v nemocnici v omezeném rozsahu na základě pilotní smlouvy; nezakládá nárok na smlouvu. V kódu „trial“.
+- **Oblast posouzení** – Legal, GDPR, Security, Ostatní; určuje, kdo v nemocnici položku katalogu kontroluje (vedle pilíře Frameworku).
+- **Compliance dossier** – odpovědi dodavatele na katalog požadavků s doklady; vyplňuje se jednou pro všechny nemocnice.
+- **Verdikt shody** – Splňuje / Splňuje s výhradami / Nesplňuje / Nelze posoudit; výsledek matchingu profilu nemocnice a dossier, zobrazený jako počty, ne procento.
+- **Adoption index** – obecná připravenost aplikace v katalogu (0–100) z veřejných vah; není to verdikt konkrétní nemocnice.
