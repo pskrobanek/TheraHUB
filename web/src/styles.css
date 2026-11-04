@@ -942,7 +942,7 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 /* ---------- Detail žádosti (DEC-022) ---------- */
 .trq-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
 .trq-flow { padding: 0 24px 20px; display: flex; flex-direction: column; gap: 20px; overflow: hidden; }
-.trq-timeline { display: flex; flex-wrap: wrap; row-gap: 14px; margin: 0 -24px; padding: 18px 24px 16px; background: rgba(17, 20, 42, 0.035); border-bottom: 1px solid rgba(17, 20, 42, 0.09); }
+.trq-timeline { display: flex; flex-wrap: wrap; row-gap: 14px; margin: 0 -24px; padding: 18px 24px 16px; background: rgba(17, 20, 42, 0.075); border-bottom: 1px solid rgba(17, 20, 42, 0.12); }
 .trq-phase { display: flex; flex-direction: column; gap: 8px; padding: 2px 20px 4px; border-left: 1px solid rgba(17, 20, 42, 0.08); }
 .trq-phase:first-child { padding-left: 4px; border-left: 0; }
 .ln-steps-lg { gap: 8px; }
