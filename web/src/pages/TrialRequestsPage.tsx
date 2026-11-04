@@ -1,221 +1,184 @@
-// Přehled Žádostí o pilotní provoz (brief §9.2, REQ-TRL-002).
-import { Kanban, List } from 'lucide-react';
-import { useMemo, useState } from 'react';
+// Implementace: přehled žádostí o pilotní provoz v nemocnici (brief §9.2, zjednodušeno DEC-019).
+// Řádek = aplikace, obor, stav (V pořádku / Čeká / Upozornění) a průběh kroků od primáře po licenci.
+import { CircleAlert, CircleCheck, CircleMinus, CirclePause, Kanban, List, type LucideIcon } from 'lucide-react';
+import { useState } from 'react';
 import AppIcon from '../components/AppIcon';
 import Link from '../components/Link';
-import ReviewerInbox from '../components/trial/ReviewerInbox';
 import StateBadge from '../components/trial/StateBadge';
-import { VerdictBadge } from '../components/trial/Status';
-import { domainLabel, domains, type Domain } from '../data/trial/catalog';
-import { workdaysLabel } from '../data/trial/dates';
+import { domainLabel, domains } from '../data/trial/catalog';
 import { dossiers } from '../data/trial/dossiers';
-import { match } from '../data/trial/match';
-import { departments, progressOf, staff, stateLabel, totalDays, trialRequests, type DeptId, type TrialRequest, type TrialState } from '../data/trial/requests';
+import { departments, progressOf, trialRequests, type RunStatus, type StepRun, type TrialRequest } from '../data/trial/requests';
 import { storeApps } from '../data/store';
 
-interface Persona {
-  id: string;
-  name: string;
-  label: string;
-  /** Rozsah záložky Všechny žádosti: celá nemocnice, jedno oddělení, nebo žádný. */
-  all: 'hospital' | DeptId | null;
-}
-
-/** Přepínač pohledu jen pro demo (DEC-012). */
-export const personas: Persona[] = [
-  { id: 'zadatel', name: departments.onko.requester.name, label: 'žadatelka, Onkologická klinika', all: null },
-  { id: 'primar', name: departments.onko.head.name, label: 'primář Onkologické kliniky', all: 'onko' },
-  { id: 'namestek', name: staff.namestek.name, label: 'náměstkyně pro LPP', all: 'hospital' },
-  { id: 'pravnik', name: staff.pravnik.name, label: 'právní oddělení (Legal)', all: null },
-  { id: 'dpo', name: staff.dpo.name, label: 'pověřenec (GDPR)', all: null },
-  { id: 'kb', name: staff.kb.name, label: 'kybernetická bezpečnost (Security)', all: null },
-  { id: 'it', name: staff.it.name, label: 'provoz a kvalita (Ostatní)', all: null },
-];
-
-type Tab = 'moje' | 'kontrola' | 'vse';
 const appOf = (id: string) => storeApps.find((a) => a.id === id)!;
 const vendorOf = (r: TrialRequest) => dossiers[r.appId]?.vendor ?? 'Firma';
 
-/** Sloupce kanbanu podle kroku (§9.2). */
+/** Souhrnný stav řádku: v pořádku, čeká (na firmu / žadatele), upozornění (po termínu, pozastaveno, zamítnuto). */
+type Health = 'ok' | 'waiting' | 'alert' | 'closed';
+const healthInfo: Record<Health, { label: string; icon: LucideIcon; tone: string }> = {
+  ok: { label: 'V pořádku', icon: CircleCheck, tone: 'match' },
+  waiting: { label: 'Čeká', icon: CirclePause, tone: 'partial' },
+  alert: { label: 'Upozornění', icon: CircleAlert, tone: 'gap' },
+  closed: { label: 'Staženo', icon: CircleMinus, tone: 'na' },
+};
+export function healthOf(r: TrialRequest): Health {
+  if (r.state === 'withdrawn') return 'closed';
+  const p = progressOf(r, vendorOf(r));
+  if (p.overdue || r.state === 'on_hold' || r.state === 'rejected') return 'alert';
+  if (['draft', 'submitted', 'waiting_vendor'].includes(r.state)) return 'waiting';
+  return 'ok';
+}
+
+/** Stav jednoho bodu průběhu: splněno, probíhá/čeká, nadcházející, zamítnuto, nevztahuje se. */
+type Dot = 'done' | 'now' | 'todo' | 'fail' | 'skip';
+const dotOf = (run: StepRun | undefined): Dot => {
+  const s: RunStatus | undefined = run?.status;
+  if (s === 'done') return 'done';
+  if (s === 'rejected') return 'fail';
+  if (s === 'withdrawn') return 'skip';
+  if (s === 'active' || s === 'waiting_vendor' || s === 'on_hold') return 'now';
+  return 'todo';
+};
+
+interface LineStep {
+  label: string;
+  dot: Dot;
+  sub?: { label: string; dot: Dot }[];
+}
+
+/** Průběh: Primář, Náměstek, 4 oblasti, Smlouva, Pilot, KPI, Vyhodnocení, Smlouva, Licence. */
+function lineup(r: TrialRequest): LineStep[] {
+  const st = r.steps;
+  const blockDots = domains.map((d) => ({ label: domainLabel[d], dot: dotOf(r.block?.[d]) }));
+  // Posouzení bez rozepsaných oblastí (např. ještě nezačalo) bere stav bloku.
+  const blockRun = st.posouzeni;
+  const sub = r.block ? blockDots : domains.map((d) => ({ label: domainLabel[d], dot: dotOf(blockRun) }));
+  const blockDot: Dot = sub.some((x) => x.dot === 'fail') ? 'fail' : sub.every((x) => x.dot === 'done') ? 'done' : sub.some((x) => x.dot !== 'todo') ? 'now' : 'todo';
+  const end: Dot = r.final === 'odchod' ? 'skip' : dotOf(st.zaver);
+  return [
+    { label: 'Primář', dot: dotOf(st.primar) },
+    { label: 'Náměstek', dot: dotOf(st.namestek) },
+    { label: '4 oblasti', dot: blockDot, sub },
+    { label: 'Smlouva', dot: dotOf(st.smlouva) },
+    { label: 'Pilot', dot: dotOf(st.pilot) },
+    { label: 'KPI', dot: dotOf(st.kpi) },
+    { label: 'Vyhodnocení', dot: dotOf(st.rozhodnuti) },
+    { label: 'Smlouva', dot: end },
+    { label: 'Licence', dot: end },
+  ];
+}
+
+const dotLabel: Record<Dot, string> = { done: 'splněno', now: 'probíhá / čeká', todo: 'nadcházející', fail: 'zamítnuto', skip: 'nevztahuje se' };
+
+function Lineup({ r }: { r: TrialRequest }) {
+  return (
+    <ol className="lineup" aria-label="Průběh implementace">
+      {lineup(r).map((s, i) => (
+        <li key={i} className={`ln ln-${s.dot}`} title={`${s.label}: ${dotLabel[s.dot]}`}>
+          {s.sub ? (
+            <span className="ln-sub">
+              {s.sub.map((x) => (
+                <i key={x.label} className={`ln-${x.dot}`} title={`${x.label}: ${dotLabel[x.dot]}`} />
+              ))}
+            </span>
+          ) : null}
+          <span className="ln-label">{s.label}</span>
+          <span className="sr-only">{dotLabel[s.dot]}</span>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+function Health({ r }: { r: TrialRequest }) {
+  const { label, icon: Icon, tone } = healthInfo[healthOf(r)];
+  return (
+    <span className={`st-chip tone-${tone}`}>
+      <Icon size={14} aria-hidden /> {label}
+    </span>
+  );
+}
+
 const columns = ['Rozpracováno', 'Předkontrola', 'Primář', 'Náměstek', 'Firma', 'Posouzení 4 oblastí', 'Schváleno k pilotu', 'Smlouva', 'Pilotní provoz', 'Vyhodnocení KPI', 'Uzavřeno'] as const;
 function columnOf(r: TrialRequest): (typeof columns)[number] {
   if (r.state === 'draft') return 'Rozpracováno';
   if (r.state === 'submitted') return 'Předkontrola';
   if (r.state === 'approved_for_trial') return 'Schváleno k pilotu';
   if (['purchased', 'exited', 'rejected', 'withdrawn'].includes(r.state)) return 'Uzavřeno';
-  const p = progressOf(r, vendorOf(r));
-  const label = p.summary;
+  const label = progressOf(r, vendorOf(r)).summary;
   return (columns as readonly string[]).includes(label) ? (label as (typeof columns)[number]) : 'Rozpracováno';
 }
 
-/** Je otevřené posouzení dané oblasti? (filtr Oblast) */
-const domainOpen = (r: TrialRequest, d: Domain) => {
-  const b = r.block?.[d];
-  return !!b && (b.status === 'active' || b.status === 'waiting_vendor');
-};
-
 export default function TrialRequestsPage() {
-  const [personaId, setPersonaId] = useState('zadatel');
-  const persona = personas.find((p) => p.id === personaId)!;
-  const [tab, setTab] = useState<Tab>('moje');
   const [view, setView] = useState<'list' | 'kanban'>('list');
-  const [fState, setFState] = useState<TrialState | ''>('');
-  const [fDept, setFDept] = useState<DeptId | ''>('');
-  const [fDomain, setFDomain] = useState<Domain | ''>('');
   const [fOverdue, setFOverdue] = useState(false);
-
-  const tabs: { id: Tab; label: string }[] = [
-    { id: 'moje', label: 'Moje žádosti' },
-    { id: 'kontrola', label: 'Ke kontrole' },
-    ...(persona.all ? [{ id: 'vse' as Tab, label: persona.all === 'hospital' ? 'Všechny žádosti nemocnice' : `Všechny žádosti – ${departments[persona.all].name}` }] : []),
-  ];
-  const activeTab = tabs.some((t) => t.id === tab) ? tab : 'moje';
-
-  const rows = useMemo(() => {
-    const base = trialRequests.filter((r) => {
-      const p = progressOf(r, vendorOf(r));
-      if (activeTab === 'moje') return departments[r.dept].requester.name === persona.name;
-      if (activeTab === 'kontrola') return p.holders.some((h) => h.name === persona.name);
-      return persona.all === 'hospital' || r.dept === persona.all;
+  const rows = trialRequests
+    .filter((r) => !fOverdue || progressOf(r, vendorOf(r)).overdue)
+    .sort((a, b) => {
+      const rank = { alert: 0, waiting: 1, ok: 2, closed: 3 };
+      return rank[healthOf(a)] - rank[healthOf(b)] || (b.submitted ?? b.created).localeCompare(a.submitted ?? a.created);
     });
-    return base
-      .filter((r) => !fState || r.state === fState)
-      .filter((r) => !fDept || r.dept === fDept)
-      .filter((r) => !fDomain || domainOpen(r, fDomain))
-      .filter((r) => !fOverdue || progressOf(r, vendorOf(r)).overdue)
-      .sort((a, b) => Number(progressOf(b, vendorOf(b)).overdue) - Number(progressOf(a, vendorOf(a)).overdue) || (b.submitted ?? b.created).localeCompare(a.submitted ?? a.created));
-  }, [activeTab, persona, fState, fDept, fDomain, fOverdue]);
 
   return (
     <div className="trq">
-      <div className="trq-bar">
-        <label className="persona">
-          <span className="muted small">Zobrazit jako</span>
-          <select value={personaId} onChange={(e) => setPersonaId(e.target.value)}>
-            {personas.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name} – {p.label}
-              </option>
-            ))}
-          </select>
-        </label>
-        <span className="muted small">Ukázka role bez přihlášení; ve Fázi 2 nahradí skutečné přihlášení.</span>
-      </div>
-
       <div className="trq-toolbar">
-        <nav className="segmented" aria-label="Záložky žádostí">
-          {tabs.map((t) => (
-            <button key={t.id} className={t.id === activeTab ? 'active' : ''} onClick={() => setTab(t.id)}>
-              {t.label}
-            </button>
-          ))}
-        </nav>
-        {activeTab !== 'kontrola' && <div className="trq-filters">
-          <select value={fState} onChange={(e) => setFState(e.target.value as TrialState | '')} aria-label="Stav">
-            <option value="">Všechny stavy</option>
-            {(Object.keys(stateLabel) as TrialState[]).map((s) => (
-              <option key={s} value={s}>
-                {stateLabel[s]}
-              </option>
-            ))}
-          </select>
-          <select value={fDept} onChange={(e) => setFDept(e.target.value as DeptId | '')} aria-label="Oddělení">
-            <option value="">Všechna oddělení</option>
-            {(Object.keys(departments) as DeptId[]).map((d) => (
-              <option key={d} value={d}>
-                {departments[d].name}
-              </option>
-            ))}
-          </select>
-          <select value={fDomain} onChange={(e) => setFDomain(e.target.value as Domain | '')} aria-label="Otevřená oblast">
-            <option value="">Všechny oblasti</option>
-            {domains.map((d) => (
-              <option key={d} value={d}>
-                Otevřená: {domainLabel[d]}
-              </option>
-            ))}
-          </select>
-          <label className="trq-check">
-            <input type="checkbox" checked={fOverdue} onChange={(e) => setFOverdue(e.target.checked)} /> Jen po termínu
-          </label>
-          <span className="segmented icons" role="group" aria-label="Zobrazení">
-            <button className={view === 'list' ? 'active' : ''} onClick={() => setView('list')} aria-label="Seznam" title="Seznam">
-              <List size={16} />
-            </button>
-            <button className={view === 'kanban' ? 'active' : ''} onClick={() => setView('kanban')} aria-label="Kanban podle kroku" title="Kanban podle kroku">
-              <Kanban size={16} />
-            </button>
-          </span>
-        </div>}
+        <label className="trq-check">
+          <input type="checkbox" checked={fOverdue} onChange={(e) => setFOverdue(e.target.checked)} /> Jen po termínu
+        </label>
+        <span className="segmented icons" role="group" aria-label="Zobrazení">
+          <button className={view === 'list' ? 'active' : ''} onClick={() => setView('list')} aria-label="Řádky" title="Řádky">
+            <List size={16} />
+          </button>
+          <button className={view === 'kanban' ? 'active' : ''} onClick={() => setView('kanban')} aria-label="Board podle kroku" title="Board podle kroku">
+            <Kanban size={16} />
+          </button>
+        </span>
       </div>
 
-      {activeTab === 'kontrola' ? (
-        <ReviewerInbox person={persona.name} requests={trialRequests} />
-      ) : rows.length === 0 ? (
-        <div className="empty glass">
-          Žádná žádost neodpovídá filtru.
-        </div>
+      {rows.length === 0 ? (
+        <div className="empty glass">Žádná implementace není po termínu.</div>
       ) : view === 'list' ? (
         <div className="trq-table-wrap glass">
-          <table className="trq-table">
+          <table className="trq-table impl-table">
             <thead>
               <tr>
                 <th>Aplikace</th>
-                <th>Žadatel</th>
-                <th>Oddělení</th>
-                <th>Podáno</th>
-                <th>Aktuální krok</th>
-                <th>Kdo ji má</th>
-                <th>Čeká (prac. dny)</th>
-                <th>Celkem (prac. dny)</th>
-                <th>Shoda (při podání)</th>
+                <th>Obor</th>
                 <th>Stav</th>
+                <th>Průběh</th>
               </tr>
             </thead>
             <tbody>
               {rows.map((r) => {
                 const app = appOf(r.appId);
-                const p = progressOf(r, vendorOf(r));
-                const verdict = match(dossiers[r.appId]?.answers, r.waivers ?? {}, r.snapshotAt).verdict;
                 return (
                   <tr key={r.id}>
                     <td>
                       <Link href={`#/aplikace/zadosti/${r.id}`} className="trq-app">
-                        <AppIcon app={app} size={28} />
+                        <AppIcon app={app} size={30} />
                         <span>
                           <b className="nowrap">{app.name}</b>
-                          <span className="mono muted small">{r.id}</span>
+                          <span className="muted small">
+                            {departments[r.dept].name} · {r.id}
+                          </span>
                         </span>
                       </Link>
                     </td>
-                    <td>{departments[r.dept].requester.name}</td>
-                    <td>{departments[r.dept].name}</td>
-                    <td className="nowrap">{r.submitted ? new Date(r.submitted).toLocaleDateString('cs-CZ') : '—'}</td>
-                    <td>{p.summary}</td>
-                    <td title={p.holders.map((h) => h.name).join(', ')}>
-                      {p.holders.length ? (
-                        <>
-                          {p.holders[0].name}
-                          {p.holders.length > 1 && <span className="muted"> +{p.holders.length - 1}</span>}
-                        </>
-                      ) : (
-                        <span className="muted">—</span>
-                      )}
-                    </td>
-                    <td className={p.overdue ? 'overdue nowrap' : 'nowrap'}>
-                      {p.paused ? <span className="muted">SLA stojí</span> : p.holders.length ? p.waiting : '—'}
-                      {p.overdue && <span className="overdue-tag">po termínu</span>}
-                    </td>
-                    <td className="nowrap">{r.submitted ? totalDays(r) : '—'}</td>
-                    <td>{r.submitted ? <VerdictBadge verdict={verdict} size="sm" /> : <span className="muted">—</span>}</td>
+                    <td>{app.category}</td>
                     <td>
-                      <StateBadge state={r.state} />
+                      <Health r={r} />
+                    </td>
+                    <td>
+                      <Lineup r={r} />
                     </td>
                   </tr>
                 );
               })}
             </tbody>
           </table>
+          <p className="muted small impl-legend">
+            <i className="ln-done" /> splněno <i className="ln-now" /> probíhá / čeká <i className="ln-todo" /> nadcházející <i className="ln-fail" /> zamítnuto
+          </p>
         </div>
       ) : (
         <div className="trq-kanban">
@@ -228,17 +191,17 @@ export default function TrialRequestsPage() {
                 </h3>
                 {items.map((r) => {
                   const app = appOf(r.appId);
-                  const p = progressOf(r, vendorOf(r));
                   return (
                     <Link key={r.id} href={`#/aplikace/zadosti/${r.id}`} className="kb-card glass">
                       <span className="kb-card-top">
                         <AppIcon app={app} size={24} />
                         <b>{app.name}</b>
                       </span>
-                      <span className="muted small">{departments[r.dept].name}</span>
+                      <span className="muted small">
+                        {app.category} · {departments[r.dept].name}
+                      </span>
+                      <Health r={r} />
                       <StateBadge state={r.state} />
-                      {p.holders.length > 0 && <span className="small">má {p.holders.map((h) => h.name).join(', ')}</span>}
-                      {p.overdue && <span className="overdue-tag">po termínu · {workdaysLabel(p.waiting)}</span>}
                     </Link>
                   );
                 })}

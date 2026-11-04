@@ -51,7 +51,7 @@ export default function AppsPage({ sub, item, appId, appTab }: Props) {
   const req = sub === 'zadosti' && item ? trialRequests.find((r) => r.id === item) : undefined;
   if (req) return <TrialRequestDetail key={req.id} req={req} />;
   const view = sub === 'store' ? 'store' : sub === 'zadosti' ? 'zadosti' : 'zakoupene';
-  const title = { store: 'App Store', zadosti: 'Žádosti o pilotní provoz', zakoupene: 'Moje aplikace' }[view];
+  const title = { store: 'App Store', zadosti: 'Implementace', zakoupene: 'Moje aplikace' }[view];
   const subtitle = {
     store: `${storeApps.length} aplikací v katalogu`,
     zadosti: `${hospitalDemo.name} – smyšlená ukázková nemocnice; osoby, požadavky a rozhodnutí jsou vymyšlené`,
@@ -64,7 +64,7 @@ export default function AppsPage({ sub, item, appId, appTab }: Props) {
         title={title}
         subtitle={subtitle}
         nav={
-          <nav className="switch" aria-label="Moje aplikace, App Store nebo žádosti">
+          <nav className="switch" aria-label="Moje aplikace, App Store nebo Implementace">
             <Link href="#/aplikace" className={view === 'zakoupene' ? 'switch-item active' : 'switch-item'}>
               <LayoutGrid size={16} /> Moje aplikace <span className="tab-count">{purchased.length}</span>
             </Link>
@@ -72,7 +72,7 @@ export default function AppsPage({ sub, item, appId, appTab }: Props) {
               <StoreIcon size={16} /> App Store <span className="tab-count">{storeApps.length}</span>
             </Link>
             <Link href="#/aplikace/zadosti" className={view === 'zadosti' ? 'switch-item active' : 'switch-item'}>
-              <RequestSeal size={16} /> Žádosti o pilotní provoz <span className="tab-count">{trialRequests.filter(isActive).length}</span>
+              <RequestSeal size={16} /> Implementace <span className="tab-count">{trialRequests.filter(isActive).length}</span>
             </Link>
           </nav>
         }

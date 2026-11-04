@@ -34,7 +34,7 @@ ID se odkazují z kódu a testů. Prefixy: **MAT** matching, **WFL** workflow, *
 | ID | Požadavek | Zdroj | Fáze | Stav |
 |---|---|---|---|---|
 | REQ-TRL-001 | Všech 13 stavů žádosti existuje v ukázkových datech a stepper je u každého správný. | §6.2, akceptace 0 | 0a | hotovo |
-| REQ-TRL-002 | Přehled žádostí: záložky Moje žádosti / Ke kontrole / Všechny žádosti; sloupce dle §9.2; seznam i kanban; filtry stav, oddělení, oblast, po termínu. | §9.2 | 0a | hotovo (bez uložených filtrů) |
+| REQ-TRL-002 | Přehled žádostí (Implementace): řádky i board; filtr Jen po termínu; řádek s aplikací, oborem, souhrnným stavem a průběhem kroků (DEC-019). Záložky Moje / Ke kontrole a filtry stav, oddělení, oblast z briefu §9.2 jsou na přání odložené. | §9.2, DEC-019 | 0a | hotovo |
 | REQ-TRL-003 | Tlačítko „Požádat o pilotní provoz“; při blokujících rozporech s upozorněním. | §9.1 | 0a (naznačené) / 2 | naznačené |
 | REQ-TRL-004 | Odznaky na kartách App Storu: Žádost podána / Pilot probíhá / V předplatném. | §9.1 | 0a | hotovo |
 | REQ-TRL-005 | Jen jedna aktivní žádost na aplikaci a oddělení. | §6.1 | 0a (data) / 2 | data dodržují |

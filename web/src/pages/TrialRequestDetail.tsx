@@ -35,7 +35,7 @@ export default function TrialRequestDetail({ req }: { req: TrialRequest }) {
   return (
     <div className="page trq-detail">
       <Link href="#/aplikace/zadosti" className="back-link">
-        <ArrowLeft size={15} /> Žádosti o pilotní provoz
+        <ArrowLeft size={15} /> Implementace
       </Link>
 
       <header className="patient-header glass trq-head">

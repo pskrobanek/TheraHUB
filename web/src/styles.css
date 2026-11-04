@@ -741,7 +741,7 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 .trq-check { display: inline-flex; align-items: center; gap: 5px; font-size: 0.88rem; }
 .segmented button.active { background: var(--dark); color: #fff; }
 .segmented.icons button { display: grid; place-items: center; padding: 6px 8px; }
-.trq-table-wrap { overflow-x: auto; padding: 4px 6px; }
+.trq-table-wrap { position: relative; overflow-x: auto; padding: 4px 6px; }
 .trq-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
 .trq-table th { text-align: left; font-weight: 500; font-size: 0.72rem; color: var(--muted); padding: 10px 6px 8px; border-bottom: 1px solid var(--glass-line); white-space: nowrap; }
 .trq-table td { padding: 9px 6px; border-bottom: 1px solid var(--glass-line); vertical-align: middle; }
@@ -894,3 +894,19 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
   .wfb-grid { grid-template-columns: 1fr; }
   .wfb-palette { position: static; flex-direction: row; flex-wrap: wrap; }
 }
+
+/* ---------- Implementace: průběh kroků v řádku ---------- */
+.impl-table td { padding-top: 11px; padding-bottom: 11px; }
+.lineup { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-end; gap: 3px; }
+.ln { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 3px; min-width: 0; }
+.ln-label { display: block; padding: 4px 7px; border-radius: 5px; font-size: 0.72rem; font-weight: 600; white-space: nowrap; text-align: center; }
+.ln-done .ln-label, i.ln-done { background: var(--st-match-fg); color: #fff; }
+.ln-now .ln-label, i.ln-now { background: #f2c94c; color: #4a3500; }
+.ln-todo .ln-label, i.ln-todo { background: rgba(17, 20, 42, 0.07); color: var(--muted); }
+.ln-fail .ln-label, i.ln-fail { background: var(--st-gap-fg); color: #fff; }
+.ln-skip .ln-label, i.ln-skip { background: rgba(17, 20, 42, 0.04); color: rgba(17, 20, 42, 0.35); text-decoration: line-through; }
+.ln-sub { display: flex; gap: 2px; }
+.ln-sub i { flex: 1; height: 4px; border-radius: 2px; }
+.impl-legend { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; padding: 6px 8px 2px; }
+.impl-legend i { display: inline-block; width: 12px; height: 8px; border-radius: 3px; margin-left: 8px; }
+.impl-legend i:first-child { margin-left: 0; }
