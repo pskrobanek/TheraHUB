@@ -2,8 +2,9 @@
 // (stejný jako v přehledu Implementace, kroky jsou klikací a otevírají podrobnosti).
 import { ArrowLeft, Circle, CircleCheck, CircleMinus, CirclePause, CircleX, Clock, LayoutGrid, Lock, Scale, Shield, TriangleAlert, type LucideIcon } from 'lucide-react';
 import { useLayoutEffect, useRef, useState } from 'react';
+import BrandDots from '../components/BrandDots';
 import Link from '../components/Link';
-import { currentPart, lineup, phaseLabel, PhaseSteps, type LineStep, type PartKey } from '../components/trial/Lineup';
+import { lineup, phaseLabel, PhaseSteps, type LineStep, type PartKey } from '../components/trial/Lineup';
 import { Drawer } from '../components/trial/ComplianceBox';
 import StateBadge from '../components/trial/StateBadge';
 import { VerdictBadge } from '../components/trial/Status';
@@ -66,15 +67,16 @@ export default function TrialRequestDetail({ req }: { req: TrialRequest }) {
   const app = storeApps.find((a) => a.id === req.appId)!;
   const dossier = dossiers[req.appId];
   const groups = lineup(req);
-  const [part, setPart] = useState<PartKey>(() => currentPart(groups));
-  const step = groups.flatMap((g) => g.steps).find((s) => s.key === part)!;
+  /** Vybraná část: Přehled žádosti, nebo jeden krok průběhu. */
+  const [part, setPart] = useState<PartKey | 'prehled'>('prehled');
+  const step = part === 'prehled' ? undefined : groups.flatMap((g) => g.steps).find((s) => s.key === part);
   const tlRef = useRef<HTMLDivElement>(null);
   const [ind, setInd] = useState<{ left: number; width: number } | null>(null);
   // Zvýraznění vybraného kroku: úsek dělicí čáry pod ním (měří se, aby sedělo i při zalomení řádků).
   useLayoutEffect(() => {
     const place = () => {
       const tl = tlRef.current;
-      const el = tl?.querySelector('.ln.sel');
+      const el = tl?.querySelector('.ln.sel, .trq-over-btn.sel');
       if (!tl || !el) return setInd(null);
       const a = tl.getBoundingClientRect();
       const b = el.getBoundingClientRect();
@@ -98,19 +100,28 @@ export default function TrialRequestDetail({ req }: { req: TrialRequest }) {
 
         <section className="glass trq-flow">
           <div className="trq-timeline" role="group" aria-label="Průběh implementace" ref={tlRef}>
+            <div className="trq-phase trq-over">
+              <button type="button" className={part === 'prehled' ? 'trq-over-btn sel' : 'trq-over-btn'} onClick={() => setPart('prehled')} aria-pressed={part === 'prehled'}>
+                <BrandDots size={14} /> Přehled
+              </button>
+            </div>
             {groups.map((g) => (
               <div key={g.id} className={`trq-phase trq-phase-${g.id}`}>
                 <span className="c-label">{phaseLabel[g.id]}</span>
-                <PhaseSteps g={g} selected={part} onSelect={setPart} />
+                <PhaseSteps g={g} selected={part === 'prehled' ? undefined : part} onSelect={setPart} />
               </div>
             ))}
             {ind && <span className="trq-tl-ind" style={{ left: ind.left, width: ind.width }} aria-hidden />}
           </div>
 
-          <PartDetail req={req} step={step} vendor={dossier?.vendor ?? 'Firma'} />
-
-          <RequestFacts req={req} />
-          <DecisionLog req={req} />
+          {step ? (
+            <PartDetail key={step.key} req={req} step={step} vendor={dossier?.vendor ?? 'Firma'} />
+          ) : (
+            <>
+              <RequestFacts req={req} />
+              <DecisionLog req={req} />
+            </>
+          )}
         </section>
       </div>
     </div>
