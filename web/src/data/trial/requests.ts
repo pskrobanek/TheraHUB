@@ -258,7 +258,7 @@ export const trialRequests: TrialRequest[] = [
     created: '2026-10-01',
     submitted: '2026-10-05',
     snapshotAt: '2026-10-05',
-    state: 'in_approval',
+    state: 'waiting_vendor',
     steps: {
       zadost: done(d.onko.requester.name, '2026-10-05', 'podano'),
       primar: done(d.onko.head.name, '2026-10-07'),
@@ -269,7 +269,7 @@ export const trialRequests: TrialRequest[] = [
     block: {
       legal: done(s.pravnik.name, '2026-10-20', 'schvaleno'),
       gdpr: done(s.dpo.name, '2026-10-22', 's_podminkou', 'Data opouští nemocnici jen pseudonymizovaná (ukázka, TODO(dpo)).'),
-      security: active('2026-10-14'),
+      security: { status: 'waiting_vendor', since: '2026-10-29', note: 'Dotaz na firmu: doložit šifrování záloh (SEC-003)' },
       ostatni: active('2026-10-14'),
     },
     conditions: [{ text: 'Data opouští nemocnici jen pseudonymizovaná (ukázka, TODO(dpo)).', owner: s.dpo.name, status: 'otevřená' }],

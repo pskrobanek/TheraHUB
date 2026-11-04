@@ -1,7 +1,7 @@
 // Implementace: přehled žádostí o pilotní provoz v nemocnici (brief §9.2, zjednodušeno DEC-019).
 // Řádek = aplikace, obor, stav (V pořádku / Čeká / Upozornění) a průběh kroků od primáře po licenci.
-import { Check, CircleAlert, CircleCheck, CircleMinus, CirclePause, Kanban, List, ListFilter, type LucideIcon } from 'lucide-react';
-import { useState } from 'react';
+import { Building2, Check, ChevronDown, CircleAlert, CircleCheck, CircleMinus, Clock, Kanban, List, ListFilter, type LucideIcon } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
 import AppIcon from '../components/AppIcon';
 import Link from '../components/Link';
 import StateBadge from '../components/trial/StateBadge';
@@ -13,19 +13,19 @@ import { storeApps } from '../data/store';
 const appOf = (id: string) => storeApps.find((a) => a.id === id)!;
 const vendorOf = (r: TrialRequest) => dossiers[r.appId]?.vendor ?? 'Firma';
 
-/** Souhrnný stav řádku: v pořádku, čeká (na firmu / žadatele), upozornění (po termínu, pozastaveno, zamítnuto). */
+/** Souhrnný stav řádku: v pořádku, čeká (na firmu / žadatele, pozastaveno – SLA stojí), upozornění (po termínu, zamítnuto). */
 type Health = 'ok' | 'waiting' | 'alert' | 'closed';
 const healthInfo: Record<Health, { label: string; icon: LucideIcon; tone: string }> = {
   ok: { label: 'V pořádku', icon: CircleCheck, tone: 'match' },
-  waiting: { label: 'Čeká', icon: CirclePause, tone: 'partial' },
+  waiting: { label: 'Čeká', icon: Clock, tone: 'wait' },
   alert: { label: 'Upozornění', icon: CircleAlert, tone: 'gap' },
   closed: { label: 'Staženo', icon: CircleMinus, tone: 'na' },
 };
 export function healthOf(r: TrialRequest): Health {
   if (r.state === 'withdrawn') return 'closed';
   const p = progressOf(r, vendorOf(r));
-  if (p.overdue || r.state === 'on_hold' || r.state === 'rejected') return 'alert';
-  if (['draft', 'submitted', 'waiting_vendor'].includes(r.state)) return 'waiting';
+  if (p.overdue || r.state === 'rejected') return 'alert';
+  if (['draft', 'submitted', 'waiting_vendor', 'on_hold'].includes(r.state)) return 'waiting';
   return 'ok';
 }
 
@@ -147,6 +147,82 @@ function columnOf(r: TrialRequest): (typeof columns)[number] {
 /** Oddělení přihlášené lékařky v demu – výchozí výběr (DEC-020). */
 const myDept: DeptId = 'onko';
 
+type DeptValue = DeptId | 'vse';
+const deptOptions: { value: DeptValue; label: string }[] = [
+  ...(Object.keys(departments) as DeptId[]).map((d) => ({ value: d, label: departments[d].name })),
+  { value: 'vse', label: 'Všechna oddělení' },
+];
+
+/** Vlastní rozbalovací výběr oddělení (listbox; myš i klávesnice: šipky, Enter, Esc). */
+function DeptSelect({ value, onChange }: { value: DeptValue; onChange: (v: DeptValue) => void }) {
+  const [open, setOpen] = useState(false);
+  const [hi, setHi] = useState(0);
+  const ref = useRef<HTMLDivElement>(null);
+  const current = deptOptions.find((o) => o.value === value)!;
+  useEffect(() => {
+    if (!open) return;
+    const close = (e: MouseEvent) => !ref.current?.contains(e.target as Node) && setOpen(false);
+    document.addEventListener('mousedown', close);
+    return () => document.removeEventListener('mousedown', close);
+  }, [open]);
+  const pick = (v: DeptValue) => {
+    onChange(v);
+    setOpen(false);
+  };
+  const onKey = (e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') return setOpen(false);
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      if (!open) {
+        setOpen(true);
+        setHi(deptOptions.indexOf(current));
+        return;
+      }
+      setHi((h) => (h + (e.key === 'ArrowDown' ? 1 : deptOptions.length - 1)) % deptOptions.length);
+    }
+    if ((e.key === 'Enter' || e.key === ' ') && open) {
+      e.preventDefault();
+      pick(deptOptions[hi].value);
+    }
+  };
+  return (
+    <div className={open ? 'dsel open' : 'dsel'} ref={ref} onKeyDown={onKey}>
+      <button
+        type="button"
+        className="dsel-btn"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        aria-label={`Oddělení: ${current.label}`}
+        onClick={() => {
+          setOpen((o) => !o);
+          setHi(deptOptions.indexOf(current));
+        }}
+      >
+        <Building2 size={15} aria-hidden />
+        <span>{current.label}</span>
+        <ChevronDown size={15} className="dsel-chev" aria-hidden />
+      </button>
+      {open && (
+        <ul className="dsel-list" role="listbox" aria-label="Oddělení">
+          {deptOptions.map((o, i) => (
+            <li
+              key={o.value}
+              role="option"
+              aria-selected={o.value === value}
+              className={(i === hi ? 'hi ' : '') + (o.value === value ? 'sel' : '')}
+              onMouseEnter={() => setHi(i)}
+              onClick={() => pick(o.value)}
+            >
+              <span>{o.label}</span>
+              {o.value === value && <Check size={14} strokeWidth={2.5} aria-hidden />}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export default function TrialRequestsPage() {
   const [view, setView] = useState<'list' | 'kanban'>('list');
   const [dept, setDept] = useState<DeptId | 'vse'>(myDept);
@@ -188,15 +264,7 @@ export default function TrialRequestsPage() {
 
         <section>
           <h4>Oddělení</h4>
-          <select className="impl-select" value={dept} onChange={(e) => setDept(e.target.value as DeptId | 'vse')} aria-label="Oddělení">
-            {(Object.keys(departments) as DeptId[]).map((d) => (
-              <option key={d} value={d}>
-                {departments[d].name}
-                {d === myDept ? ' (moje)' : ''}
-              </option>
-            ))}
-            <option value="vse">Všechna oddělení</option>
-          </select>
+          <DeptSelect value={dept} onChange={setDept} />
         </section>
 
         <section>
@@ -239,7 +307,7 @@ export default function TrialRequestsPage() {
           <table className="trq-table impl-table">
             <thead>
               <tr>
-                <th>Aplikace a obor</th>
+                <th>Aplikace a oddělení</th>
                 <th>Stav</th>
                 {(Object.keys(phaseLabel) as Phase[]).map((ph) => (
                   <th key={ph} className="impl-phase-th">
@@ -259,8 +327,7 @@ export default function TrialRequestsPage() {
                         <span>
                           <b className="nowrap">{app.name}</b>
                           <span className="muted small" title={r.id}>
-                            {app.category}
-                            {dept === 'vse' ? ` · ${departments[r.dept].name}` : ''}
+                            {departments[r.dept].name}
                           </span>
                         </span>
                       </Link>
@@ -300,7 +367,7 @@ export default function TrialRequestsPage() {
                         <b>{app.name}</b>
                       </span>
                       <span className="muted small">
-                        {app.category} · {departments[r.dept].name}
+                        {departments[r.dept].name}
                       </span>
                       <Health r={r} />
                       <StateBadge state={r.state} />
