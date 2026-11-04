@@ -1,12 +1,10 @@
-// Detail žádosti o pilotní provoz (brief §9.3, DEC-022). Vlevo hlavička aplikace jako v App Storu a box s průběhem
-// (stejný jako v přehledu Implementace, kroky jsou klikací a otevírají podrobnosti). Vpravo stejný sloupec připravenosti
-// jako v detailu aplikace – čte stejné dossier, takže se údaje v obou místech vždy shodují.
+// Detail žádosti o pilotní provoz (brief §9.3, DEC-022, DEC-023). Hlavička aplikace jako v App Storu a pod ní box s průběhem
+// (stejný jako v přehledu Implementace, kroky jsou klikací a otevírají podrobnosti).
 import { ArrowLeft, Circle, CircleCheck, CircleMinus, CirclePause, CircleX, Clock, LayoutGrid, Lock, Scale, Shield, TriangleAlert, type LucideIcon } from 'lucide-react';
 import { useState } from 'react';
 import Link from '../components/Link';
 import { currentPart, lineup, phaseLabel, PhaseSteps, type LineStep, type PartKey } from '../components/trial/Lineup';
 import { Drawer } from '../components/trial/ComplianceBox';
-import ReadinessPanel from '../components/trial/ReadinessPanel';
 import StateBadge from '../components/trial/StateBadge';
 import { VerdictBadge } from '../components/trial/Status';
 import StoreAppHead from '../components/trial/StoreAppHead';
@@ -77,30 +75,26 @@ export default function TrialRequestDetail({ req }: { req: TrialRequest }) {
         <ArrowLeft size={15} /> Implementace
       </Link>
 
-      <div className="sd-grid">
-        <div className="trq-col">
-          <section className="sd-main glass">
-            <StoreAppHead app={app} />
-          </section>
+      <div className="trq-col">
+        <section className="sd-main glass">
+          <StoreAppHead app={app} />
+        </section>
 
-          <section className="glass trq-flow">
-            <div className="trq-timeline" role="group" aria-label="Průběh implementace">
-              {groups.map((g) => (
-                <div key={g.id} className={`trq-phase trq-phase-${g.id}`}>
-                  <span className="c-label">{phaseLabel[g.id]}</span>
-                  <PhaseSteps g={g} selected={part} onSelect={setPart} />
-                </div>
-              ))}
-            </div>
+        <section className="glass trq-flow">
+          <div className="trq-timeline" role="group" aria-label="Průběh implementace">
+            {groups.map((g) => (
+              <div key={g.id} className={`trq-phase trq-phase-${g.id}`}>
+                <span className="c-label">{phaseLabel[g.id]}</span>
+                <PhaseSteps g={g} selected={part} onSelect={setPart} />
+              </div>
+            ))}
+          </div>
 
-            <PartDetail req={req} step={step} vendor={dossier?.vendor ?? 'Firma'} />
+          <PartDetail req={req} step={step} vendor={dossier?.vendor ?? 'Firma'} />
 
-            <RequestFacts req={req} />
-            <DecisionLog req={req} />
-          </section>
-        </div>
-
-        <ReadinessPanel app={app} note={req.snapshotAt ? <SnapshotNote req={req} /> : undefined} />
+          <RequestFacts req={req} />
+          <DecisionLog req={req} />
+        </section>
       </div>
     </div>
   );
@@ -163,6 +157,7 @@ function PartDetail({ req, step, vendor }: { req: TrialRequest; step: LineStep; 
               );
             })}
           </ul>
+          {req.snapshotAt && <SnapshotNote req={req} />}
           {req.conditions && req.conditions.length > 0 && (
             <div className="trq-conds">
               <span className="c-label">Podmínky</span>
