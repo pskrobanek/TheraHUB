@@ -1,7 +1,7 @@
 // Detail žádosti o pilotní provoz (brief §9.3, DEC-022, DEC-023). Hlavička aplikace jako v App Storu a pod ní box s průběhem
 // (stejný jako v přehledu Implementace, kroky jsou klikací a otevírají podrobnosti).
 import { ArrowLeft, Circle, CircleCheck, CircleMinus, CirclePause, CircleX, Clock, LayoutGrid, Lock, Scale, Shield, TriangleAlert, type LucideIcon } from 'lucide-react';
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import Link from '../components/Link';
 import { currentPart, lineup, phaseLabel, PhaseSteps, type LineStep, type PartKey } from '../components/trial/Lineup';
 import { Drawer } from '../components/trial/ComplianceBox';
@@ -68,6 +68,22 @@ export default function TrialRequestDetail({ req }: { req: TrialRequest }) {
   const groups = lineup(req);
   const [part, setPart] = useState<PartKey>(() => currentPart(groups));
   const step = groups.flatMap((g) => g.steps).find((s) => s.key === part)!;
+  const tlRef = useRef<HTMLDivElement>(null);
+  const [ind, setInd] = useState<{ left: number; width: number } | null>(null);
+  // Zvýraznění vybraného kroku: úsek dělicí čáry pod ním (měří se, aby sedělo i při zalomení řádků).
+  useLayoutEffect(() => {
+    const place = () => {
+      const tl = tlRef.current;
+      const el = tl?.querySelector('.ln.sel');
+      if (!tl || !el) return setInd(null);
+      const a = tl.getBoundingClientRect();
+      const b = el.getBoundingClientRect();
+      setInd({ left: b.left - a.left, width: b.width });
+    };
+    place();
+    window.addEventListener('resize', place);
+    return () => window.removeEventListener('resize', place);
+  }, [part]);
 
   return (
     <div className="page store-detail trq-detail">
@@ -81,13 +97,14 @@ export default function TrialRequestDetail({ req }: { req: TrialRequest }) {
         </section>
 
         <section className="glass trq-flow">
-          <div className="trq-timeline" role="group" aria-label="Průběh implementace">
+          <div className="trq-timeline" role="group" aria-label="Průběh implementace" ref={tlRef}>
             {groups.map((g) => (
               <div key={g.id} className={`trq-phase trq-phase-${g.id}`}>
                 <span className="c-label">{phaseLabel[g.id]}</span>
                 <PhaseSteps g={g} selected={part} onSelect={setPart} />
               </div>
             ))}
+            {ind && <span className="trq-tl-ind" style={{ left: ind.left, width: ind.width }} aria-hidden />}
           </div>
 
           <PartDetail req={req} step={step} vendor={dossier?.vendor ?? 'Firma'} />
