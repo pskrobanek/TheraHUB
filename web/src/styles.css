@@ -977,3 +977,6 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 .trq-over-btn:hover { border-color: rgba(17, 20, 42, 0.22); }
 .trq-over-btn:focus-visible { outline: 2px solid var(--dark); outline-offset: 2px; }
 .trq-flow > .trq-sub:first-of-type { border-top: 0; padding-top: 0; }
+.trq-hist-res { font-weight: 600; }
+.trq-hist-from { display: block; color: var(--muted); }
+.trq-history td { vertical-align: top; }

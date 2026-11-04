@@ -160,6 +160,19 @@ export interface TrialRequest {
   snapshotAt?: string;
   /** Konečné větvení po rozhodnutí. */
   final?: 'nakup' | 'odchod';
+  /** Záznamy navíc, které nejdou vyčíst z kroků (vrácení, připomínky, doplnění). */
+  events?: HistoryEvent[];
+}
+
+/** Záznam v historii žádosti. `related` = kroky, v jejichž historii se záznam ukáže také. */
+export interface HistoryEvent {
+  date: string;
+  by: string;
+  step: StepId;
+  domain?: Domain;
+  result: string;
+  comment?: string;
+  related?: StepId[];
 }
 
 const done = (by: string, date: string, outcome: Outcome = 'schvaleno', condition?: string): StepRun => ({ status: 'done', by, date, outcome, condition });
@@ -250,6 +263,10 @@ export const trialRequests: TrialRequest[] = [
     users: 12,
     months: 3,
     kpis: kpiSet.provoz,
+    events: [
+      { date: '2026-10-24', by: 'Systém', step: 'namestek', result: 'Po termínu', comment: 'Lhůta 5 pracovních dnů uplynula 23. 10.; náměstkyni odeslána připomínka.' },
+      { date: '2026-10-30', by: 'Systém', step: 'namestek', result: 'Druhá připomínka', comment: 'Kopie žadatelce a primáři.', related: ['primar'] },
+    ],
   },
   {
     id: 'PP-2026-019',
@@ -278,6 +295,12 @@ export const trialRequests: TrialRequest[] = [
     users: 8,
     months: 6,
     kpis: kpiSet.kohorta,
+    events: [
+      { date: '2026-10-08', by: s.namestek.name, step: 'namestek', result: 'Vráceno primáři', comment: 'Doplnit, kolik lékařů se pilotu zúčastní a kdo zastoupí garanta.', related: ['primar'] },
+      { date: '2026-10-08', by: d.onko.head.name, step: 'primar', result: 'Doplněno a znovu předáno', comment: 'Uživatelé: 8 lékařů; zástup garanta MUDr. Jana Pokorná (smyšlené).', related: ['namestek'] },
+      { date: '2026-10-29', by: s.kb.name, step: 'posouzeni', domain: 'security', result: 'Dotaz na firmu', comment: 'Doložit šifrování záloh (SEC-003). Lhůta oblasti stojí.', related: ['firma'] },
+      { date: '2026-11-02', by: 'Systém', step: 'posouzeni', domain: 'security', result: 'Připomínka firmě', comment: 'Firma zatím neodpověděla.', related: ['firma'] },
+    ],
   },
   {
     id: 'PP-2026-017',
@@ -571,6 +594,11 @@ export const trialRequests: TrialRequest[] = [
     users: 18,
     months: 6,
     kpis: kpiSet.sepse,
+    events: [
+      { date: '2026-09-08', by: 'Systém', step: 'firma', result: 'Připomínka firmě', comment: 'Firma nepotvrdila podmínky pilotního provozu do termínu.' },
+      { date: '2026-09-15', by: 'Systém', step: 'firma', result: 'Druhá připomínka', comment: 'Kopie náměstkyni.', related: ['namestek'] },
+      { date: '2026-09-16', by: s.namestek.name, step: 'firma', result: 'Pozastaveno', comment: 'Žádost pozastavena do odpovědi firmy; žadatelka informována.', related: ['namestek'] },
+    ],
   },
 ];
 
@@ -690,6 +718,38 @@ export function progressOf(req: TrialRequest, vendor: string): Progress {
     next: !ended && nextStep ? { label: nextStep.id === 'zaver' ? 'Nákup / Odchod' : nextStep.label, who: holdersOf(req, nextStep.id, vendor) } : undefined,
     summary: ended ? stateLabel[req.state] : step.label,
   };
+}
+
+// ---------- Historie žádosti ----------
+
+/** Všechny záznamy žádosti: rozhodnutí z kroků a oblastí, předání aktivním krokům a záznamy navíc. Seřazeno od nejstaršího. */
+export function historyOf(req: TrialRequest, vendor: string): HistoryEvent[] {
+  const out: HistoryEvent[] = [];
+  const fromRun = (step: StepId, run: StepRun | undefined, domain?: Domain) => {
+    if (!run) return;
+    if ((run.status === 'done' || run.status === 'rejected') && run.date)
+      out.push({ date: run.date, by: run.by ?? '—', step, domain, result: run.outcome ? outcomeLabel[run.outcome] : run.status === 'rejected' ? 'Zamítnuto' : 'Hotovo', comment: run.condition ?? run.note });
+    else if (run.status === 'withdrawn' && run.date) out.push({ date: run.date, by: run.by ?? '—', step, domain, result: 'Staženo', comment: run.note });
+    else if ((run.status === 'active' || run.status === 'waiting_vendor' || run.status === 'on_hold') && run.since) {
+      const who = domain ? domainOwner[domain].name : holdersOf(req, step, vendor).map((h) => h.name).join(', ');
+      out.push({ date: run.since, by: 'Systém', step, domain, result: 'Předáno k vyřízení', comment: who });
+    }
+  };
+  for (const st of templateA.steps) {
+    if (st.id === 'posouzeni' && req.block) {
+      // Paralelní blok: všechny 4 oblasti dostanou balíček zároveň, pak každá rozhoduje sama.
+      const since = req.steps.posouzeni?.since;
+      (Object.keys(req.block) as Domain[]).forEach((dm) => {
+        const b = req.block![dm];
+        if (since) out.push({ date: since, by: 'Systém', step: 'posouzeni', domain: dm, result: 'Předáno k vyřízení', comment: domainOwner[dm].name });
+        if (b && b.status !== 'active' && b.status !== 'waiting_vendor') fromRun('posouzeni', b, dm);
+      });
+      continue;
+    }
+    fromRun(st.id, req.steps[st.id]);
+  }
+  out.push(...(req.events ?? []));
+  return out.sort((a, b) => a.date.localeCompare(b.date));
 }
 
 export const requestsForApp = (appId: string) => trialRequests.filter((r) => r.appId === appId);

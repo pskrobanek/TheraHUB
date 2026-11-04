@@ -1,8 +1,7 @@
 // Detail žádosti o pilotní provoz (brief §9.3, DEC-022, DEC-023). Hlavička aplikace jako v App Storu a pod ní box s průběhem
 // (stejný jako v přehledu Implementace, kroky jsou klikací a otevírají podrobnosti).
-import { ArrowLeft, Circle, CircleCheck, CircleMinus, CirclePause, CircleX, Clock, LayoutGrid, Lock, Scale, Shield, TriangleAlert, type LucideIcon } from 'lucide-react';
+import { ArrowLeft, Circle, ClipboardList, CircleCheck, CircleMinus, CirclePause, CircleX, Clock, LayoutGrid, Lock, Scale, Shield, TriangleAlert, type LucideIcon } from 'lucide-react';
 import { useLayoutEffect, useRef, useState } from 'react';
-import BrandDots from '../components/BrandDots';
 import Link from '../components/Link';
 import { lineup, phaseLabel, PhaseSteps, type LineStep, type PartKey } from '../components/trial/Lineup';
 import { Drawer } from '../components/trial/ComplianceBox';
@@ -16,10 +15,12 @@ import { match } from '../data/trial/match';
 import {
   departments,
   domainOwner,
+  historyOf,
   holdersOf,
   outcomeLabel,
   progressOf,
   templateA,
+  type HistoryEvent,
   type RunStatus,
   type StepRun,
   type TrialRequest,
@@ -102,7 +103,7 @@ export default function TrialRequestDetail({ req }: { req: TrialRequest }) {
           <div className="trq-timeline" role="group" aria-label="Průběh implementace" ref={tlRef}>
             <div className="trq-phase trq-over">
               <button type="button" className={part === 'prehled' ? 'trq-over-btn sel' : 'trq-over-btn'} onClick={() => setPart('prehled')} aria-pressed={part === 'prehled'}>
-                <BrandDots size={14} /> Přehled
+                <ClipboardList size={17} aria-hidden /> Přehled
               </button>
             </div>
             {groups.map((g) => (
@@ -115,11 +116,14 @@ export default function TrialRequestDetail({ req }: { req: TrialRequest }) {
           </div>
 
           {step ? (
-            <PartDetail key={step.key} req={req} step={step} vendor={dossier?.vendor ?? 'Firma'} />
+            <>
+              <PartDetail key={step.key} req={req} step={step} vendor={dossier?.vendor ?? 'Firma'} />
+              <History req={req} vendor={dossier?.vendor ?? 'Firma'} step={step} />
+            </>
           ) : (
             <>
               <RequestFacts req={req} />
-              <DecisionLog req={req} />
+              <History req={req} vendor={dossier?.vendor ?? 'Firma'} />
             </>
           )}
         </section>
@@ -386,53 +390,53 @@ function SnapshotNote({ req }: { req: TrialRequest }) {
   );
 }
 
-function DecisionLog({ req }: { req: TrialRequest }) {
-  const rows: { step: string; run: StepRun }[] = [];
-  for (const st of templateA.steps) {
-    const run = req.steps[st.id];
-    if (st.id === 'posouzeni' && req.block) {
-      domains.forEach((d) => {
-        const b = req.block![d];
-        if (b && (b.status === 'done' || b.status === 'rejected')) rows.push({ step: `Posouzení · ${domainLabel[d]}`, run: b });
-      });
-      continue;
-    }
-    if (run && (run.status === 'done' || run.status === 'rejected' || run.status === 'withdrawn')) rows.push({ step: st.label, run });
-  }
-  rows.sort((a, b) => (a.run.date ?? '').localeCompare(b.run.date ?? ''));
+/** Krátký název kroku pro záznam historie. */
+const eventStep = (e: HistoryEvent) => (e.domain ? `Posouzení · ${domainLabel[e.domain]}` : (templateA.steps.find((t) => t.id === e.step)?.label ?? e.step));
+
+/** Historie záznamů. S `step` jen záznamy kroku a záznamy z jiných kroků, které se ho týkají (např. vrácení náměstkem primáři). */
+function History({ req, vendor, step }: { req: TrialRequest; vendor: string; step?: LineStep }) {
+  const all = historyOf(req, vendor);
+  const rows = step ? all.filter((e) => e.step === step.step || e.related?.includes(step.step)) : all;
   return (
     <section className="trq-sub">
-      <h3 className="widget-label">Historie rozhodnutí</h3>
-      <table className="roster">
+      <h3 className="widget-label">{step ? 'Historie kroku' : 'Historie žádosti'}</h3>
+      <table className="roster trq-history">
         <thead>
           <tr>
-            <th>Kdy</th>
-            <th>Krok</th>
+            <th>Datum</th>
+            {!step && <th>Krok</th>}
             <th>Kdo</th>
-            <th>Rozhodnutí</th>
-            <th>Důvod / podmínka</th>
+            <th>Výsledek</th>
+            <th>Komentář</th>
           </tr>
         </thead>
         <tbody>
-          {rows.map(({ step, run }, i) => (
-            <tr key={i}>
-              <td className="nowrap mono">{run.date ? fmtDay(run.date, true) : '—'}</td>
-              <td>{step}</td>
-              <td>{run.by ?? '—'}</td>
-              <td>{run.status === 'withdrawn' ? 'Staženo' : run.outcome ? outcomeLabel[run.outcome] : '—'}</td>
-              <td className="muted">{run.condition ?? run.note ?? '—'}</td>
-            </tr>
-          ))}
+          {rows.map((e, i) => {
+            const other = step && e.step !== step.step;
+            return (
+              <tr key={i}>
+                <td className="nowrap mono">{fmtDay(e.date, true)}</td>
+                {!step && <td>{eventStep(e)}</td>}
+                <td>{e.by}</td>
+                <td>
+                  <b className="trq-hist-res">{e.result}</b>
+                  {step && e.domain && <span className="muted small"> · {domainLabel[e.domain]}</span>}
+                  {other && <span className="trq-hist-from small">z kroku {eventStep(e)}</span>}
+                </td>
+                <td className="muted">{e.comment ?? '—'}</td>
+              </tr>
+            );
+          })}
           {rows.length === 0 && (
             <tr>
-              <td colSpan={5} className="muted">
-                Zatím žádné rozhodnutí.
+              <td colSpan={step ? 4 : 5} className="muted">
+                Zatím žádný záznam.
               </td>
             </tr>
           )}
         </tbody>
       </table>
-      <p className="muted small">Ve Fázi 2 každé rozhodnutí ponese i MFA potvrzení a záznam v neměnném auditu.</p>
+      {!step && <p className="muted small">Ve Fázi 2 každé rozhodnutí ponese i MFA potvrzení a záznam v neměnném auditu.</p>}
     </section>
   );
 }
