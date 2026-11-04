@@ -104,30 +104,24 @@ function lineup(r: TrialRequest): LineGroup[] {
 
 const dotLabel: Record<Dot, string> = { done: 'splněno', now: 'probíhá / čeká', todo: 'nadcházející', fail: 'zamítnuto', skip: 'nevztahuje se' };
 
-function Lineup({ r }: { r: TrialRequest }) {
+/** Kroky jedné fáze v buňce tabulky (název fáze je v záhlaví sloupce). */
+function PhaseSteps({ g }: { g: LineGroup }) {
   return (
-    <div className="lineup" aria-label="Průběh implementace">
-      {lineup(r).map((g) => (
-        <div key={g.id} className="ln-group">
-          <span className="ln-group-label">{g.label}</span>
-          <ol>
-            {g.steps.map((s, i) => (
-              <li key={i} className={`ln ln-${s.dot}`} title={`${s.label}: ${dotLabel[s.dot]}`}>
-                {s.sub && (
-                  <span className="ln-sub">
-                    {s.sub.map((x) => (
-                      <i key={x.label} className={`ln-${x.dot}`} title={`${x.label}: ${dotLabel[x.dot]}`} />
-                    ))}
-                  </span>
-                )}
-                <span className="ln-label">{s.label}</span>
-                <span className="sr-only">{dotLabel[s.dot]}</span>
-              </li>
-            ))}
-          </ol>
-        </div>
+    <ol className="ln-steps" aria-label={g.label}>
+      {g.steps.map((s, i) => (
+        <li key={i} className={`ln ln-${s.dot}`} title={`${s.label}: ${dotLabel[s.dot]}`}>
+          {s.sub && (
+            <span className="ln-sub">
+              {s.sub.map((x) => (
+                <i key={x.label} className={`ln-${x.dot}`} title={`${x.label}: ${dotLabel[x.dot]}`} />
+              ))}
+            </span>
+          )}
+          <span className="ln-label">{s.label}</span>
+          <span className="sr-only">{dotLabel[s.dot]}</span>
+        </li>
       ))}
-    </div>
+    </ol>
   );
 }
 
@@ -174,10 +168,27 @@ export default function TrialRequestsPage() {
 
   return (
     <div className="store-layout impl-layout">
-      <aside className="filters" aria-label="Výběr implementací">
-        <label className="impl-dept">
-          <span className="filters-sec-label">Oddělení</span>
-          <select value={dept} onChange={(e) => setDept(e.target.value as DeptId | 'vse')}>
+      <aside className="filters" aria-label="Filtry implementací">
+        <div className="filters-head">
+          <span className="fh-tab on" title="Filtry" aria-label="Filtry">
+            <ListFilter size={15} strokeWidth={2} aria-hidden />
+          </span>
+          {(phases.size > 0 || dept !== myDept) && (
+            <button
+              className="link"
+              onClick={() => {
+                setPhases(new Set());
+                setDept(myDept);
+              }}
+            >
+              Zrušit vše
+            </button>
+          )}
+        </div>
+
+        <section>
+          <h4>Oddělení</h4>
+          <select className="impl-select" value={dept} onChange={(e) => setDept(e.target.value as DeptId | 'vse')} aria-label="Oddělení">
             {(Object.keys(departments) as DeptId[]).map((d) => (
               <option key={d} value={d}>
                 {departments[d].name}
@@ -186,18 +197,10 @@ export default function TrialRequestsPage() {
             ))}
             <option value="vse">Všechna oddělení</option>
           </select>
-        </label>
+        </section>
+
         <section>
-          <div className="filters-head">
-            <b className="impl-filters-title">
-              <ListFilter size={15} strokeWidth={2} aria-hidden /> Filtry
-            </b>
-            {phases.size > 0 && (
-              <button className="link" onClick={() => setPhases(new Set())}>
-                Zrušit
-              </button>
-            )}
-          </div>
+          <h4>Fáze</h4>
           <ul className="spec-list">
             {(Object.keys(phaseLabel) as Phase[]).map((ph) => (
               <li key={ph}>
@@ -238,7 +241,11 @@ export default function TrialRequestsPage() {
               <tr>
                 <th>Aplikace a obor</th>
                 <th>Stav</th>
-                <th>Průběh</th>
+                {(Object.keys(phaseLabel) as Phase[]).map((ph) => (
+                  <th key={ph} className="impl-phase-th">
+                    {phaseLabel[ph]}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
@@ -261,9 +268,11 @@ export default function TrialRequestsPage() {
                     <td>
                       <Health r={r} />
                     </td>
-                    <td>
-                      <Lineup r={r} />
-                    </td>
+                    {lineup(r).map((g) => (
+                      <td key={g.id} className="impl-phase-td">
+                        <PhaseSteps g={g} />
+                      </td>
+                    ))}
                   </tr>
                 );
               })}

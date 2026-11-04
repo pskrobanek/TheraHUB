@@ -897,10 +897,6 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 
 /* ---------- Implementace: průběh kroků v řádku ---------- */
 .impl-table td { padding-top: 11px; padding-bottom: 11px; }
-.lineup { display: flex; align-items: flex-end; gap: 8px; }
-.ln-group { display: flex; flex-direction: column; gap: 4px; padding: 4px 5px 5px; border-radius: 8px; background: rgba(17, 20, 42, 0.03); }
-.ln-group-label { font-size: 0.62rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--muted); }
-.ln-group ol { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-end; gap: 3px; }
 .ln { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 3px; min-width: 0; }
 .ln-label { display: block; padding: 4px 5px; border-radius: 5px; font-size: 0.68rem; font-weight: 600; white-space: nowrap; text-align: center; }
 .ln-done .ln-label, i.ln-done { background: var(--st-match-fg); color: #fff; }
@@ -915,13 +911,13 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 .impl-legend i:first-child { margin-left: 0; }
 
 .impl-layout .filters { gap: 4px; }
-.impl-dept { display: flex; flex-direction: column; gap: 6px; padding-bottom: 12px; }
-.filters-sec-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); font-weight: 600; }
-.impl-dept select { font: inherit; font-size: 0.9rem; padding: 7px 9px; border-radius: var(--radius-sm); border: 1px solid rgba(17, 20, 42, 0.15); background: #fff; color: var(--text); }
-.impl-filters-title { display: inline-flex; align-items: center; gap: 6px; font-size: 0.95rem; }
 .impl-box { width: 16px; height: 16px; border-radius: 4px; border: 1.5px solid rgba(17, 20, 42, 0.3); display: grid; place-items: center; flex-shrink: 0; background: #fff; }
 .impl-box.on { background: var(--dark); border-color: var(--dark); color: #fff; }
 .impl-layout .trq-toolbar { justify-content: space-between; }
 .impl-layout { grid-template-columns: 210px minmax(0, 1fr); }
 .impl-table .trq-app { max-width: 190px; }
 .impl-table td:first-child { width: 1%; }
+.ln-steps { list-style: none; margin: 0; padding: 0; display: flex; align-items: flex-end; gap: 3px; }
+.impl-phase-th { padding-left: 10px !important; border-left: 1px solid rgba(17, 20, 42, 0.08); }
+.impl-phase-td { padding-left: 10px !important; border-left: 1px solid rgba(17, 20, 42, 0.08); }
+.impl-select { width: 100%; font: inherit; font-size: 0.88rem; padding: 7px 9px; border-radius: var(--radius-sm); border: 1px solid rgba(17, 20, 42, 0.15); background: #fff; color: var(--text); }
