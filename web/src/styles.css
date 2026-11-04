@@ -935,3 +935,4 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 .dsel-list li.hi { background: rgba(17, 20, 42, 0.05); }
 .dsel-list li.sel { font-weight: 600; }
 .tone-wait { --fg: var(--st-wait-fg); --bg: var(--st-wait-bg); }
+.impl-health { display: inline-grid; place-items: center; color: var(--fg); flex-shrink: 0; }

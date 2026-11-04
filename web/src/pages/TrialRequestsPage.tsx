@@ -227,20 +227,23 @@ export default function TrialRequestsPage() {
   const [view, setView] = useState<'list' | 'kanban'>('list');
   const [dept, setDept] = useState<DeptId | 'vse'>(myDept);
   const [phases, setPhases] = useState<Set<Phase>>(new Set());
+  const [healths, setHealths] = useState<Set<Health>>(new Set());
   const inDept = trialRequests.filter((r) => dept === 'vse' || r.dept === dept);
   const rows = inDept
     .filter((r) => phases.size === 0 || phases.has(phaseOf(r)))
+    .filter((r) => healths.size === 0 || healths.has(healthOf(r)))
     .sort((a, b) => {
       const rank = { alert: 0, waiting: 1, ok: 2, closed: 3 };
       return rank[healthOf(a)] - rank[healthOf(b)] || (b.submitted ?? b.created).localeCompare(a.submitted ?? a.created);
     });
-  const toggle = (ph: Phase) =>
-    setPhases((cur) => {
-      const n = new Set(cur);
-      if (n.has(ph)) n.delete(ph);
-      else n.add(ph);
-      return n;
-    });
+  const flip = <T,>(cur: Set<T>, v: T) => {
+    const n = new Set(cur);
+    if (n.has(v)) n.delete(v);
+    else n.add(v);
+    return n;
+  };
+  const toggle = (ph: Phase) => setPhases((cur) => flip(cur, ph));
+  const toggleHealth = (h: Health) => setHealths((cur) => flip(cur, h));
 
   return (
     <div className="store-layout impl-layout">
@@ -249,11 +252,12 @@ export default function TrialRequestsPage() {
           <span className="fh-tab on" title="Filtry" aria-label="Filtry">
             <ListFilter size={15} strokeWidth={2} aria-hidden />
           </span>
-          {(phases.size > 0 || dept !== myDept) && (
+          {(phases.size > 0 || healths.size > 0 || dept !== myDept) && (
             <button
               className="link"
               onClick={() => {
                 setPhases(new Set());
+                setHealths(new Set());
                 setDept(myDept);
               }}
             >
@@ -277,10 +281,33 @@ export default function TrialRequestsPage() {
                     {phases.has(ph) && <Check size={12} strokeWidth={3} />}
                   </span>
                   {phaseLabel[ph]}
-                  <span className="n">{inDept.filter((r) => phaseOf(r) === ph).length}</span>
+                  <span className="n">{inDept.filter((r) => healths.size === 0 || healths.has(healthOf(r))).filter((r) => phaseOf(r) === ph).length}</span>
                 </button>
               </li>
             ))}
+          </ul>
+        </section>
+
+        <section>
+          <h4>Stav</h4>
+          <ul className="spec-list">
+            {(Object.keys(healthInfo) as Health[]).map((h) => {
+              const { label, icon: Icon, tone } = healthInfo[h];
+              return (
+                <li key={h}>
+                  <button className={healths.has(h) ? 'spec active' : 'spec'} onClick={() => toggleHealth(h)} aria-pressed={healths.has(h)}>
+                    <span className={healths.has(h) ? 'impl-box on' : 'impl-box'} aria-hidden>
+                      {healths.has(h) && <Check size={12} strokeWidth={3} />}
+                    </span>
+                    <span className={`impl-health tone-${tone}`}>
+                      <Icon size={14} aria-hidden />
+                    </span>
+                    {label}
+                    <span className="n">{inDept.filter((r) => phases.size === 0 || phases.has(phaseOf(r))).filter((r) => healthOf(r) === h).length}</span>
+                  </button>
+                </li>
+              );
+            })}
           </ul>
         </section>
       </aside>
