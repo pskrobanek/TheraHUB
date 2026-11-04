@@ -31,6 +31,7 @@
   --st-na-fg: #474c60;      --st-na-bg: #eceef3;
   --st-active-fg: #1f2bb8;  --st-active-bg: #e4e6fd;
   --st-wait-fg: #6b4a00;    --st-wait-bg: #fde9a8;
+  --st-done-fg: #0f4d24;    --st-done-bg: #b4e5c3;
 
   font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   color: var(--text);
@@ -900,7 +901,8 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 .impl-table td { padding-top: 11px; padding-bottom: 11px; }
 .ln { position: relative; display: flex; flex-direction: column; align-items: stretch; gap: 3px; min-width: 0; }
 .ln-label { display: block; padding: 4px 5px; border-radius: 5px; font-size: 0.68rem; font-weight: 600; white-space: nowrap; text-align: center; }
-.ln-done .ln-label, i.ln-done { background: var(--st-match-fg); color: #fff; }
+.ln-done .ln-label, i.ln-done { background: var(--st-done-bg); color: var(--st-done-fg); }
+.ln-sub i.ln-done, .impl-legend i.ln-done { background: #6fc48b; }
 .ln-now .ln-label, i.ln-now { background: #f2c94c; color: #4a3500; }
 .ln-todo .ln-label, i.ln-todo { background: rgba(17, 20, 42, 0.07); color: var(--muted); }
 .ln-fail .ln-label, i.ln-fail { background: var(--st-gap-fg); color: #fff; }
@@ -939,11 +941,11 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 
 /* ---------- Detail žádosti (DEC-022) ---------- */
 .trq-col { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
-.trq-flow { padding: 20px 24px; display: flex; flex-direction: column; gap: 20px; }
-.trq-timeline { display: flex; flex-wrap: wrap; row-gap: 12px; }
-.trq-phase { display: flex; flex-direction: column; gap: 8px; padding: 2px 12px 4px; border-left: 1px solid rgba(17, 20, 42, 0.08); }
+.trq-flow { padding: 0 24px 20px; display: flex; flex-direction: column; gap: 20px; overflow: hidden; }
+.trq-timeline { display: flex; flex-wrap: wrap; row-gap: 14px; margin: 0 -24px; padding: 18px 24px 16px; background: rgba(17, 20, 42, 0.035); border-bottom: 1px solid rgba(17, 20, 42, 0.09); }
+.trq-phase { display: flex; flex-direction: column; gap: 8px; padding: 2px 20px 4px; border-left: 1px solid rgba(17, 20, 42, 0.08); }
 .trq-phase:first-child { padding-left: 4px; border-left: 0; }
-.ln-steps-lg { gap: 4px; }
+.ln-steps-lg { gap: 8px; }
 .ln-steps-lg .ln-label { font-size: 0.72rem; padding: 5px 7px; }
 .trq-phase > .c-label { font-size: 0.78rem; color: var(--muted); }
 .trq-phase > .ln-steps { margin-top: auto; }
