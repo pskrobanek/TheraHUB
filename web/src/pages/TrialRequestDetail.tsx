@@ -1,89 +1,333 @@
-// Detail žádosti o pilotní provoz (brief §9.3). Ve Fázi 0a záložky Přehled, Shoda a Rozhodnutí; ostatní naznačené.
-import { ArrowLeft } from 'lucide-react';
+// Detail žádosti o pilotní provoz (brief §9.3, DEC-022). Vlevo hlavička aplikace jako v App Storu a box s průběhem
+// (stejný jako v přehledu Implementace, kroky jsou klikací a otevírají podrobnosti). Vpravo stejný sloupec připravenosti
+// jako v detailu aplikace – čte stejné dossier, takže se údaje v obou místech vždy shodují.
+import { ArrowLeft, Circle, CircleCheck, CircleMinus, CirclePause, CircleX, Clock, LayoutGrid, Lock, Scale, Shield, TriangleAlert, type LucideIcon } from 'lucide-react';
 import { useState } from 'react';
-import AppIcon from '../components/AppIcon';
 import Link from '../components/Link';
-import ComplianceBox from '../components/trial/ComplianceBox';
+import { currentPart, lineup, phaseLabel, PhaseSteps, type LineStep, type PartKey } from '../components/trial/Lineup';
+import { Drawer } from '../components/trial/ComplianceBox';
+import ReadinessPanel from '../components/trial/ReadinessPanel';
 import StateBadge from '../components/trial/StateBadge';
 import { VerdictBadge } from '../components/trial/Status';
-import Stepper from '../components/trial/Stepper';
-import { domainLabel, domains } from '../data/trial/catalog';
-import { fmtDay } from '../data/trial/dates';
+import StoreAppHead from '../components/trial/StoreAppHead';
+import { domainLabel, domains, type Domain } from '../data/trial/catalog';
+import { fmtDay, workdaysLabel } from '../data/trial/dates';
 import { dossiers } from '../data/trial/dossiers';
 import { match } from '../data/trial/match';
-import { departments, hospitalDemo, outcomeLabel, templateA, type StepRun, type TrialRequest } from '../data/trial/requests';
+import {
+  departments,
+  domainOwner,
+  holdersOf,
+  outcomeLabel,
+  progressOf,
+  templateA,
+  type RunStatus,
+  type StepRun,
+  type TrialRequest,
+} from '../data/trial/requests';
 import { storeApps } from '../data/store';
 
-type Tab = 'prehled' | 'shoda' | 'rozhodnuti' | 'dokumenty' | 'dotazy' | 'podminky' | 'pilot' | 'audit';
-const tabs: { id: Tab; label: string; phase?: string }[] = [
-  { id: 'prehled', label: 'Přehled' },
-  { id: 'shoda', label: 'Shoda' },
-  { id: 'rozhodnuti', label: 'Rozhodnutí' },
-  { id: 'dokumenty', label: 'Dokumenty', phase: 'Fáze 2' },
-  { id: 'dotazy', label: 'Dotazy', phase: 'Fáze 2' },
-  { id: 'podminky', label: 'Podmínky a výjimky', phase: 'Fáze 2' },
-  { id: 'pilot', label: 'Pilotní provoz', phase: 'Fáze 3' },
-  { id: 'audit', label: 'Audit', phase: 'Fáze 2' },
-];
+const domainIcon: Record<Domain, LucideIcon> = { legal: Scale, gdpr: Lock, security: Shield, ostatni: LayoutGrid };
+
+/** Stav části průběhu: vždy ikona + text (REQ-MAT-001). */
+const runInfo: Record<RunStatus | 'none', { label: string; icon: LucideIcon; tone: string }> = {
+  done: { label: 'Splněno', icon: CircleCheck, tone: 'match' },
+  active: { label: 'Probíhá', icon: Clock, tone: 'wait' },
+  waiting_vendor: { label: 'Čeká na firmu', icon: Clock, tone: 'wait' },
+  on_hold: { label: 'Pozastaveno', icon: CirclePause, tone: 'wait' },
+  rejected: { label: 'Zamítnuto', icon: CircleX, tone: 'gap' },
+  withdrawn: { label: 'Staženo', icon: CircleMinus, tone: 'na' },
+  pending: { label: 'Nadcházející', icon: Circle, tone: 'na' },
+  none: { label: 'Nadcházející', icon: Circle, tone: 'na' },
+};
+
+function RunChip({ run, skip }: { run?: StepRun; skip?: boolean }) {
+  const { label, icon: Icon, tone } = skip ? { label: 'Nevztahuje se', icon: CircleMinus, tone: 'na' } : runInfo[run?.status ?? 'none'];
+  return (
+    <span className={`st-chip tone-${tone}`}>
+      <Icon size={14} aria-hidden /> {label}
+    </span>
+  );
+}
+
+/** Co se v části děje (popis procesu šablony A, ne právní obsah). */
+const partInfo: Record<PartKey, { title: string; what: string }> = {
+  primar: { title: 'Schválení primářem', what: 'Primář oddělení potvrdí odborný smysl pilotního provozu a kapacitu oddělení.' },
+  namestek: { title: 'Souhlas náměstka', what: 'Náměstkyně pro léčebnou péči potvrdí, že pilotní provoz je pro nemocnici prioritou.' },
+  firma: { title: 'Potvrzení firmou', what: 'Firma potvrdí podmínky pilotního provozu a doplní dossier.' },
+  posouzeni: { title: 'Posouzení 4 oblastí', what: 'Legal, GDPR, Security a Ostatní posuzují souběžně, každá oblast nad svým balíčkem.' },
+  smlouva: { title: 'Smlouva o pilotním provozu', what: 'Právní oddělení připraví smlouvu o bezplatném pilotním provozu, podepisuje ředitel.' },
+  pilot: { title: 'Pilotní provoz', what: 'Aplikace běží na oddělení, odborný garant sleduje KPI.' },
+  kpi: { title: 'Vyhodnocení KPI', what: 'Žadatel a primář vyhodnotí KPI proti cílům ze žádosti.' },
+  rozhodnuti: { title: 'Rozhodnutí', what: 'Náměstkyně rozhodne o nákupu, nebo o ukončení pilotního provozu.' },
+  nakup: { title: 'Smlouva o předplatném', what: 'Nákup proběhne podle pravidel zadávání veřejných zakázek.' },
+  licence: { title: 'Licence', what: 'Aktivace licence a převedení aplikace do běžného provozu oddělení.' },
+};
 
 export default function TrialRequestDetail({ req }: { req: TrialRequest }) {
-  const [tab, setTab] = useState<Tab>('prehled');
   const app = storeApps.find((a) => a.id === req.appId)!;
   const dossier = dossiers[req.appId];
-  const dep = departments[req.dept];
+  const groups = lineup(req);
+  const [part, setPart] = useState<PartKey>(() => currentPart(groups));
+  const step = groups.flatMap((g) => g.steps).find((s) => s.key === part)!;
 
   return (
-    <div className="page trq-detail">
+    <div className="page store-detail trq-detail">
       <Link href="#/aplikace/zadosti" className="back-link">
         <ArrowLeft size={15} /> Implementace
       </Link>
 
-      <header className="patient-header glass trq-head">
-        <div className="trq-head-top">
-          <AppIcon app={app} size={48} />
-          <div className="trq-head-title">
-            <h1>
-              {app.name} <span className="birth-number mono">{req.id}</span>
-            </h1>
-            <p className="muted">
-              {dep.name} · žadatel a odborný garant: {dep.requester.name} · {hospitalDemo.short}
-              {req.submitted ? ` · podáno ${fmtDay(req.submitted, true)}` : ' · nepodáno'}
-            </p>
-          </div>
-          <StateBadge state={req.state} />
-        </div>
-        <Stepper req={req} />
-        <nav className="tabs" aria-label="Záložky žádosti">
-          {tabs.map((t) => (
-            <button key={t.id} className={t.id === tab ? 'tab active' : 'tab'} onClick={() => setTab(t.id)} disabled={!!t.phase} title={t.phase ? `Přijde ve ${t.phase}` : undefined}>
-              {t.label}
-              {t.phase && <span className="tab-phase">{t.phase}</span>}
-            </button>
-          ))}
-        </nav>
-      </header>
+      <div className="sd-grid">
+        <div className="trq-col">
+          <section className="sd-main glass">
+            <StoreAppHead app={app} />
+          </section>
 
-      {tab === 'prehled' && <Overview req={req} />}
-      {tab === 'shoda' && (
-        <>
-          <ComplianceBox
-            result={match(dossier?.answers, req.waivers ?? {}, req.snapshotAt ?? req.created)}
-            dossierVersion={dossier?.version}
-            snapshotLabel={req.snapshotAt ? `Snímek z podání ${fmtDay(req.snapshotAt, true)} (zmrazený)` : 'Žádost zatím nebyla podána – živý výsledek'}
-            onRequest={null}
-          />
-          {req.snapshotAt && <LiveDiff req={req} />}
-        </>
-      )}
-      {tab === 'rozhodnuti' && <DecisionLog req={req} />}
+          <section className="glass trq-flow">
+            <div className="trq-timeline" role="group" aria-label="Průběh implementace">
+              {groups.map((g) => (
+                <div key={g.id} className={`trq-phase trq-phase-${g.id}`}>
+                  <span className="c-label">{phaseLabel[g.id]}</span>
+                  <PhaseSteps g={g} selected={part} onSelect={setPart} />
+                </div>
+              ))}
+            </div>
+
+            <PartDetail req={req} step={step} vendor={dossier?.vendor ?? 'Firma'} />
+
+            <RequestFacts req={req} />
+            <DecisionLog req={req} />
+          </section>
+        </div>
+
+        <ReadinessPanel app={app} note={req.snapshotAt ? <SnapshotNote req={req} /> : undefined} />
+      </div>
     </div>
   );
 }
 
-function Overview({ req }: { req: TrialRequest }) {
+/** Podrobnosti vybrané části průběhu. */
+function PartDetail({ req, step, vendor }: { req: TrialRequest; step: LineStep; vendor: string }) {
+  const [drawer, setDrawer] = useState<Domain | null>(null);
+  const run = req.steps[step.step];
+  const prog = progressOf(req, vendor);
+  const isCurrent = prog.current >= 0 && templateA.steps[prog.current]?.id === step.step;
+  const skip = step.dot === 'skip';
+  const info = partInfo[step.key];
+  const dossier = dossiers[req.appId];
+  const result = match(dossier?.answers);
+  const holders = holdersOf(req, step.step, vendor);
+  const dep = departments[req.dept];
+
   return (
-    <section className="glass app-panel trq-overview">
+    <section className="trq-part" aria-live="polite">
+      <header className="trq-part-head">
+        <div>
+          <h2>{info.title}</h2>
+          <p className="muted small">{info.what}</p>
+        </div>
+        {step.key === 'posouzeni' && req.block ? <BlockChip req={req} /> : <RunChip run={run} skip={skip} />}
+      </header>
+
+      {isCurrent && req.note && (
+        <p className="cbox-warn small">
+          <TriangleAlert size={14} aria-hidden /> {req.note}
+        </p>
+      )}
+
+      {step.key === 'posouzeni' ? (
+        <>
+          <ul className="trq-domains">
+            {domains.map((d) => {
+              const b = req.block?.[d] ?? (run && run.status !== 'active' ? run : undefined);
+              const Icon = domainIcon[d];
+              return (
+                <li key={d} className="trq-domain">
+                  <div className="trq-domain-head">
+                    <Icon size={16} fill="currentColor" strokeWidth={1.5} aria-hidden />
+                    <b>{domainLabel[d]}</b>
+                    <RunChip run={b ?? (run?.status === 'active' ? { status: 'active' } : undefined)} />
+                  </div>
+                  <span className="muted small">
+                    {b?.status === 'done' || b?.status === 'rejected'
+                      ? `${b.by} · ${b.date ? fmtDay(b.date, true) : ''}${b.outcome ? ` · ${outcomeLabel[b.outcome]}` : ''}`
+                      : b?.status === 'waiting_vendor'
+                        ? `${vendor} · od ${b.since ? fmtDay(b.since, true) : ''}`
+                        : domainOwner[d].name}
+                  </span>
+                  {(b?.condition || b?.note) && <span className="small">{b.condition ?? b.note}</span>}
+                  <button className="link-btn small" onClick={() => setDrawer(d)}>
+                    Položky oblasti
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+          {req.conditions && req.conditions.length > 0 && (
+            <div className="trq-conds">
+              <span className="c-label">Podmínky</span>
+              <ul>
+                {req.conditions.map((c) => (
+                  <li key={c.text} className="small">
+                    {c.text} <span className="muted">· {c.owner} · {c.status}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </>
+      ) : (
+        <dl className="trq-facts trq-part-facts">
+          {skip ? (
+            <div>
+              <dt>Stav</dt>
+              <dd>Nevztahuje se – po pilotním provozu bylo rozhodnuto aplikaci nekupovat.</dd>
+            </div>
+          ) : run?.status === 'done' || run?.status === 'rejected' || run?.status === 'withdrawn' ? (
+            <>
+              <div>
+                <dt>Rozhodl(a)</dt>
+                <dd>{run.by ?? '—'}</dd>
+              </div>
+              <div>
+                <dt>Kdy</dt>
+                <dd>{run.date ? fmtDay(run.date, true) : '—'}</dd>
+              </div>
+              <div>
+                <dt>Výsledek</dt>
+                <dd>{run.status === 'withdrawn' ? 'Staženo' : run.outcome ? outcomeLabel[run.outcome] : '—'}</dd>
+              </div>
+              {(run.condition || run.note) && (
+                <div>
+                  <dt>Podmínka / poznámka</dt>
+                  <dd>{run.condition ?? run.note}</dd>
+                </div>
+              )}
+            </>
+          ) : (
+            <>
+              <div>
+                <dt>{run ? 'Řeší' : 'Bude řešit'}</dt>
+                <dd>
+                  {holders.map((h) => (
+                    <span key={h.name} className="trq-holder">
+                      {h.name} <span className="muted small">· {h.role}</span>
+                    </span>
+                  ))}
+                </dd>
+              </div>
+              {run?.since && (
+                <div>
+                  <dt>Od</dt>
+                  <dd>{fmtDay(run.since, true)}</dd>
+                </div>
+              )}
+              {isCurrent && (
+                <div>
+                  <dt>{prog.paused ? 'Lhůta stojí' : 'Čeká'}</dt>
+                  <dd>
+                    {workdaysLabel(prog.waiting)}
+                    {prog.due && ` · termín ${fmtDay(prog.due, true)}`}
+                    {prog.overdue && <b className="trq-overdue"> · po termínu</b>}
+                  </dd>
+                </div>
+              )}
+              {run?.note && (
+                <div>
+                  <dt>Poznámka</dt>
+                  <dd>{run.note}</dd>
+                </div>
+              )}
+            </>
+          )}
+          {step.key === 'pilot' && (
+            <>
+              <div>
+                <dt>Odborný garant</dt>
+                <dd>{dep.requester.name}</dd>
+              </div>
+              <div>
+                <dt>Období</dt>
+                <dd>
+                  {req.months} {req.months === 1 ? 'měsíc' : req.months < 5 ? 'měsíce' : 'měsíců'}
+                  {req.trialStart && ` · ${fmtDay(req.trialStart, true)} – ${req.trialEnd ? fmtDay(req.trialEnd, true) : ''}`}
+                </dd>
+              </div>
+            </>
+          )}
+        </dl>
+      )}
+
+      {(step.key === 'kpi' || step.key === 'pilot') && (
+        <table className="roster">
+          <thead>
+            <tr>
+              <th>Ukazatel</th>
+              <th>Cíl</th>
+              <th>Zdroj měření</th>
+            </tr>
+          </thead>
+          <tbody>
+            {req.kpis.map((k) => (
+              <tr key={k.name}>
+                <td>{k.name}</td>
+                <td>{k.target}</td>
+                <td className="muted">{k.source}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+
+      {drawer && <Drawer result={result} initial={drawer} onClose={() => setDrawer(null)} />}
+    </section>
+  );
+}
+
+/** Souhrnný stav paralelního bloku 4 oblastí. */
+function BlockChip({ req }: { req: TrialRequest }) {
+  const runs = domains.map((d) => req.block?.[d]);
+  const st: RunStatus | 'none' = runs.some((r) => r?.status === 'rejected')
+    ? 'rejected'
+    : runs.every((r) => r?.status === 'done')
+      ? 'done'
+      : runs.some((r) => r?.status === 'waiting_vendor')
+        ? 'waiting_vendor'
+        : runs.some((r) => r)
+          ? 'active'
+          : 'none';
+  const n = runs.filter((r) => r?.status === 'done').length;
+  const { label, icon: Icon, tone } = runInfo[st];
+  return (
+    <span className={`st-chip tone-${tone}`}>
+      <Icon size={14} aria-hidden /> {label} · {n} ze 4
+    </span>
+  );
+}
+
+/** Údaje žádosti (účel, rozsah, kdo žádá). */
+function RequestFacts({ req }: { req: TrialRequest }) {
+  const dep = departments[req.dept];
+  return (
+    <section className="trq-sub">
+      <div className="trq-sub-head">
+        <h3 className="widget-label">Žádost</h3>
+        <span className="mono muted small">{req.id}</span>
+        <StateBadge state={req.state} />
+      </div>
       <dl className="trq-facts">
+        <div>
+          <dt>Oddělení</dt>
+          <dd>{dep.name}</dd>
+        </div>
+        <div>
+          <dt>Žadatel a odborný garant</dt>
+          <dd>{dep.requester.name}</dd>
+        </div>
+        <div>
+          <dt>Podáno</dt>
+          <dd>{req.submitted ? fmtDay(req.submitted, true) : 'Nepodáno'}</dd>
+        </div>
         <div>
           <dt>Klinický problém a účel</dt>
           <dd>{req.purpose}</dd>
@@ -96,50 +340,25 @@ function Overview({ req }: { req: TrialRequest }) {
           <dt>Uživatelé</dt>
           <dd>{req.users}</dd>
         </div>
-        <div>
-          <dt>Délka pilotního provozu</dt>
-          <dd>
-            {req.months} {req.months === 1 ? 'měsíc' : req.months < 5 ? 'měsíce' : 'měsíců'}
-            {req.trialStart && ` · ${fmtDay(req.trialStart, true)} – ${req.trialEnd ? fmtDay(req.trialEnd, true) : ''}`}
-          </dd>
-        </div>
       </dl>
-      <h3 className="widget-label">KPI pilotního provozu</h3>
-      <table className="roster">
-        <thead>
-          <tr>
-            <th>Ukazatel</th>
-            <th>Cíl</th>
-            <th>Zdroj měření</th>
-          </tr>
-        </thead>
-        <tbody>
-          {req.kpis.map((k) => (
-            <tr key={k.name}>
-              <td>{k.name}</td>
-              <td>{k.target}</td>
-              <td className="muted">{k.source}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
       <p className="muted small">Pilotní provoz nezakládá nárok na smlouvu; případný nákup proběhne podle pravidel zadávání veřejných zakázek.</p>
     </section>
   );
 }
 
-/** Rozdíl mezi snímkem z podání a dnešním výsledkem (plně ve Fázi 2). */
-function LiveDiff({ req }: { req: TrialRequest }) {
+/** Verdikt ze zmrazeného snímku při podání vs. dnešní stav (REQ-MAT-008). */
+function SnapshotNote({ req }: { req: TrialRequest }) {
   const dossier = dossiers[req.appId];
   const snap = match(dossier?.answers, req.waivers ?? {}, req.snapshotAt);
-  const live = match(dossier?.answers, req.waivers ?? {});
+  const live = match(dossier?.answers);
   const changed = snap.domains.flatMap((d, i) => d.items.filter((it, k) => live.domains[i].items[k].status !== it.status));
   return (
-    <p className="phase-note glass">
-      Dnešní živý výsledek: <VerdictBadge verdict={live.verdict} size="sm" />
+    <p className="trq-snap small">
+      Při podání {fmtDay(req.snapshotAt!, true)} (zmrazený snímek): <VerdictBadge verdict={snap.verdict} size="sm" />
       {changed.length > 0
-        ? ` · ${changed.length} ${changed.length === 1 ? 'položka se od podání změnila' : changed.length < 5 ? 'položky se od podání změnily' : 'položek se od podání změnilo'} (${changed.map((c) => c.item.code).join(', ')}).`
+        ? ` · ${changed.length} ${changed.length === 1 ? 'položka se od podání změnila' : changed.length < 5 ? 'položky se od podání změnily' : 'položek se od podání změnilo'}.`
         : ' · od podání beze změny.'}
+      {req.waivers && Object.keys(req.waivers).length > 0 && ` Výjimky v žádosti: ${Object.keys(req.waivers).join(', ')}.`}
     </p>
   );
 }
@@ -159,7 +378,8 @@ function DecisionLog({ req }: { req: TrialRequest }) {
   }
   rows.sort((a, b) => (a.run.date ?? '').localeCompare(b.run.date ?? ''));
   return (
-    <section className="glass app-panel">
+    <section className="trq-sub">
+      <h3 className="widget-label">Historie rozhodnutí</h3>
       <table className="roster">
         <thead>
           <tr>

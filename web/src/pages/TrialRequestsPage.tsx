@@ -5,9 +5,9 @@ import { useEffect, useRef, useState } from 'react';
 import AppIcon from '../components/AppIcon';
 import Link from '../components/Link';
 import StateBadge from '../components/trial/StateBadge';
-import { domainLabel, domains } from '../data/trial/catalog';
 import { dossiers } from '../data/trial/dossiers';
-import { departments, progressOf, trialRequests, type DeptId, type RunStatus, type StepRun, type TrialRequest } from '../data/trial/requests';
+import { departments, progressOf, trialRequests, type DeptId, type TrialRequest } from '../data/trial/requests';
+import { lineup, phaseLabel, phaseOf, PhaseSteps, type Phase } from '../components/trial/Lineup';
 import { storeApps } from '../data/store';
 
 const appOf = (id: string) => storeApps.find((a) => a.id === id)!;
@@ -27,102 +27,6 @@ export function healthOf(r: TrialRequest): Health {
   if (p.overdue || r.state === 'rejected') return 'alert';
   if (['draft', 'submitted', 'waiting_vendor', 'on_hold'].includes(r.state)) return 'waiting';
   return 'ok';
-}
-
-/** Stav jednoho bodu průběhu: splněno, probíhá/čeká, nadcházející, zamítnuto, nevztahuje se. */
-type Dot = 'done' | 'now' | 'todo' | 'fail' | 'skip';
-const dotOf = (run: StepRun | undefined): Dot => {
-  const s: RunStatus | undefined = run?.status;
-  if (s === 'done') return 'done';
-  if (s === 'rejected') return 'fail';
-  if (s === 'withdrawn') return 'skip';
-  if (s === 'active' || s === 'waiting_vendor' || s === 'on_hold') return 'now';
-  return 'todo';
-};
-
-interface LineStep {
-  label: string;
-  dot: Dot;
-  sub?: { label: string; dot: Dot }[];
-}
-
-interface LineGroup {
-  id: Phase;
-  label: string;
-  steps: LineStep[];
-}
-
-/** Fáze implementace (DEC-020): Příprava, Trial (pilotní provoz), Integrace. */
-export type Phase = 'priprava' | 'trial' | 'integrace';
-export const phaseLabel: Record<Phase, string> = { priprava: 'Příprava', trial: 'Trial', integrace: 'Integrace' };
-
-/** Ve které fázi žádost je. */
-export function phaseOf(r: TrialRequest): Phase {
-  if (r.state === 'purchased') return 'integrace';
-  if (['trial_active', 'evaluating', 'exited'].includes(r.state)) return 'trial';
-  return 'priprava';
-}
-
-/** Průběh ve třech celcích: Příprava (Primář, Náměstek, Firma, 4 oblasti, Smlouva), Trial (Pilot, KPI, Rozhodnutí), Integrace (Smlouva, Licence). */
-function lineup(r: TrialRequest): LineGroup[] {
-  const st = r.steps;
-  const blockRun = st.posouzeni;
-  const sub = domains.map((d) => ({ label: domainLabel[d], dot: dotOf(r.block ? r.block[d] : blockRun) }));
-  const blockDot: Dot = sub.some((x) => x.dot === 'fail') ? 'fail' : sub.every((x) => x.dot === 'done') ? 'done' : sub.some((x) => x.dot !== 'todo') ? 'now' : 'todo';
-  const end: Dot = r.final === 'odchod' ? 'skip' : dotOf(st.zaver);
-  return [
-    {
-      id: 'priprava',
-      label: 'Příprava',
-      steps: [
-        { label: 'Primář', dot: dotOf(st.primar) },
-        { label: 'Náměstek', dot: dotOf(st.namestek) },
-        { label: 'Firma', dot: dotOf(st.firma) },
-        { label: '4 oblasti', dot: blockDot, sub },
-        { label: 'Smlouva', dot: dotOf(st.smlouva) },
-      ],
-    },
-    {
-      id: 'trial',
-      label: 'Trial',
-      steps: [
-        { label: 'Pilot', dot: dotOf(st.pilot) },
-        { label: 'KPI', dot: dotOf(st.kpi) },
-        { label: 'Rozhodnutí', dot: dotOf(st.rozhodnuti) },
-      ],
-    },
-    {
-      id: 'integrace',
-      label: 'Integrace',
-      steps: [
-        { label: 'Smlouva', dot: end },
-        { label: 'Licence', dot: end },
-      ],
-    },
-  ];
-}
-
-const dotLabel: Record<Dot, string> = { done: 'splněno', now: 'probíhá / čeká', todo: 'nadcházející', fail: 'zamítnuto', skip: 'nevztahuje se' };
-
-/** Kroky jedné fáze v buňce tabulky (název fáze je v záhlaví sloupce). */
-function PhaseSteps({ g }: { g: LineGroup }) {
-  return (
-    <ol className="ln-steps" aria-label={g.label}>
-      {g.steps.map((s, i) => (
-        <li key={i} className={`ln ln-${s.dot}`} title={`${s.label}: ${dotLabel[s.dot]}`}>
-          {s.sub && (
-            <span className="ln-sub">
-              {s.sub.map((x) => (
-                <i key={x.label} className={`ln-${x.dot}`} title={`${x.label}: ${dotLabel[x.dot]}`} />
-              ))}
-            </span>
-          )}
-          <span className="ln-label">{s.label}</span>
-          <span className="sr-only">{dotLabel[s.dot]}</span>
-        </li>
-      ))}
-    </ol>
-  );
 }
 
 function Health({ r }: { r: TrialRequest }) {
