@@ -980,3 +980,90 @@ a.ov-patient:hover { color: var(--accent); text-decoration: underline; }
 .trq-hist-res { font-weight: 600; }
 .trq-hist-from { display: block; color: var(--muted); }
 .trq-history td { vertical-align: top; }
+
+/* ---------- Přetažení pacienta na aplikaci ---------- */
+.sub-link[draggable='true'] { cursor: grab; }
+.drop-target { position: relative; }
+body.dragging-patient .my-tile.drop-target { outline: 2px dashed rgba(47, 55, 232, 0.35); outline-offset: 2px; }
+body.dragging-patient .sub-item.drop-target { outline: 1.5px dashed rgba(47, 55, 232, 0.35); outline-offset: -1px; }
+.drop-target.drop-over { outline: 2px solid var(--accent) !important; background: rgba(47, 55, 232, 0.06); }
+.drop-hint { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 6px 12px; border-radius: 99px; background: var(--dark); color: #fff; font-size: 0.8rem; font-weight: 600; white-space: nowrap; pointer-events: none; }
+.myapps-tip { display: flex; align-items: center; gap: 6px; margin: 0 0 4px; }
+.launch-toast { position: fixed; z-index: 60; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-radius: var(--radius); background: rgba(255, 255, 255, 0.95); box-shadow: 0 12px 32px rgba(17, 20, 42, 0.18); }
+
+/* ---------- Workflow ---------- */
+.wf-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 14px; }
+.wf-card { padding: 18px 20px; display: flex; flex-direction: column; gap: 10px; border-radius: var(--radius); }
+.wf-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+.wf-card-head h3 { margin: 0; font-size: 1rem; }
+.wf-card p { margin: 0; }
+.wf-card-facts { margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: 0.85rem; }
+.wf-card-facts dt { color: var(--muted); font-size: 0.75rem; display: flex; align-items: center; gap: 4px; }
+.wf-card-facts dd { margin: 0; }
+.wf-card-actions { display: flex; gap: 8px; margin-top: auto; }
+.wf-card-new { align-items: center; justify-content: center; text-align: center; border: 1.5px dashed rgba(17, 20, 42, 0.18); background: rgba(255, 255, 255, 0.35); color: var(--text); min-height: 180px; }
+.wf-chain { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.wf-chain li { display: flex; align-items: center; }
+.wf-chain li + li::before { content: ''; width: 8px; height: 1.5px; background: rgba(17, 20, 42, 0.2); margin-right: 4px; }
+
+.wf-tool-icon { display: inline-grid; place-items: center; width: 26px; height: 26px; border-radius: 7px; flex-shrink: 0; background: var(--g-bg, #eceef3); color: var(--g-fg, #474c60); }
+.wf-tool-icon.sm { width: 22px; height: 22px; border-radius: 6px; }
+.wf-g-spoustece { --g-bg: #e3ebfa; --g-fg: #1d4b9e; }
+.wf-g-kontrola { --g-bg: #e2f4e7; --g-fg: #14632f; }
+.wf-g-rizeni { --g-bg: #fcf1d2; --g-fg: #765000; }
+.wf-g-komunikace { --g-bg: #eee7fb; --g-fg: #5a36a0; }
+.wf-g-data { --g-bg: #eceef3; --g-fg: #474c60; }
+
+.wf-builder { display: flex; flex-direction: column; gap: 14px; }
+.wf-top { padding: 14px 18px; display: flex; flex-direction: column; gap: 12px; border-radius: var(--radius); }
+.wf-toolbar { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.wf-spacer { flex: 1; }
+.wf-name { font: inherit; font-size: 1.05rem; font-weight: 600; padding: 6px 10px; border-radius: var(--radius-sm); border: 1px solid transparent; background: transparent; color: var(--text); max-width: 100%; }
+.wf-name:hover, .wf-name:focus { border-color: rgba(17, 20, 42, 0.15); background: #fff; outline: none; }
+.wf-apps { display: flex; align-items: center; gap: 12px; padding-top: 12px; border-top: 1px solid rgba(17, 20, 42, 0.08); }
+.wf-apps ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.wf-app { all: unset; display: grid; cursor: grab; border-radius: 8px; transition: transform 0.12s; }
+.wf-app:hover { transform: translateY(-2px); }
+.wf-app:focus-visible { outline: 2px solid var(--dark); outline-offset: 2px; }
+
+.wf-work { display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: 16px; align-items: start; }
+.wf-canvas-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; position: relative; }
+.wf-canvas { overflow: auto; border-radius: var(--radius); max-height: 640px; background-color: rgba(255, 255, 255, 0.45); background-image: radial-gradient(rgba(17, 20, 42, 0.13) 1px, transparent 1px); background-size: 20px 20px; }
+.wf-inner { position: relative; transform-origin: 0 0; }
+.wf-zoom-box { position: relative; }
+.wf-zoom { margin-left: auto; display: inline-flex; align-items: center; gap: 2px; padding: 3px; border-radius: var(--radius-sm); background: #fff; border: 1px solid rgba(17, 20, 42, 0.1); box-shadow: 0 2px 8px rgba(40, 48, 110, 0.1); z-index: 5; }
+.wf-zoom button { border: 0; background: none; padding: 5px 6px; border-radius: 4px; cursor: pointer; color: var(--text); display: grid; }
+.wf-zoom button:hover { background: rgba(17, 20, 42, 0.06); }
+.wf-zoom span { min-width: 44px; text-align: center; }
+.wf-toolbar .tile-btn { flex: none; padding: 7px 12px; }
+.wf-edges { position: absolute; inset: 0; overflow: visible; }
+.wf-edge-line { fill: none; stroke: #8a90a8; stroke-width: 1.6; }
+.wf-edge-line.temp { stroke: var(--accent); stroke-dasharray: 5 4; }
+.wf-edge-hit { fill: none; stroke: transparent; stroke-width: 14; cursor: pointer; pointer-events: stroke; }
+.wf-edge.sel .wf-edge-line { stroke: var(--dark); stroke-width: 2.2; }
+.wf-arrow { fill: #8a90a8; }
+.wf-arrow.sel { fill: var(--dark); }
+.wf-edge-label { font-size: 11px; font-weight: 600; fill: var(--muted); paint-order: stroke; stroke: #f5f6fb; stroke-width: 4px; }
+.wf-node { position: absolute; display: flex; align-items: center; gap: 9px; padding: 0 14px 0 10px; box-sizing: border-box; border-radius: 10px; background: #fff; border: 1px solid rgba(17, 20, 42, 0.1); box-shadow: 0 2px 8px rgba(40, 48, 110, 0.08); cursor: grab; user-select: none; touch-action: none; }
+.wf-node:active { cursor: grabbing; }
+.wf-node:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.wf-node.sel { border-color: var(--dark); box-shadow: 0 0 0 2px rgba(17, 20, 42, 0.12), 0 6px 18px rgba(40, 48, 110, 0.14); }
+.wf-node-text { display: flex; flex-direction: column; min-width: 0; line-height: 1.25; }
+.wf-node-text b { font-size: 0.82rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wf-node-note { font-size: 0.7rem; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wf-port-in, .wf-port-out { position: absolute; top: 50%; width: 12px; height: 12px; margin-top: -6px; border-radius: 50%; background: #fff; border: 2px solid #8a90a8; box-sizing: border-box; }
+.wf-port-in { left: -6px; }
+.wf-port-out { right: -7px; width: 14px; height: 14px; margin-top: -7px; cursor: crosshair; border-color: var(--accent); }
+.wf-port-out:hover { background: var(--accent); }
+.wf-empty { position: absolute; left: 50%; top: 45%; transform: translate(-50%, -50%); margin: 0; }
+.wf-inspect { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; padding: 10px 44px 10px 14px; border-radius: var(--radius); position: relative; }
+.wf-note-input { font: inherit; font-size: 0.85rem; padding: 6px 9px; border-radius: var(--radius-sm); border: 1px solid rgba(17, 20, 42, 0.15); background: #fff; min-width: 240px; flex: 1; }
+.wf-link-to { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
+.wf-link-to select { font: inherit; font-size: 0.85rem; padding: 5px 8px; border-radius: var(--radius-sm); border: 1px solid rgba(17, 20, 42, 0.15); background: #fff; color: var(--text); }
+.wf-inspect-close { position: absolute; right: 8px; top: 50%; transform: translateY(-50%); border: 0; background: none; color: var(--muted); cursor: pointer; padding: 6px; }
+.wf-status { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+.wf-status > span { display: inline-flex; align-items: center; gap: 5px; }
+.wf-tools .spec.wf-tool { cursor: grab; }
+.wf-tool-plus { margin-left: auto; color: var(--muted); opacity: 0; }
+.wf-tool:hover .wf-tool-plus, .wf-tool:focus-visible .wf-tool-plus { opacity: 1; }
+@media (max-width: 1000px) { .wf-work { grid-template-columns: 1fr; } }

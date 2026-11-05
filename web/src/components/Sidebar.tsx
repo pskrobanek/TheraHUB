@@ -7,6 +7,7 @@ import AppIcon from './AppIcon';
 import HospitalMark from './HospitalMark';
 import { FlowBranch } from './icons';
 import Link from './Link';
+import { patientDragProps, usePatientDrop } from '../lib/patientDrag';
 
 interface NavItem {
   id: SectionId;
@@ -43,6 +44,30 @@ interface Props {
 
 const alertsLabel = (n: number) => (n === 0 ? 'bez alertů' : n === 1 ? '1 alert' : n < 5 ? `${n} alerty` : `${n} alertů`);
 
+/** Otevřená aplikace v menu; lze na ni pustit pacienta. */
+function OpenAppItem({ app: a, active, onClose }: { app: StoreApp; active: boolean; onClose: () => void }) {
+  const o = overviews[a.id];
+  const { over, dropProps } = usePatientDrop(a);
+  return (
+    <div className={`sub-item${active ? ' active' : ''}${over ? ' drop-over' : ''} drop-target`} {...dropProps}>
+      <Link href={appHref(a.id)} className="sub-link sub-app">
+        <AppIcon app={a} size={22} />
+        <span>
+          <span className="sub-name">{a.name}</span>
+          {o && (
+            <span className="sub-meta">
+              {o.patients} pacientů · {alertsLabel(o.alerts)}
+            </span>
+          )}
+        </span>
+      </Link>
+      <button className="sub-close" onClick={onClose} aria-label={`Zavřít ${a.name}`}>
+        <X size={14} />
+      </button>
+    </div>
+  );
+}
+
 export default function Sidebar({ route, openPatients, onClosePatient, openApps, onCloseApp }: Props) {
   const shownApp = openAppId(route);
   const inApps = route.section === 'aplikace';
@@ -78,7 +103,7 @@ export default function Sidebar({ route, openPatients, onClosePatient, openApps,
           <div className="subnav">
             {openPatients.map((p) => (
               <div key={p.id} className={route.patientId === p.id ? 'sub-item active' : 'sub-item'}>
-                <Link href={patientHref(p.id, route.tab)} className="sub-link">
+                <Link href={patientHref(p.id, route.tab)} className="sub-link" {...patientDragProps(p.id, p.name)} title="Přetáhněte na aplikaci a otevře se s profilem pacienta">
                   <span className="sub-name">{p.name}</span>
                   <span className="sub-meta">
                     <span className="mono">{p.mainDiagnosis}</span> · <span className="mono">{p.birthNumber}</span>
@@ -99,27 +124,9 @@ export default function Sidebar({ route, openPatients, onClosePatient, openApps,
         />
         {openApps.length > 0 && (
           <div className="subnav">
-            {openApps.map((a) => {
-              const o = overviews[a.id];
-              return (
-                <div key={a.id} className={shownApp === a.id ? 'sub-item active' : 'sub-item'}>
-                  <Link href={appHref(a.id)} className="sub-link sub-app">
-                    <AppIcon app={a} size={22} />
-                    <span>
-                      <span className="sub-name">{a.name}</span>
-                      {o && (
-                        <span className="sub-meta">
-                          {o.patients} pacientů · {alertsLabel(o.alerts)}
-                        </span>
-                      )}
-                    </span>
-                  </Link>
-                  <button className="sub-close" onClick={() => onCloseApp(a.id)} aria-label={`Zavřít ${a.name}`}>
-                    <X size={14} />
-                  </button>
-                </div>
-              );
-            })}
+            {openApps.map((a) => (
+              <OpenAppItem key={a.id} app={a} active={shownApp === a.id} onClose={() => onCloseApp(a.id)} />
+            ))}
           </div>
         )}
 

@@ -1,4 +1,4 @@
-import { ArrowRight, LayoutGrid, Search, SlidersHorizontal, ShoppingBag as StoreIcon } from 'lucide-react';
+import { ArrowRight, LayoutGrid, MousePointerClick, Search, SlidersHorizontal, ShoppingBag as StoreIcon } from 'lucide-react';
 import { useState } from 'react';
 import AppDetailPage from './AppDetailPage';
 import StoreAppDetail from './StoreAppDetail';
@@ -15,6 +15,8 @@ import { appGroups } from '../data/appGroups';
 import { overviews } from '../data/overview';
 import { OpenBridge, RequestSeal } from '../components/icons';
 import { openExternalApp } from '../lib/launch';
+import { usePatientDrop } from '../lib/patientDrag';
+import type { StoreApp } from '../data/types';
 import { appHref, type AppTab } from '../lib/route';
 import { purchasedIds, storeApps } from '../data/store';
 import { hospitalDemo, isActive, trialRequests } from '../data/trial/requests';
@@ -83,9 +85,51 @@ export default function AppsPage({ sub, item, appId, appTab }: Props) {
   );
 }
 
+/** Dlaždice zakoupené aplikace; přetažením pacienta z menu se aplikace otevře rovnou s jeho profilem. */
+function AppTile({ app }: { app: StoreApp }) {
+  const o = overviews[app.id];
+  const { over, dropProps } = usePatientDrop(app);
+  return (
+    <article className={`my-tile drop-target${over ? ' drop-over' : ''}`} {...dropProps}>
+      <Link href={appHref(app.id)} className="my-tile-main">
+        <AppIcon app={app} size={44} />
+        <span className="my-tile-title">
+          <h3>{app.name}</h3>
+          <span className="my-tile-tagline">{app.tagline}</span>
+        </span>
+      </Link>
+      {o && (
+        <dl className="my-tile-stats">
+          {tileStats.map(({ key, label }) => (
+            <div key={key} title={`${label}: ${o[key]} (pruh vůči aplikaci s nejvyšším počtem)`}>
+              <dt>{label}</dt>
+              <span className="tile-bar" aria-hidden>
+                <span style={{ width: `${o[key] === 0 ? 0 : Math.max(4, (o[key] / maxOf[key]) * 100)}%` }} />
+              </span>
+              <dd>{o[key]}</dd>
+            </div>
+          ))}
+        </dl>
+      )}
+      <div className="my-tile-actions">
+        <Link href={appHref(app.id)} className="tile-btn">
+          <BrandDots size={12} /> Přehled
+        </Link>
+        <button className="tile-btn open" onClick={() => openExternalApp(app)}>
+          Otevřít <OpenBridge size={16} strokeWidth={1.75} aria-hidden />
+        </button>
+      </div>
+      {over && <span className="drop-hint">Otevřít s pacientem</span>}
+    </article>
+  );
+}
+
 function Purchased() {
   return (
     <div className="myapps">
+      <p className="myapps-tip muted small">
+        <MousePointerClick size={14} aria-hidden /> Tip: přetáhněte pacienta z menu vlevo na aplikaci – otevře se v novém okně rovnou s jeho profilem.
+      </p>
       {groups.map(({ id, label, apps }) => (
         <section key={id} className="myapps-group">
           <header className="myapps-head">
@@ -93,41 +137,9 @@ function Purchased() {
             <span className="muted small">{apps.length}</span>
           </header>
           <div className="my-tiles">
-            {apps.map((app) => {
-              const o = overviews[app.id];
-              return (
-                <article key={app.id} className="my-tile">
-                  <Link href={appHref(app.id)} className="my-tile-main">
-                    <AppIcon app={app} size={44} />
-                    <span className="my-tile-title">
-                      <h3>{app.name}</h3>
-                      <span className="my-tile-tagline">{app.tagline}</span>
-                    </span>
-                  </Link>
-                  {o && (
-                    <dl className="my-tile-stats">
-                      {tileStats.map(({ key, label }) => (
-                        <div key={key} title={`${label}: ${o[key]} (pruh vůči aplikaci s nejvyšším počtem)`}>
-                          <dt>{label}</dt>
-                          <span className="tile-bar" aria-hidden>
-                            <span style={{ width: `${o[key] === 0 ? 0 : Math.max(4, (o[key] / maxOf[key]) * 100)}%` }} />
-                          </span>
-                          <dd>{o[key]}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  )}
-                  <div className="my-tile-actions">
-                    <Link href={appHref(app.id)} className="tile-btn">
-                      <BrandDots size={12} /> Přehled
-                    </Link>
-                    <button className="tile-btn open" onClick={() => openExternalApp(app)}>
-                      Otevřít <OpenBridge size={16} strokeWidth={1.75} aria-hidden />
-                    </button>
-                  </div>
-                </article>
-              );
-            })}
+            {apps.map((app) => (
+              <AppTile key={app.id} app={app} />
+            ))}
           </div>
         </section>
       ))}

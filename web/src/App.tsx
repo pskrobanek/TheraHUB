@@ -3,11 +3,13 @@ import Sidebar from './components/Sidebar';
 import { activeApps as initialActive, patients } from './data/demo';
 import type { ActivePatientApp } from './data/types';
 import { purchasedIds, storeApps } from './data/store';
+import { LAUNCH_BLOCKED, openExternalApp } from './lib/launch';
 import { navigate, onNavigate, openAppId, parseHash, patientHref, type Route } from './lib/route';
 import AppsPage from './pages/AppsPage';
 import PatientPage from './pages/PatientPage';
 import Placeholder from './pages/Placeholder';
 import SettingsPage from './pages/SettingsPage';
+import WorkflowPage from './pages/WorkflowPage';
 
 // Bez adresy otevři prvního pacienta, ať prototyp hned ukazuje obsah.
 const routeOf = (hash: string): Route => (hash ? parseHash(hash) : { ...parseHash(hash), patientId: patients[0].id });
@@ -20,6 +22,16 @@ export default function App() {
   const [openAppIds, setOpenAppIds] = useState<string[]>([]);
 
   useEffect(() => onNavigate((href) => setRoute(routeOf(href))), []);
+
+  // Prohlížeč zablokoval okno (dlouhé tažení pacienta už není „kliknutí“): nabídni otevření tlačítkem.
+  const [blocked, setBlocked] = useState<{ appId: string; patientId: string } | null>(null);
+  useEffect(() => {
+    const on = (e: Event) => setBlocked((e as CustomEvent<{ appId: string; patientId: string }>).detail);
+    window.addEventListener(LAUNCH_BLOCKED, on);
+    return () => window.removeEventListener(LAUNCH_BLOCKED, on);
+  }, []);
+  const blockedApp = blocked && storeApps.find((a) => a.id === blocked.appId);
+  const blockedPatient = blocked && patients.find((p) => p.id === blocked.patientId);
 
   // Otevřená aplikace se přidá do menu jako podzáložka (podobně jako pacient).
   const shownAppId = openAppId(route);
@@ -86,6 +98,8 @@ export default function App() {
             />
           ) : route.section === 'aplikace' ? (
             <AppsPage sub={route.sub} item={route.item} appId={shownAppId} appTab={route.appTab} />
+          ) : route.section === 'workflow' ? (
+            <WorkflowPage sub={route.sub} item={route.item} />
           ) : route.section === 'nastaveni' ? (
             <SettingsPage sub={route.sub} />
           ) : (
@@ -93,6 +107,23 @@ export default function App() {
           )}
         </main>
       </div>
+      {blockedApp && blockedPatient && (
+        <div className="launch-toast glass" role="status">
+          <span>Prohlížeč zablokoval nové okno.</span>
+          <button
+            className="btn primary"
+            onClick={() => {
+              openExternalApp(blockedApp, blockedPatient);
+              setBlocked(null);
+            }}
+          >
+            Otevřít {blockedApp.name} – {blockedPatient.name}
+          </button>
+          <button className="link-btn" onClick={() => setBlocked(null)}>
+            Zavřít
+          </button>
+        </div>
+      )}
     </>
   );
 }
