@@ -20,6 +20,7 @@ import {
   Split,
   type LucideIcon,
 } from 'lucide-react';
+import { appApis } from './workflowApis';
 
 export type ToolGroup = 'spoustece' | 'kontrola' | 'rizeni' | 'komunikace' | 'data';
 export const toolGroupLabel: Record<ToolGroup, string> = {
@@ -69,6 +70,12 @@ export interface WfNode {
   y: number;
   /** Vlastní popisek kroku (např. „ePRO dotazník“). */
   note?: string;
+  /** Vybraná funkce z API aplikace (workflowApis.ts). */
+  module?: string;
+  /** Hodnoty vstupů: text, nebo odkaz na výstup dřívějšího kroku ve tvaru {{idKroku.klíč}}. */
+  config?: Record<string, string>;
+  /** Chování při chybě kroku. */
+  onError?: string;
 }
 
 export interface WfEdge {
@@ -102,15 +109,29 @@ export interface HospitalWorkflow extends WfGraph {
 
 export const statusLabel: Record<HospitalWorkflow['status'], string> = { aktivni: 'Aktivní', koncept: 'Koncept', pozastaveno: 'Pozastaveno' };
 
-const n = (id: string, kind: WfNode['kind'], ref: string, x: number, y: number, note?: string): WfNode => ({ id, kind, ref, x, y, note });
+const n = (id: string, kind: WfNode['kind'], ref: string, x: number, y: number, note?: string, module?: string): WfNode => ({ id, kind, ref, x, y, note, module });
 const e = (from: string, to: string, label?: string): WfEdge => ({ from, to, label });
+
+/** Výchozí funkce aplikace v ukázkových datech: krok před Podmínkou dodává data (spouštěč), jinak akce. */
+function withDefaults<T extends WfGraph>(g: T): T {
+  return {
+    ...g,
+    nodes: g.nodes.map((nd) => {
+      const api = nd.kind === 'app' ? appApis[nd.ref] : undefined;
+      if (!api || nd.module) return nd;
+      const feedsCondition = g.edges.some((ed) => ed.from === nd.id && g.nodes.find((x) => x.id === ed.to)?.ref === 'podminka');
+      const m = api.modules.find((x) => x.kind === (feedsCondition ? 'trigger' : 'action')) ?? api.modules[0];
+      return { ...nd, module: m.id };
+    }),
+  };
+}
 
 /** Aplikace zapojené do grafu. */
 export const appsOf = (g: WfGraph) => [...new Set(g.nodes.filter((x) => x.kind === 'app').map((x) => x.ref))];
 
 // ---------- Workflows nemocnice (počty zapojení sedí s „Workflows“ na dlaždicích Moje aplikace) ----------
 
-export const hospitalWorkflows: HospitalWorkflow[] = [
+export const hospitalWorkflows: HospitalWorkflow[] = ([
   {
     id: 'rt-hlava-krk',
     name: 'Péče během radioterapie hlavy a krku',
@@ -145,7 +166,7 @@ export const hospitalWorkflows: HospitalWorkflow[] = [
     updated: '28. 10.',
     nodes: [
       n('a', 'tool', 'nis', 20, 150, 'Nová onkologická diagnóza'),
-      n('b', 'app', 'oncoready', 220, 150, 'Prescreening'),
+      n('b', 'app', 'oncoready', 220, 150, 'Prescreening', 'prescreening'),
       n('c', 'app', 'klid', 420, 60, 'Screening distresu'),
       n('d', 'tool', 'kontrola', 420, 230, 'Lékař potvrdí vhodnost'),
       n('e', 'tool', 'souhlas', 620, 230),
@@ -211,11 +232,11 @@ export const hospitalWorkflows: HospitalWorkflow[] = [
     ],
     edges: [e('a', 'b'), e('b', 'c'), e('c', 'd', 'ano'), e('c', 'e', 'ne')],
   },
-];
+] as HospitalWorkflow[]).map(withDefaults);
 
 // ---------- Šablony TheraHUB (výchozí body; nemocnice si je upraví) ----------
 
-export const templates: WfTemplate[] = [
+export const templates: WfTemplate[] = ([
   {
     id: 'sab-epro',
     name: 'ePRO s upozorněním lékaře',
@@ -275,4 +296,4 @@ export const templates: WfTemplate[] = [
     ],
     edges: [e('a', 'b'), e('b', 'c'), e('b', 'd'), e('b', 'e'), e('c', 'f'), e('d', 'f'), e('e', 'f'), e('f', 'g')],
   },
-];
+] as WfTemplate[]).map(withDefaults);

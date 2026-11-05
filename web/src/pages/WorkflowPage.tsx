@@ -1,5 +1,5 @@
 // Sekce Workflow: Přehled workflows nemocnice, Šablony TheraHUB a Vytvořit (editor na plátně).
-import { ArrowRight, ClipboardList, LayoutTemplate, Pencil, Plus, Users } from 'lucide-react';
+import { ArrowRight, ClipboardList, LayoutTemplate, Pencil, Plus } from 'lucide-react';
 import { useState } from 'react';
 import AppIcon from '../components/AppIcon';
 import { FlowBranch } from '../components/icons';
@@ -103,49 +103,51 @@ function Chain({ g }: { g: WfGraph }) {
 
 function Overview({ list }: { list: HospitalWorkflow[] }) {
   return (
-    <div className="wf-cards">
-      {list.map((w) => {
-        const apps = appsOf(w);
-        return (
-          <article key={w.id} className="wf-card glass">
-            <header className="wf-card-head">
-              <h3>{w.name}</h3>
-              <span className={`st-chip compact tone-${w.status === 'aktivni' ? 'match' : w.status === 'koncept' ? 'na' : 'wait'}`}>{statusLabel[w.status]}</span>
-            </header>
-            <p className="muted small">{w.desc}</p>
-            <Chain g={w} />
-            <dl className="wf-card-facts">
-              <div>
-                <dt>Aplikace</dt>
-                <dd>{apps.length ? apps.map((id) => appById[id]?.name).join(', ') : 'jen nástroje'}</dd>
-              </div>
-              <div>
-                <dt>
-                  <Users size={13} aria-hidden /> Pacienti
-                </dt>
-                <dd>{w.patients}</dd>
-              </div>
-              <div>
-                <dt>Spravuje</dt>
-                <dd>{w.owner}</dd>
-              </div>
-              <div>
-                <dt>Upraveno</dt>
-                <dd>{w.updated}</dd>
-              </div>
-            </dl>
-            <div className="wf-card-actions">
-              <Link href={`#/workflow/vytvorit/${w.id}`} className="tile-btn">
-                <Pencil size={14} aria-hidden /> Upravit
-              </Link>
-            </div>
-          </article>
-        );
-      })}
-      <Link href="#/workflow/vytvorit" className="wf-card wf-card-new glass">
-        <Plus size={22} aria-hidden />
-        <b>Vytvořit workflow</b>
-        <span className="muted small">Prázdné plátno, nebo začněte ze šablony.</span>
+    <div className="wf-list glass">
+      <table className="trq-table wf-table">
+        <thead>
+          <tr>
+            <th>Workflow</th>
+            <th>Kroky</th>
+            <th>Pacienti</th>
+            <th>Spravuje</th>
+            <th>Upraveno</th>
+            <th>Stav</th>
+            <th aria-label="Akce" />
+          </tr>
+        </thead>
+        <tbody>
+          {list.map((w) => (
+            <tr key={w.id} className="wf-row" onClick={() => navigate(`#/workflow/vytvorit/${w.id}`)}>
+              <td>
+                <Link href={`#/workflow/vytvorit/${w.id}`} className="wf-row-name">
+                  <b>{w.name}</b>
+                  <span className="muted small">{w.desc}</span>
+                </Link>
+              </td>
+              <td>
+                <Chain g={w} />
+                <span className="muted small">
+                  {w.nodes.length} kroků · {appsOf(w).length} aplikací
+                </span>
+              </td>
+              <td className="mono">{w.patients}</td>
+              <td className="small">{w.owner}</td>
+              <td className="nowrap small">{w.updated}</td>
+              <td>
+                <span className={`st-chip compact tone-${w.status === 'aktivni' ? 'match' : w.status === 'koncept' ? 'na' : 'wait'}`}>{statusLabel[w.status]}</span>
+              </td>
+              <td className="wf-row-act">
+                <Link href={`#/workflow/vytvorit/${w.id}`} className="tile-btn">
+                  <Pencil size={14} aria-hidden /> Upravit
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <Link href="#/workflow/vytvorit" className="wf-list-new">
+        <Plus size={15} aria-hidden /> Vytvořit workflow – prázdné plátno, nebo začněte ze šablony
       </Link>
     </div>
   );
@@ -153,25 +155,43 @@ function Overview({ list }: { list: HospitalWorkflow[] }) {
 
 function Templates() {
   return (
-    <div className="wf-cards">
-      {templates.map((t) => (
-        <article key={t.id} className="wf-card glass">
-          <header className="wf-card-head">
-            <h3>{t.name}</h3>
-            <span className="st-chip compact tone-review">{t.area}</span>
-          </header>
-          <p className="muted small">{t.desc}</p>
-          <Chain g={t} />
-          <p className="muted small">
-            {t.nodes.length} kroků · {appsOf(t).length ? `aplikace: ${appsOf(t).map((id) => appById[id]?.name).join(', ')}` : 'jen obecné nástroje'}
-          </p>
-          <div className="wf-card-actions">
-            <Link href={`#/workflow/vytvorit/${t.id}`} className="tile-btn open">
-              Použít šablonu <ArrowRight size={14} aria-hidden />
-            </Link>
-          </div>
-        </article>
-      ))}
+    <div className="wf-list glass">
+      <table className="trq-table wf-table">
+        <thead>
+          <tr>
+            <th>Šablona</th>
+            <th>Oblast</th>
+            <th>Kroky</th>
+            <th>Aplikace</th>
+            <th aria-label="Akce" />
+          </tr>
+        </thead>
+        <tbody>
+          {templates.map((t) => (
+            <tr key={t.id} className="wf-row" onClick={() => navigate(`#/workflow/vytvorit/${t.id}`)}>
+              <td>
+                <span className="wf-row-name">
+                  <b>{t.name}</b>
+                  <span className="muted small">{t.desc}</span>
+                </span>
+              </td>
+              <td>
+                <span className="st-chip compact tone-review">{t.area}</span>
+              </td>
+              <td>
+                <Chain g={t} />
+                <span className="muted small">{t.nodes.length} kroků</span>
+              </td>
+              <td className="small">{appsOf(t).length ? appsOf(t).map((id) => appById[id]?.name).join(', ') : <span className="muted">jen obecné nástroje</span>}</td>
+              <td className="wf-row-act">
+                <Link href={`#/workflow/vytvorit/${t.id}`} className="tile-btn open">
+                  Použít <ArrowRight size={14} aria-hidden />
+                </Link>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }
