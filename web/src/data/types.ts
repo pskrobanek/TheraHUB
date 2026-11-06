@@ -44,7 +44,7 @@ export interface CatalogApp {
 
 export type IconName =
   | 'onco' | 'heart' | 'scribe' | 'droplet' | 'leaf' | 'camera' | 'smile' | 'gauge' | 'pill' | 'watch'
-  | 'bed' | 'scan' | 'activity' | 'database' | 'calendar';
+  | 'bed' | 'scan' | 'activity' | 'database' | 'calendar' | 'chart' | 'team' | 'receipt';
 
 /** Splněno / částečně / nesplněno. */
 export type Check = 'ok' | 'partial' | 'no';

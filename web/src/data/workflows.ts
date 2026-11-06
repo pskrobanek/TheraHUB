@@ -232,6 +232,30 @@ export const hospitalWorkflows: HospitalWorkflow[] = ([
     ],
     edges: [e('a', 'b'), e('b', 'c'), e('c', 'd', 'ano'), e('c', 'e', 'ne')],
   },
+  {
+    id: 'centrova-leciva',
+    name: 'Predikce centrových léčiv',
+    desc: 'Rozhodnutí MDT, stav pacientů a aktuální úhrady denně přepočítají predikci čerpání center ONKO, PNEU a NEU do konce roku.',
+    status: 'aktivni',
+    patients: 796,
+    owner: 'Ekonomika a lékárna',
+    updated: '5. 11.',
+    nodes: [
+      n('a', 'tool', 'plan', 20, 150, 'Denně 6:00'),
+      { ...n('b', 'app', 'mdtsummary', 220, 40, 'Nová rozhodnutí o CL', 'rozhodnuti'), config: { centrum: 'ONKO' } },
+      n('c', 'app', 'oncoready', 220, 150, 'Přerušení léčby pro toxicitu', 'preruseni'),
+      n('d', 'app', 'vzpuptodate', 220, 260, 'Ceny a úhrady k datu', 'uhrada'),
+      {
+        ...n('e', 'app', 'predikcecl', 430, 150, 'Všechna centra', 'prepocet'),
+        config: { centrum: 'Všechna centra', nove: '{{b.lecba}}', preruseni: '{{c.cykly}}', cena: '{{d.uhrada}}' },
+      },
+      { ...n('f', 'tool', 'podminka', 630, 150, 'Predikce ≥ 95 % limitu?'), config: { pole: '{{e.procento}}', operator: '≥', prah: '95' } },
+      { ...n('g', 'tool', 'upozorneni', 830, 60, 'Vedení centra a ekonomika'), config: { komu: 'Primář', priorita: 'Vysoká', text: '{{e.rozdil}}' } },
+      { ...n('h', 'tool', 'kontrola', 1030, 60, 'Vedení centra posoudí opatření'), config: { resitel: 'Primář', lhuta: '3 pracovní dny', podklady: '{{e.predikce}}' } },
+      { ...n('i', 'tool', 'report', 830, 240, 'Měsíční report čerpání'), config: { prijemce: 'Vedení oddělení', obdobi: 'Měsíc', obsah: '{{e.predikce}}' } },
+    ],
+    edges: [e('a', 'b'), e('a', 'c'), e('a', 'd'), e('b', 'e'), e('c', 'e'), e('d', 'e'), e('e', 'f'), e('f', 'g', 'ano'), e('f', 'i', 'ne'), e('g', 'h'), e('h', 'i')],
+  },
 ] as HospitalWorkflow[]).map(withDefaults);
 
 // ---------- Šablony TheraHUB (výchozí body; nemocnice si je upraví) ----------

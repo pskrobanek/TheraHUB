@@ -2,6 +2,8 @@
 // Každá aplikace dodává vlastní souhrnný widget stejně jako widget u pacienta;
 // data zůstávají v nemocnici, TheraHUB je jen zobrazuje.
 
+import { centers, fmtMil, fmtPct, stateOf, statusLabel } from './centralDrugs';
+
 export type Severity = 'critical' | 'warning' | 'info';
 
 export interface OverviewRow {
@@ -46,11 +48,22 @@ export interface AppOverview {
 
 const week = ['Po', 'Út', 'St', 'Čt', 'Pá', 'So', 'Ne'];
 
+// Predikce CL čte stejná ukázková data jako okno aplikace.
+const clRows: OverviewRow[] = centers.map((c) => {
+  const st = stateOf(c);
+  return {
+    patient: `${c.code} – ${c.name}`,
+    detail: `Predikce k 31. 12.: ${fmtPct(st.pctForecast)} limitu (${st.diff > 0 ? '+' : '−'}${fmtMil(Math.abs(st.diff))})`,
+    meta: statusLabel[st.status],
+    severity: st.status === 'over' ? 'critical' : st.status === 'risk' ? 'warning' : 'info',
+  };
+});
+
 export const overviews: Record<string, AppOverview> = {
   oncoready: {
     appId: 'oncoready',
     patients: 46,
-    workflows: 3,
+    workflows: 4,
     studies: 2,
     alerts: 3,
     stat: { label: 'Vyplněnost', value: '81 %' },
@@ -301,6 +314,69 @@ export const overviews: Record<string, AppOverview> = {
     extra: [
       { label: 'Synchronizace dnes', value: '15' },
       { label: 'Pod 3 000 kroků', value: '4' },
+    ],
+  },
+  predikcecl: {
+    appId: 'predikcecl',
+    patients: 796,
+    workflows: 1,
+    studies: 0,
+    alerts: 2,
+    stat: { label: 'Predikce k 31. 12.', value: `${fmtPct((centers.reduce((a, c) => a + stateOf(c).forecast, 0) / centers.reduce((a, c) => a + c.limit, 0)) * 100)} limitů` },
+    widget: { kind: 'list', title: 'Centra – predikce do konce roku (ukázka)', rows: clRows },
+    last: { patient: 'ONKO', text: 'predikce přepočtena po MDT', time: '07:05' },
+    actions: ['Přehled center', 'Exportovat report'],
+    extra: [
+      { label: 'Center ve sledování', value: '3' },
+      { label: 'Přesnost predikce loni', value: '± 2,8 %' },
+      { label: 'Poslední přepočet', value: 'dnes 07:05' },
+    ],
+  },
+  mdtsummary: {
+    appId: 'mdtsummary',
+    patients: 138,
+    workflows: 1,
+    studies: 1,
+    alerts: 1,
+    stat: { label: 'MDT tento týden', value: '4 jednání' },
+    widget: {
+      kind: 'list',
+      title: 'Čeká na podpis souhrnu',
+      rows: [
+        { patient: 'Karel Dvořák', detail: 'MDT hlava a krk: pokračovat v chemoradioterapii', meta: 'dnes', severity: 'warning' },
+        { patient: 'Marie Novotná', detail: 'MDT prs: zahájit imunoterapii (centrové léčivo)', meta: 'včera', severity: 'warning' },
+        { patient: 'Tomáš Král', detail: 'MDT GIT: kontrola za 3 měsíce', meta: 'včera', severity: 'info' },
+      ],
+    },
+    last: { patient: 'Marie Novotná', text: 'souhrn MDT připraven', time: '16:40' },
+    actions: ['Připravit MDT', 'Souhrny k podpisu'],
+    extra: [
+      { label: 'Rozhodnutí za říjen', value: '96' },
+      { label: 'Z toho centrová léčiva', value: '21' },
+      { label: 'Ø příprava podkladů', value: '6 min' },
+    ],
+  },
+  vzpuptodate: {
+    appId: 'vzpuptodate',
+    patients: 0,
+    workflows: 1,
+    studies: 0,
+    alerts: 2,
+    stat: { label: 'Změny za měsíc', value: '7' },
+    widget: {
+      kind: 'list',
+      title: 'Změny cen a úhrad s dopadem (ukázka)',
+      rows: [
+        { patient: 'Cílená léčba (2 přípravky)', detail: 'Nižší úhrada od 1. 11.', meta: 'ONKO', severity: 'warning' },
+        { patient: 'Léčba roztroušené sklerózy', detail: 'Nové generikum od 1. 12.', meta: 'NEU', severity: 'info' },
+        { patient: 'Biologika u astmatu', detail: 'Beze změny do konce roku', meta: 'PNEU', severity: 'info' },
+      ],
+    },
+    last: { patient: 'Číselník léčiv', text: 'aktualizován', time: '06:00' },
+    actions: ['Přehled změn', 'Nastavit hlídání'],
+    extra: [
+      { label: 'Sledovaných přípravků', value: '214' },
+      { label: 'Poslední aktualizace', value: 'dnes 06:00' },
     ],
   },
 };

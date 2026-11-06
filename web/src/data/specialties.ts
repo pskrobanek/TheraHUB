@@ -12,6 +12,7 @@ import {
   Ribbon,
   ScanLine,
   Utensils,
+  Wallet,
   type LucideIcon,
 } from 'lucide-react';
 
@@ -35,6 +36,7 @@ export const specialties: Record<string, Specialty> = {
   Dokumentace: { icon: FileText, color: '#475569' },
   Výzkum: { icon: Microscope, color: '#0f766e' },
   Provoz: { icon: Building2, color: '#334155' },
+  Ekonomika: { icon: Wallet, color: '#0f766e' },
 };
 
 const fallback: Specialty = { icon: Building2, color: '#475569' };

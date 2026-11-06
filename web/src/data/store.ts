@@ -259,9 +259,58 @@ export const storeApps: StoreApp[] = [
       },
     },
   },
+  {
+    id: 'predikcecl', name: 'Predikce CL', tagline: 'Predikce spotřeby centrových léčiv', category: 'Ekonomika', icon: 'chart', tint: '#0f766e',
+    store: {
+      pitch: 'Predikuje čerpání centrových léčiv v centrech nemocnice do konce roku a včas upozorní, když hrozí překročení limitu. Vychází z rozhodnutí MDT, stavu pacientů a aktuálních úhrad.',
+      audience: ['admin', 'lekar'],
+      regulatory: { kind: 'admin', label: 'Administrativní' }, ai: 'none',
+      trial: { days: 60, kpis: ['Odchylka predikce k 31. 12. ≤ 3 %', 'Upozornění na překročení ≥ 2 měsíce předem'] },
+      price: { amount: 24000, per: 'nemocnice', period: 'měsíc' },
+      rating: 4.6, reviews: 9, hospitals: 4,
+      compliance: {
+        hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 70,
+        therahub: { widget: true, science: false, workflow: true },
+        intersystems: 'ok', euStandard: 'partial', aiAssociation: null, society: null,
+      },
+    },
+  },
+  {
+    id: 'mdtsummary', name: 'MDT summary', tagline: 'Souhrny multidisciplinárních týmů', category: 'Onkologie', icon: 'team', tint: '#4338ca',
+    store: {
+      pitch: 'Připraví podklady pro multidisciplinární tým a z jednání strukturovaný souhrn rozhodnutí o léčbě do NIS. Lékař souhrn zkontroluje a podepíše.',
+      audience: ['lekar'],
+      regulatory: { kind: 'admin', label: 'Administrativní · AI' }, ai: 'guided',
+      trial: { days: 60, kpis: ['Čas přípravy MDT −40 %', '≥ 90 % rozhodnutí strukturovaně v NIS'] },
+      price: { amount: 12000, per: 'nemocnice', period: 'měsíc' },
+      rating: 4.5, reviews: 12, hospitals: 6,
+      compliance: {
+        hospital: { legal: 'ok', gdpr: 'ok', security: 'partial' }, nis: 80,
+        therahub: { widget: true, science: true, workflow: true },
+        intersystems: 'ok', euStandard: 'ok', aiAssociation: 'partial', society: null,
+      },
+    },
+  },
+  {
+    id: 'vzpuptodate', name: 'VZP uptodate', tagline: 'Aktuální ceny a úhrady léčiv', category: 'Farmakoterapie', icon: 'receipt', tint: '#0e7490',
+    store: {
+      pitch: 'Hlídá změny cen, úhrad a podmínek úhrady léčiv z veřejných číselníků a upozorní na dopad u pacientů a center nemocnice.',
+      audience: ['admin', 'lekar'],
+      regulatory: { kind: 'admin', label: 'Administrativní' }, ai: 'none',
+      trial: { days: 30, kpis: ['Změny úhrad zachycené do 1 dne od zveřejnění'] },
+      price: { amount: 2500, per: 'nemocnice', period: 'měsíc' },
+      rating: 4.4, reviews: 17, hospitals: 11,
+      compliance: {
+        hospital: { legal: 'ok', gdpr: 'ok', security: 'ok' }, nis: 60,
+        therahub: { widget: true, science: false, workflow: true },
+        intersystems: 'partial', euStandard: 'no', aiAssociation: null, society: null,
+      },
+    },
+  },
 ];
 
 /** Aplikace, které má nemocnice zakoupené (licencované). */
 export const purchasedIds = new Set([
   'oncoready', 'toxitrack', 'cardiowatch', 'visitscribe', 'polykej', 'nutriplan', 'dermafoto', 'klid', 'bolestdenik', 'lekyhlidac', 'krokomer',
+  'predikcecl', 'mdtsummary', 'vzpuptodate',
 ]);

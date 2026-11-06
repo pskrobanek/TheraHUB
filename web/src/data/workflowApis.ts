@@ -61,6 +61,11 @@ export const appApis: Record<string, AppApi> = {
       act('prescreening', 'Prescreening do studie', 'Vyhodnotí, zda pacient může odpovídat kritériím otevřené studie.', [
         { key: 'studie', label: 'Studie', type: 'select', required: true, options: ['Otevřené studie oddělení', 'Konkrétní studie (vybrat)'] },
       ], [{ key: 'vhodny', label: 'Může být vhodný', type: 'bool' }, { key: 'duvody', label: 'Důvody', type: 'text' }]),
+      {
+        id: 'preruseni', kind: 'search', label: 'Přerušení a odklady léčby', desc: 'Souhrn za oddělení: kolik cyklů bylo odloženo nebo přerušeno pro toxicitu.',
+        inputs: [{ key: 'obdobi', label: 'Období', type: 'select', options: ['Posledních 7 dní', 'Posledních 30 dní'] }],
+        outputs: [{ key: 'pacienti', label: 'Pacienti s přerušením', type: 'number' }, { key: 'cykly', label: 'Odložené cykly', type: 'number', fhir: 'CarePlan' }],
+      },
       find('posledni-vysledky', 'Získat poslední výsledky', 'Načte poslední vyplněný dotazník a trend.', [], [{ key: 'skore', label: 'Skóre', type: 'number', fhir: 'Observation' }, { key: 'trend', label: 'Trend', type: 'select', options: ['zlepšení', 'beze změny', 'zhoršení'] }]),
     ],
   },
@@ -169,6 +174,59 @@ export const appApis: Record<string, AppApi> = {
         { key: 'kroky', label: 'Kroky', type: 'number', fhir: 'Observation' },
         { key: 'minuty', label: 'Aktivní minuty', type: 'number', fhir: 'Observation' },
       ]),
+    ],
+  },
+  mdtsummary: {
+    ...smart(['patient/CarePlan.read', 'patient/Condition.read', 'patient/DocumentReference.write']),
+    modules: [
+      trig('rozhodnuti', 'Nové rozhodnutí MDT', 'Spustí se po podpisu souhrnu z jednání multidisciplinárního týmu.', [
+        { key: 'lecba', label: 'Rozhodnutá léčba', type: 'text', fhir: 'CarePlan' },
+        { key: 'centrove', label: 'Centrové léčivo', type: 'bool', fhir: 'MedicationRequest' },
+        { key: 'centrum', label: 'Centrum', type: 'select', options: ['ONKO', 'PNEU', 'NEU'] },
+        { key: 'cykly', label: 'Plánovaný počet cyklů', type: 'number', fhir: 'CarePlan' },
+      ]),
+      act('podklady', 'Připravit podklady pro MDT', 'Souhrn pacienta z NIS a aplikací před jednáním.', [{ key: 'jednani', label: 'Jednání', type: 'select', options: ['Nejbližší MDT oddělení', 'Vybrat termín'] }], [{ key: 'podklad', label: 'Podklad', type: 'file', fhir: 'DocumentReference' }]),
+    ],
+  },
+  vzpuptodate: {
+    connection: 'Veřejné číselníky léčiv a úhrad + SMART on FHIR přes TheraHUB Node',
+    scopes: ['system/Medication.read', 'system/MedicationKnowledge.read'],
+    modules: [
+      {
+        id: 'uhrada', kind: 'search', label: 'Aktuální cena a úhrada', desc: 'Najde platnou cenu, úhradu a podmínky úhrady léčiva.',
+        inputs: [{ key: 'lecba', label: 'Léčivo / léčba', type: 'text', required: true, fhir: 'Medication' }, { key: 'k-datu', label: 'K datu', type: 'date' }],
+        outputs: [{ key: 'cena', label: 'Cena za cyklus', type: 'number', fhir: 'MedicationKnowledge' }, { key: 'uhrada', label: 'Úhrada', type: 'number', fhir: 'MedicationKnowledge' }, { key: 'podminky', label: 'Podmínky úhrady', type: 'text' }],
+      },
+      {
+        id: 'zmena', kind: 'trigger', label: 'Změna ceny nebo úhrady', desc: 'Spustí se, když se změní cena nebo úhrada sledovaného léčiva.',
+        inputs: [{ key: 'skupina', label: 'Sledovat', type: 'select', options: ['Centrová léčiva nemocnice', 'Vše předepisované'] }],
+        outputs: [{ key: 'lecivo', label: 'Léčivo', type: 'text', fhir: 'Medication' }, { key: 'platnost', label: 'Platnost od', type: 'date' }, { key: 'zmena', label: 'Změna úhrady (%)', type: 'number' }],
+      },
+    ],
+  },
+  predikcecl: {
+    ...smart(['system/MedicationAdministration.read', 'system/CarePlan.read']),
+    modules: [
+      // Pracuje s agregovanými částkami za centrum, ne s jedním pacientem – bez vstupu Pacient.
+      {
+        id: 'prepocet', kind: 'action', label: 'Přepočítat predikci', desc: 'Přepočte predikci čerpání centra do konce roku.',
+        inputs: [
+          { key: 'centrum', label: 'Centrum', type: 'select', required: true, options: ['ONKO', 'PNEU', 'NEU', 'Všechna centra'] },
+          { key: 'nove', label: 'Nové indikace', type: 'text', hint: 'Namapujte z MDT summary.' },
+          { key: 'preruseni', label: 'Přerušení léčby', type: 'text', hint: 'Namapujte z OncoReady.' },
+          { key: 'cena', label: 'Cena a úhrada', type: 'text', hint: 'Namapujte z VZP uptodate.' },
+        ],
+        outputs: [
+          { key: 'predikce', label: 'Predikce k 31. 12. (mil. Kč)', type: 'number' },
+          { key: 'procento', label: '% ročního limitu', type: 'number' },
+          { key: 'rozdil', label: 'Rozdíl proti limitu (mil. Kč)', type: 'number' },
+        ],
+      },
+      {
+        id: 'riziko', kind: 'trigger', label: 'Riziko překročení limitu', desc: 'Spustí se, když predikce centra přesáhne nastavený podíl limitu.',
+        inputs: [{ key: 'prah', label: 'Upozornit od (% limitu)', type: 'number', hint: 'Např. 95.' }],
+        outputs: [{ key: 'centrum', label: 'Centrum', type: 'text' }, { key: 'procento', label: '% ročního limitu', type: 'number' }, when],
+      },
     ],
   },
 };

@@ -3,6 +3,7 @@ import {
   BedDouble,
   CalendarClock,
   Camera,
+  ChartLine,
   Database,
   Droplet,
   Gauge,
@@ -10,9 +11,11 @@ import {
   Leaf,
   Loader,
   Pill,
+  ReceiptText,
   ScanLine,
   Smile,
   Sparkles,
+  UsersRound,
   Watch,
   type LucideIcon,
 } from 'lucide-react';
@@ -35,6 +38,9 @@ const icons: Record<IconName, LucideIcon> = {
   activity: Activity,
   database: Database,
   calendar: CalendarClock,
+  chart: ChartLine,
+  team: UsersRound,
+  receipt: ReceiptText,
 };
 
 interface Props {

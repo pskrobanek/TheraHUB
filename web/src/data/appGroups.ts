@@ -24,7 +24,12 @@ export const appGroups: AppGroup[] = [
   {
     id: 'administrativa',
     label: 'Dokumentace a administrativa',
-    appIds: ['visitscribe'],
+    appIds: ['visitscribe', 'mdtsummary'],
+  },
+  {
+    id: 'ekonomika',
+    label: 'Ekonomika a léčiva',
+    appIds: ['predikcecl', 'vzpuptodate'],
   },
   {
     id: 'provoz',

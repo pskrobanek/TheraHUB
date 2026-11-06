@@ -2,6 +2,7 @@
 // běží u dodavatele a připojují se přes API (SMART on FHIR) v kontextu nemocnice a uživatele.
 import { currentUser, hospital } from '../data/demo';
 import type { CatalogApp, Patient } from '../data/types';
+import { predikceClHtml } from './predikceClWindow';
 
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 
@@ -28,6 +29,12 @@ export function openExternalApp(app: CatalogApp, patient?: Patient): boolean {
     if (patient) window.dispatchEvent(new CustomEvent(LAUNCH_BLOCKED, { detail: { appId: app.id, patientId: patient.id } }));
     else alert(`Prohlížeč zablokoval nové okno. Povolte vyskakovací okna a zkuste znovu otevřít ${app.name}.`);
     return false;
+  }
+  // Predikce CL má vlastní ukázkové okno s grafy (nejde o aplikaci pro jednoho pacienta).
+  if (app.id === 'predikcecl') {
+    w.document.write(predikceClHtml(currentUser.name));
+    w.document.close();
+    return true;
   }
   w.document.write(`<!doctype html><html lang="cs"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(app.name)}${patient ? ` – ${esc(patient.name)}` : ''} – spuštění z TheraHUB</title>
