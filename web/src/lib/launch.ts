@@ -3,6 +3,8 @@
 import { currentUser, hospital } from '../data/demo';
 import type { CatalogApp, Patient } from '../data/types';
 import { predikceClHtml } from './predikceClWindow';
+import { nodeLabel, workflowsForApp } from '../data/workflowStore';
+import { statusLabel } from '../data/workflows';
 
 const esc = (s: string) => s.replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]!);
 
@@ -32,7 +34,13 @@ export function openExternalApp(app: CatalogApp, patient?: Patient): boolean {
   }
   // Predikce CL má vlastní ukázkové okno s grafy (nejde o aplikaci pro jednoho pacienta).
   if (app.id === 'predikcecl') {
-    w.document.write(predikceClHtml(currentUser.name));
+    const linked = workflowsForApp(app.id).map((wf) => ({
+      name: wf.name,
+      status: statusLabel[wf.status],
+      // Aplikace v pořadí, jak jdou zleva doprava.
+      apps: [...new Set([...wf.nodes].sort((a, b) => a.x - b.x).filter((nd) => nd.kind === 'app').map(nodeLabel))],
+    }));
+    w.document.write(predikceClHtml(currentUser.name, linked));
     w.document.close();
     return true;
   }

@@ -1120,3 +1120,33 @@ body.dragging-patient .sub-item.drop-target { outline: 1.5px dashed rgba(47, 55,
 .wf-row-act { text-align: right; white-space: nowrap; }
 .wf-row-act .tile-btn { display: inline-flex; }
 .wf-list-new { display: flex; align-items: center; gap: 6px; padding: 12px 10px 8px; color: var(--accent); font-weight: 600; font-size: 0.88rem; text-decoration: none; }
+
+/* ---------- Detail aplikace – záložka Workflow ---------- */
+.awf { display: flex; flex-direction: column; gap: 14px; }
+.awf-card { display: flex; flex-direction: column; gap: 12px; }
+.awf-head { display: flex; align-items: flex-start; gap: 12px; }
+.awf-head > div { flex: 1; min-width: 0; }
+.awf-head h3 { margin: 0 0 2px; font-size: 1.02rem; }
+.awf-head h3 a { color: inherit; text-decoration: none; }
+.awf-head h3 a:hover { text-decoration: underline; }
+.awf-head p { margin: 0; }
+.awf-head .tile-btn { flex: none; display: inline-flex; padding: 7px 12px; }
+.awf-chain { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.awf-chain li { display: flex; align-items: center; }
+.awf-chain li + li::before { content: ''; width: 8px; height: 1.5px; background: rgba(17, 20, 42, 0.2); margin-right: 4px; }
+.awf-step { display: inline-flex; border-radius: 8px; padding: 2px; }
+.awf-step.own { box-shadow: 0 0 0 2px var(--accent); background: #fff; }
+.awf-card > p { margin: 0; }
+.awf-role { border-top: 1px solid rgba(17, 20, 42, 0.08); padding-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+.awf-role-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.awf-desc { margin: 0; }
+.awf-io { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.awf-io h4 { margin: 0 0 6px; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+.awf-io ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.awf-io li { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.awf-io p { margin: 0 0 6px; }
+.awf-val { font-weight: 600; }
+.awf-next { display: flex; align-items: center; gap: 5px; margin: 8px 0 0 !important; }
+.awf-users { margin-top: 8px !important; }
+.awf-users li { display: block; }
+@media (max-width: 900px) { .awf-io { grid-template-columns: 1fr; } .awf-head { flex-wrap: wrap; } }

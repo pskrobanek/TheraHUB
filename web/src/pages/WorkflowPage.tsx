@@ -7,16 +7,16 @@ import Link from '../components/Link';
 import PageHeader from '../components/PageHeader';
 import Builder from '../components/workflow/Builder';
 import { storeApps } from '../data/store';
-import { appsOf, hospitalWorkflows, statusLabel, templates, toolById, type HospitalWorkflow, type WfGraph } from '../data/workflows';
+import { appsOf, statusLabel, templates, toolById, type HospitalWorkflow, type WfGraph } from '../data/workflows';
+import { getWorkflows, saveWorkflow } from '../data/workflowStore';
 import { navigate } from '../lib/route';
 
 const appById = Object.fromEntries(storeApps.map((a) => [a.id, a]));
 
-/** Workflows v paměti stránky (v ukázce se neukládají na server). */
-let store: HospitalWorkflow[] = [...hospitalWorkflows];
 
 export default function WorkflowPage({ sub, item }: { sub?: string; item?: string }) {
   const [, refresh] = useState(0);
+  const store = getWorkflows();
   const view = sub === 'sablony' ? 'sablony' : sub === 'vytvorit' ? 'vytvorit' : 'prehled';
   const editing = view === 'vytvorit' && item ? (store.find((w) => w.id === item) ?? templates.find((t) => t.id === item)) : undefined;
   const isOwn = !!editing && store.some((w) => w.id === editing.id);
@@ -29,10 +29,10 @@ export default function WorkflowPage({ sub, item }: { sub?: string; item?: strin
   }[view];
 
   const save = (g: WfGraph & { name: string }) => {
-    if (isOwn) store = store.map((w) => (w.id === editing!.id ? { ...w, ...g } : w));
+    if (isOwn) saveWorkflow({ ...(editing as HospitalWorkflow), ...g, updated: 'dnes' });
     else {
       const id = `vlastni-${Date.now().toString(36)}`;
-      store = [...store, { id, ...g, desc: 'Vlastní workflow vytvořené v editoru.', status: 'koncept', patients: 0, owner: 'Radiační onkologie', updated: 'dnes' }];
+      saveWorkflow({ id, ...g, desc: 'Vlastní workflow vytvořené v editoru.', status: 'koncept', patients: 0, owner: 'Radiační onkologie', updated: 'dnes' });
       navigate(`#/workflow/vytvorit/${id}`);
     }
     refresh((x) => x + 1);

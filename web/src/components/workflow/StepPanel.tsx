@@ -2,18 +2,15 @@
 // z výstupů dřívějších kroků, výstupy pro další kroky a chování při chybě.
 import { ArrowRight, Link2, Plug, ShieldCheck, Trash, X } from 'lucide-react';
 import { storeApps } from '../../data/store';
-import { appApis, moduleKindLabel, onErrorOptions, toolSpecs, type ApiModule, type Field } from '../../data/workflowApis';
+import { appApis, moduleKindLabel, onErrorOptions, type Field } from '../../data/workflowApis';
+import { ioOf, moduleOf, nodeLabel, TOKEN } from '../../data/workflowStore';
 import { toolById, type WfEdge, type WfNode } from '../../data/workflows';
 import AppIcon from '../AppIcon';
 
 const appById = Object.fromEntries(storeApps.map((a) => [a.id, a]));
 
-export const nodeLabel = (nd: WfNode) => (nd.kind === 'app' ? (appById[nd.ref]?.name ?? nd.ref) : (toolById[nd.ref]?.label ?? nd.ref));
-export const moduleOf = (nd: WfNode): ApiModule | undefined => (nd.kind === 'app' ? appApis[nd.ref]?.modules.find((m) => m.id === nd.module) : undefined);
-/** Vstupy a výstupy kroku podle vybrané funkce (aplikace) nebo nástroje. */
-export const ioOf = (nd: WfNode): { inputs: Field[]; outputs: Field[] } => (nd.kind === 'app' ? (moduleOf(nd) ?? { inputs: [], outputs: [] }) : (toolSpecs[nd.ref] ?? { inputs: [], outputs: [] }));
+export { ioOf, moduleOf, nodeLabel };
 
-const TOKEN = /^\{\{([^.}]+)\.([^}]+)\}\}$/;
 
 /** Kroky, ze kterých vede cesta do daného kroku (jen jejich výstupy lze mapovat). */
 function ancestors(id: string, edges: WfEdge[]): Set<string> {

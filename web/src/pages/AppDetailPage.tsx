@@ -2,6 +2,8 @@ import { AlertTriangle, CircleCheck, Clock, ShieldCheck } from 'lucide-react';
 import AppIcon from '../components/AppIcon';
 import { PatientName, Trend, severityIcon, severityLabel } from '../components/apps/overviewParts';
 import Link from '../components/Link';
+import AppWorkflows from '../components/apps/AppWorkflows';
+import { workflowsForApp } from '../data/workflowStore';
 import { hospital } from '../data/demo';
 import { overviews, rosterOf, type AppOverview, type RosterEntry } from '../data/overview';
 import { specialtyOf } from '../data/specialties';
@@ -12,8 +14,7 @@ import { appHref, appTabs, type AppTab } from '../lib/route';
 
 const tabLabels: Record<AppTab, string> = { prehled: 'Přehled', pacienti: 'Pacienti', workflow: 'Workflow', science: 'Science' };
 
-const tabPlans: Record<Exclude<AppTab, 'prehled' | 'pacienti'>, string> = {
-  workflow: 'Léčebné cesty a postupy nemocnice, do kterých je aplikace zapojená, a kroky, které v nich obstarává.',
+const tabPlans: Record<Exclude<AppTab, 'prehled' | 'pacienti' | 'workflow'>, string> = {
   science: 'Výzkumné projekty, které využívají data z této aplikace, a jejich stav.',
 };
 
@@ -93,6 +94,7 @@ export default function AppDetailPage({ app, tab }: { app: StoreApp; tab: AppTab
             <Link key={id} href={appHref(app.id, id)} className={id === tab ? 'tab active' : 'tab'}>
               {tabLabels[id]}
               {id === 'pacienti' && <span className="tab-count">{o.patients}</span>}
+              {id === 'workflow' && <span className="tab-count">{workflowsForApp(app.id).length}</span>}
             </Link>
           ))}
         </nav>
@@ -186,6 +188,8 @@ export default function AppDetailPage({ app, tab }: { app: StoreApp; tab: AppTab
             Zobrazeno {roster.length} z {o.patients}
           </div>
         </section>
+      ) : tab === 'workflow' ? (
+        <AppWorkflows app={app} />
       ) : (
         <div className="empty glass">
           <b>Připravujeme.</b> {tabPlans[tab]}

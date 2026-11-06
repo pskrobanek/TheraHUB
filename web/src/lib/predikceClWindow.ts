@@ -133,7 +133,13 @@ function table(): string {
 }
 
 /** Celé HTML okna. Název nemocnice se záměrně neuvádí – čísla jsou smyšlená (DEC-003, OQ-104). */
-export function predikceClHtml(user: string): string {
+export interface LinkedWorkflow {
+  name: string;
+  status: string;
+  apps: string[];
+}
+
+export function predikceClHtml(user: string, linked: LinkedWorkflow[] = []): string {
   const st = centers.map(stateOf);
   const limit = centers.reduce((a, c) => a + c.limit, 0);
   const forecast = st.reduce((a, s) => a + s.forecast, 0);
@@ -210,6 +216,9 @@ table { border-collapse: collapse; width: 100%; font-size: .82rem; font-variant-
 th, td { padding: 6px 8px; border-bottom: 1px solid var(--grid); text-align: right; } th:first-child, td:first-child { text-align: left; } thead th { color: var(--ink2); font-weight: 500; }
 .fc-row { color: var(--ink2); font-style: italic; }
 footer { font-size: .78rem; color: var(--ink2); }
+.linked { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: .8rem; color: var(--ink2); }
+.linked > span:first-child { font-weight: 600; text-transform: uppercase; letter-spacing: .05em; font-size: .7rem; color: var(--muted); }
+.lw { padding: 4px 10px; border-radius: 99px; background: var(--surface); border: 1px solid var(--ring); color: var(--ink); }
 .demo { display: inline-block; font-size: .72rem; font-weight: 600; padding: 2px 8px; border-radius: 99px; background: color-mix(in srgb, var(--warning) 25%, transparent); color: var(--ink); margin-left: 8px; vertical-align: middle; }
 @media (max-width: 720px) { .two { grid-template-columns: 1fr; } .center header { flex-wrap: wrap; } }
 </style></head><body><main>
@@ -224,6 +233,8 @@ footer { font-size: .78rem; color: var(--ink2); }
     <div class="tile"><span>Roční limity center celkem</span><b>${fmtMil(limit)}</b><small>ONKO + PNEU + NEU</small></div>
     <div class="tile"><span>Center s rizikem</span><b>${st.filter((s) => s.status !== 'ok').length} ze ${centers.length}</b><small>${centers.filter((_, i) => st[i].status !== 'ok').map((c) => c.code).join(', ') || 'žádné'}</small></div>
   </div>
+
+  ${linked.length ? `<div class="linked"><span>Navázaná workflow</span>${linked.map((l) => `<span class="lw"><b>${esc(l.name)}</b> · ${esc(l.status)} · aplikace: ${esc(l.apps.join(', '))}</span>`).join('')}</div>` : ''}
 
   <section class="card">
     <div class="chart-head">
@@ -243,7 +254,7 @@ footer { font-size: .78rem; color: var(--ink2); }
 
   <footer>
     Ukázková data – smyšlená čísla, nejde o skutečné údaje nemocnice. Výpočet běží v nemocnici (TheraHUB Node) nad agregovanými částkami; data pacientů nemocnici neopouštějí.
-    Vstupy dodává workflow <b>Predikce centrových léčiv</b>: MDT summary (nové indikace), OncoReady (přerušení léčby), VZP uptodate (změny cen a úhrad).
+    ${linked.length ? `Vstupy dodávají navázané workflows: ${linked.map((l) => `<b>${esc(l.name)}</b> (${esc(l.apps.join(', '))})`).join('; ')}.` : 'Aplikace zatím není zapojená do žádného workflow – predikce běží jen z čerpání v NIS.'}
     Spuštěno z TheraHUB přes SMART on FHIR · ${esc(user)}.
   </footer>
 </main>

@@ -16,6 +16,7 @@ import { overviews } from '../data/overview';
 import { OpenBridge, RequestSeal } from '../components/icons';
 import { openExternalApp } from '../lib/launch';
 import { usePatientDrop } from '../lib/patientDrag';
+import { workflowsForApp } from '../data/workflowStore';
 import type { StoreApp } from '../data/types';
 import { appHref, type AppTab } from '../lib/route';
 import { purchasedIds, storeApps } from '../data/store';
@@ -29,9 +30,11 @@ const tileStats = [
   { key: 'workflows', label: 'Workflows' },
   { key: 'studies', label: 'Studie' },
 ] as const;
-const maxOf = Object.fromEntries(
-  tileStats.map(({ key }) => [key, Math.max(1, ...purchased.map((a) => overviews[a.id]?.[key] ?? 0))]),
-) as Record<(typeof tileStats)[number]['key'], number>;
+type TileKey = (typeof tileStats)[number]['key'];
+/** Hodnota na dlaždici; počet workflows se počítá ze skutečných workflows nemocnice (sekce Workflow). */
+const statOf = (appId: string, key: TileKey) => (key === 'workflows' ? workflowsForApp(appId).length : (overviews[appId]?.[key] ?? 0));
+const maxOfNow = () =>
+  Object.fromEntries(tileStats.map(({ key }) => [key, Math.max(1, ...purchased.map((a) => statOf(a.id, key)))])) as Record<TileKey, number>;
 
 /** Zakoupené aplikace seskupené podle funkční kategorie. */
 const groups = appGroups
@@ -86,7 +89,7 @@ export default function AppsPage({ sub, item, appId, appTab }: Props) {
 }
 
 /** Dlaždice zakoupené aplikace; přetažením pacienta z menu se aplikace otevře rovnou s jeho profilem. */
-function AppTile({ app }: { app: StoreApp }) {
+function AppTile({ app, maxOf }: { app: StoreApp; maxOf: Record<TileKey, number> }) {
   const o = overviews[app.id];
   const { over, dropProps } = usePatientDrop(app);
   return (
@@ -101,12 +104,12 @@ function AppTile({ app }: { app: StoreApp }) {
       {o && (
         <dl className="my-tile-stats">
           {tileStats.map(({ key, label }) => (
-            <div key={key} title={`${label}: ${o[key]} (pruh vůči aplikaci s nejvyšším počtem)`}>
+            <div key={key} title={`${label}: ${statOf(app.id, key)} (pruh vůči aplikaci s nejvyšším počtem)`}>
               <dt>{label}</dt>
               <span className="tile-bar" aria-hidden>
-                <span style={{ width: `${o[key] === 0 ? 0 : Math.max(4, (o[key] / maxOf[key]) * 100)}%` }} />
+                <span style={{ width: `${statOf(app.id, key) === 0 ? 0 : Math.max(4, (statOf(app.id, key) / maxOf[key]) * 100)}%` }} />
               </span>
-              <dd>{o[key]}</dd>
+              <dd>{statOf(app.id, key)}</dd>
             </div>
           ))}
         </dl>
@@ -125,6 +128,7 @@ function AppTile({ app }: { app: StoreApp }) {
 }
 
 function Purchased() {
+  const maxOf = maxOfNow();
   return (
     <div className="myapps">
       <p className="myapps-tip muted small">
@@ -138,7 +142,7 @@ function Purchased() {
           </header>
           <div className="my-tiles">
             {apps.map((app) => (
-              <AppTile key={app.id} app={app} />
+              <AppTile key={app.id} app={app} maxOf={maxOf} />
             ))}
           </div>
         </section>

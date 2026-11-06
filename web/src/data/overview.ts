@@ -31,7 +31,7 @@ export type OverviewWidget =
 export interface AppOverview {
   appId: string;
   patients: number;
-  /** Počet workflows nemocnice, do kterých je aplikace zapojená. */
+  /** Výchozí počet workflows (dlaždice a detail už počítají ze skutečných workflows ve workflowStore). */
   workflows: number;
   /** Počet výzkumných projektů (Science), které využívají data aplikace. */
   studies: number;
